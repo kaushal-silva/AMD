@@ -25,6 +25,16 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
         }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
     </style>
 </head>
 <body>
@@ -105,11 +115,50 @@
         <div id="message-box" class="fixed bottom-4 right-4 bg-white border-l-4 border-teal-500 text-gray-800 p-4 rounded-lg shadow-xl hidden transition-opacity duration-300" role="alert">
             <p id="message-text" class="font-semibold"></p>
         </div>
+    </div>
 
+    <!-- Login Modal Structure -->
+    <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <!-- Modal Content -->
+        <div id="modal-content-container" class="bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl relative modal-fade-enter">
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2 text-center"></h3>
+            <p id="modal-subtitle" class="text-sm text-gray-500 mb-6 text-center"></p>
+
+            <!-- Tab/Toggle for Sign In / Sign Up -->
+            <div class="flex justify-center mb-8 bg-gray-100 p-1 rounded-lg">
+                <button id="tab-signin" onclick="setMode('signin')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 hover:text-gray-900 transition duration-150"></button>
+                <button id="tab-signup" onclick="setMode('signup')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 hover:text-gray-900 transition duration-150"></button>
+            </div>
+
+            <!-- Authentication Options -->
+            <div class="space-y-4">
+                <!-- Email/Password Mock -->
+                <button id="auth-email" onclick="simulateLogin('email')" class="w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-150">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-8 12a9 9 0 110-18 9 9 0 010 18z"/></svg>
+                    <span id="auth-email-text" class="text-gray-700 font-medium"></span>
+                </button>
+
+                <!-- Line Mock (Using a simple icon and a brand color) -->
+                <button id="auth-line" onclick="simulateLogin('line')" class="w-full flex items-center justify-center p-3 bg-[#00C300] text-white font-semibold rounded-lg hover:bg-[#00A000] transition duration-150">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#FFF"/><path fill="#00C300" d="M12.91 14.509h18.179v1.94h-18.179zM12.91 21.018h18.179v1.94h-18.179zM12.91 27.527h18.179v1.94h-18.179zM12.91 34.036h18.179v1.94h-18.179z"/></svg>
+                    <span id="auth-line-text"></span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript for translations and simulated login action -->
     <script>
+        // Global variables for modal state
+        let currentLang = 'en';
+        let currentUserType = ''; // 'Health Professional', 'Client', or 'AMC'
+        let currentMode = 'signin'; // 'signin' or 'signup'
+        
         // --- Translation Data Structure (JSON) ---
         const translations = {
             'en': {
@@ -125,9 +174,18 @@
                 'client_card_desc': 'Access your treatment plan, schedule appointments, review progress, and communicate securely with your AMD team.',
                 'client_card_button': 'Log In / View Records',
                 'amc_card_title': 'AMC Coordinator',
-                'amc_card_desc': 'Airway Mouth Coordinators manage administrative tasks, billing, provider schedules, and resource allocation across the entire platform.',
+                'amc_card_desc': 'Airway Mouth Coordinators support your patient journey ensuring you get the best results.', // UPDATED
                 'amc_card_button': 'Log In / Admin Access',
-                'toggle_text': '中文' // Text displayed on the toggle button itself (next language)
+                'toggle_text': '中文',
+                'modal_sign_in_title': 'Sign In to continue',
+                'modal_sign_up_title': 'Create Your Account',
+                'modal_subtitle_hp': 'Access your professional AMD dashboard.',
+                'modal_subtitle_client': 'Access your personalized treatment records.',
+                'modal_subtitle_amc': 'Access administrative and coordination tools.',
+                'tab_sign_in': 'Sign In',
+                'tab_sign_up': 'Sign Up',
+                'auth_email_text': 'Continue with Email/Password',
+                'auth_line_text': 'Continue with LINE'
             },
             'zh': {
                 // Traditional Chinese translations suitable for Taiwan
@@ -143,15 +201,22 @@
                 'client_card_desc': '訪問您的治療計劃、安排預約、查看進度並與您的 AMD 團隊安全溝通。',
                 'client_card_button': '登錄 / 查看記錄',
                 'amc_card_title': 'AMC 協調員',
-                'amc_card_desc': '口腔氣道協調員管理整個平台的行政任務、計費、供應商日程和資源分配。',
+                'amc_card_desc': '口腔氣道協調員支持您的患者旅程，確保您獲得最佳結果。', // UPDATED
                 'amc_card_button': '登錄 / 管理員訪問',
-                'toggle_text': 'English' // Text displayed on the toggle button itself (next language)
+                'toggle_text': 'English',
+                'modal_sign_in_title': '登入以繼續',
+                'modal_sign_up_title': '創建您的帳戶',
+                'modal_subtitle_hp': '進入您的專業 AMD 儀表板。',
+                'modal_subtitle_client': '訪問您的個人化治療記錄。',
+                'modal_subtitle_amc': '訪問管理和協調工具。',
+                'tab_sign_in': '登入',
+                'tab_sign_up': '註冊',
+                'auth_email_text': '使用電子郵件/密碼繼續',
+                'auth_line_text': '使用 LINE 繼續'
             }
         };
 
-        let currentLang = 'en';
-
-        // Function to update the text content of all translatable elements
+        // --- Core Translation Function ---
         function updateText() {
             const langData = translations[currentLang];
             
@@ -172,55 +237,157 @@
             
             // Update the document title
             document.title = (currentLang === 'en' ? 'AMD Portal' : 'AMD 入口網站') + ' | Airway Mouth Doctor Solutions';
+            
+            // Update modal specific text if modal is open
+            if (!document.getElementById('login-modal').classList.contains('hidden')) {
+                setModalContent();
+            }
         }
 
-        // Function to handle the language toggle
+        // --- Language Toggle ---
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             updateText();
         }
 
-        // Initialize the page with the default language
-        document.addEventListener('DOMContentLoaded', updateText);
-
-
-        // Placeholder JavaScript for simulating login interaction
+        // --- Modal Control Functions ---
         function handleLogin(userType) {
-            const messageBox = document.getElementById('message-box');
-            const messageText = document.getElementById('message-text');
+            currentUserType = userType;
+            currentMode = 'signin'; // Default to Sign In
+            
+            const modal = document.getElementById('login-modal');
+            const modalContent = document.getElementById('modal-content-container');
+            
+            modal.classList.remove('hidden');
+            // Apply entrance transition classes
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10); 
+            
+            setModalContent();
+        }
 
-            // Determine the message content based on the current language
-            let message;
-            if (currentLang === 'zh') {
-                message = `正在重新導向至 ${userType === 'Health Professional' ? '衛生專業人員' : userType === 'Client' ? '客戶/患者' : 'AMC 協調員'} 登錄畫面... (此為模擬)`;
+        function closeModal() {
+            const modal = document.getElementById('login-modal');
+            const modalContent = document.getElementById('modal-content-container');
+            
+            // Apply exit transition classes
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200); // Match CSS transition time
+        }
+        
+        function setMode(mode) {
+            currentMode = mode;
+            setModalContent();
+        }
+        
+        function setModalContent() {
+            const langData = translations[currentLang];
+            const isSignIn = currentMode === 'signin';
+            
+            // 1. Update Title and Subtitle
+            document.getElementById('modal-title').textContent = isSignIn ? langData.modal_sign_in_title : langData.modal_sign_up_title;
+            
+            let subtitleKey;
+            if (currentUserType === 'Health Professional') subtitleKey = 'modal_subtitle_hp';
+            else if (currentUserType === 'Client') subtitleKey = 'modal_subtitle_client';
+            else if (currentUserType === 'AMC') subtitleKey = 'modal_subtitle_amc';
+            document.getElementById('modal-subtitle').textContent = langData[subtitleKey];
+
+            // 2. Update Tabs
+            const tabSignIn = document.getElementById('tab-signin');
+            const tabSignUp = document.getElementById('tab-signup');
+            
+            tabSignIn.textContent = langData.tab_sign_in;
+            tabSignUp.textContent = langData.tab_sign_up;
+
+            // Style active tab
+            const activeClasses = 'bg-white text-gray-900 shadow';
+            const inactiveClasses = 'bg-gray-100 text-gray-500 hover:bg-white';
+
+            if (isSignIn) {
+                tabSignIn.className = tabSignIn.className.replace(inactiveClasses, activeClasses);
+                tabSignUp.className = tabSignUp.className.replace(activeClasses, inactiveClasses);
             } else {
-                message = `Redirecting to the ${userType} Login Screen... (This is a simulation)`;
+                tabSignIn.className = tabSignIn.className.replace(activeClasses, inactiveClasses);
+                tabSignUp.className = tabSignUp.className.replace(inactiveClasses, activeClasses);
             }
             
-            // Set the message content
-            messageText.textContent = message;
+            // 3. Update Auth Buttons
+            document.getElementById('auth-email-text').textContent = isSignIn ? langData.auth_email_text : langData.auth_email_text.replace('Continue', 'Sign Up');
+            document.getElementById('auth-line-text').textContent = isSignIn ? langData.auth_line_text : langData.auth_line_text.replace('Continue', 'Sign Up');
+        }
 
-            // Show the message box
+        function simulateLogin(authMethod) {
+            closeModal();
+            const isSignUp = currentMode === 'signup';
+            let targetUrl = '';
+            
+            // Determine the target URL based on user type and action (Sign In vs Sign Up)
+            if (!isSignUp) {
+                // Sign In (All types go to their respective dashboards)
+                if (currentUserType === 'Health Professional') {
+                    targetUrl = 'PractitionerDashboard.html';
+                } else if (currentUserType === 'Client') {
+                    targetUrl = 'ClientDashboard.html';
+                } else if (currentUserType === 'AMC') {
+                    targetUrl = 'AMC.html';
+                }
+            } else {
+                // Sign Up (Client goes to onboarding, others go to dashboard for mock)
+                if (currentUserType === 'Client') {
+                    targetUrl = 'ClientOnboarding.html'; // Specific requirement
+                } else if (currentUserType === 'Health Professional') {
+                    targetUrl = 'PractitionerDashboard.html';
+                } else if (currentUserType === 'AMC') {
+                    targetUrl = 'AMC.html';
+                }
+            }
+
+            // Determine the message for the user
+            let actionText = isSignUp ? (currentLang === 'en' ? 'Sign Up' : '註冊') : (currentLang === 'en' ? 'Log In' : '登入');
+            let userTypeText = currentLang === 'en' ? currentUserType : (currentUserType === 'Health Professional' ? '衛生專業人員' : currentUserType === 'Client' ? '客戶/患者' : 'AMC 協調員');
+            let methodText = authMethod === 'email' ? (currentLang === 'en' ? 'Email/Password' : '電子郵件/密碼') : 'LINE';
+            
+            const message = `${userTypeText} ${actionText} via ${methodText}. Redirecting to ${targetUrl}... (Mock)`;
+            
+            showMessage(message, currentUserType);
+
+            // In a real application, you would replace this timeout with:
+            // window.location.href = targetUrl;
+        }
+
+        // Function to display the simulation message box
+        function showMessage(text, userType) {
+            const messageBox = document.getElementById('message-box');
+            const messageText = document.getElementById('message-text');
+            
+            messageText.textContent = text;
+            
+            let borderColorClass = 'border-teal-500'; // Default to HP color
+            if (userType === 'Client') borderColorClass = 'border-sky-500';
+            else if (userType === 'AMC') borderColorClass = 'border-indigo-500';
+            
+            messageBox.className = `fixed bottom-4 right-4 bg-white border-l-4 ${borderColorClass} text-gray-800 p-4 rounded-lg shadow-xl transition-opacity duration-300`;
             messageBox.classList.remove('hidden');
             messageBox.style.opacity = '1';
-            
-            // Also update the border color dynamically based on the card's color
-            let borderColor = '';
-            if (userType === 'Health Professional') borderColor = 'border-teal-500';
-            else if (userType === 'Client') borderColor = 'border-sky-500';
-            else if (userType === 'AMC') borderColor = 'border-indigo-500';
-            
-            messageBox.className = `fixed bottom-4 right-4 bg-white border-l-4 ${borderColor} text-gray-800 p-4 rounded-lg shadow-xl hidden transition-opacity duration-300`;
-            messageBox.classList.remove('hidden');
 
-            // Automatically hide the message box after 3 seconds
+            // Automatically hide the message box after 4 seconds
             setTimeout(() => {
                 messageBox.style.opacity = '0';
                 setTimeout(() => {
                     messageBox.classList.add('hidden');
-                }, 300); // Wait for the opacity transition to finish
-            }, 3000);
+                }, 300); 
+            }, 4000);
         }
+
+        // Initialize the page with the default language
+        document.addEventListener('DOMContentLoaded', updateText);
     </script>
 </body>
 </html>
