@@ -3,170 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Client Onboarding</title>
+    <title>AMD Portal | Airway Mouth Doctor Solutions</title>
+    <!-- Load Tailwind CSS CDN for modern, responsive styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font family for a clean, professional look -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: #f8fafc; /* Light off-white/blue background */
         }
-        .bg-gradient-header {
-            background-image: linear-gradient(to right, #06b6d4, #10b981);
+        .bg-gradient-amd {
+            /* A soothing blue-green gradient theme for health and airway */
+            background-image: linear-gradient(to right bottom, #10b981, #06b6d4);
         }
-        .shadow-step {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+        }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
         }
     </style>
 </head>
 <body>
 
-    <!-- Onboarding Page Container -->
-    <div class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
+    <!-- Main Application Container (relative for language toggle positioning) -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative">
 
-        <!-- Language Toggle -->
-        <div class="w-full max-w-5xl flex justify-end mb-6">
-            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-sky-600 border border-sky-600 hover:bg-sky-50 transition duration-150 font-semibold shadow-md">
+        <!-- Language Toggle Button -->
+        <div class="absolute top-4 right-4 z-10">
+            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-teal-600 border border-teal-600 hover:bg-teal-50 transition duration-150 font-semibold shadow-md">
                 <!-- Text updated by JavaScript -->
             </button>
         </div>
 
-        <!-- Header -->
-        <header class="text-center mb-10 max-w-4xl">
-            <h1 id="onboard-title" class="text-4xl font-extrabold text-gray-900" data-key="title">Client Onboarding: First Steps</h1>
-            <p id="onboard-subtitle" class="mt-2 text-lg text-gray-500" data-key="subtitle">Help us understand your health by completing one of the steps below.</p>
+        <!-- Header and Mission Statement (pt-16 ensures content is not hidden behind the toggle) -->
+        <header class="text-center mb-12 max-w-4xl pt-16">
+            <h1 class="text-5xl font-extrabold text-gray-900 sm:text-6xl tracking-tight">
+                <span class="bg-gradient-amd bg-clip-text text-transparent" data-key="portal_title_h1">AMD Portal</span>
+            </h1>
+            <h2 class="text-3xl font-medium text-gray-700 mt-2 sm:mt-4" data-key="portal_title_h2">
+                Airway Mouth Doctor Holistic Health
+            </h2>
+            <p class="mt-6 text-lg text-gray-500 max-w-3xl mx-auto" id="mission-statement">
+                <!-- Mission statement parts are now split and keyed for translation -->
+                <span data-key="mission_statement_start">Your single platform to manage, track, and service the needs of the </span>
+                <span class="font-semibold text-teal-600" data-key="mission_statement_emphasis">Holistic Mouth Solutions</span>
+                <span data-key="mission_statement_end"> approach, addressing Impaired Mouth Syndrome.</span>
+            </p>
         </header>
 
-        <!-- Main Content Grid -->
-        <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Login / Entry Cards Container -->
+        <main class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            <!-- Card 1: Questionnaire -->
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-step border-t-4 border-sky-500 flex flex-col">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="card1_title">1. Impaired Mouth Syndrome Questionnaire</h2>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="card1_desc">Answer 5 quick questions about your daily symptoms and habits.</p>
-                
-                <!-- Questionnaire Section -->
-                <div id="questionnaire-section" class="space-y-4 mb-6">
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q1">Q1: Do you frequently wake up with a dry mouth or headache?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q2">Q2: Do you often experience neck pain, shoulder tension, or poor posture?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q3">Q3: Do you have difficulty chewing or experience jaw joint (TMJ) discomfort?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q4">Q4: Do you notice teeth grinding or clenching during the day or night?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q5">Q5: Do you frequently use mouthwash or chewing gum to manage dry mouth/bad breath?</p>
-                        <div class="flex space-space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
+            <!-- Card 1: Health Professionals -->
+            <div id="hp-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-teal-500 flex flex-col items-center text-center cursor-pointer" onclick="handleLogin('Health Professional')">
+                <div class="text-5xl text-teal-500 mb-4" role="img" aria-label="Stethoscope icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-stethoscope"><path d="M18 15v-3"/><path d="M18 21v-3"/><path d="M18 6V3"/><path d="M18 12V9"/><path d="M12 6V3"/><path d="M12 21v-3"/><path d="M6 6V3"/><path d="M6 21v-3"/><path d="M18 3h-2a4 4 0 0 0-4 4v7a4 4 0 0 0 4 4h2"/><path d="M12 3h-2a4 4 0 0 0-4 4v7a4 4 0 0 0 4 4h2"/><path d="M6 3H4a4 4 0 0 0-4 4v7a4 4 0 0 0 4 4h2"/></svg>
                 </div>
-
-                <button class="py-3 px-6 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="card1_start" onclick="simulateStart('Questionnaire')">
-                    Start Questionnaire
+                <h3 class="text-2xl font-bold text-gray-800 mb-2" data-key="hp_card_title">Health Professional</h3>
+                <p class="text-gray-500 mb-6 flex-grow" data-key="hp_card_desc">
+                    Dentists, Doctors, and Certified Consultants. Manage patient treatments, access diagnostic tools, and collaborate with the AMD network.
+                </p>
+                <button class="w-full py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150" data-key="hp_card_button">
+                    Log In / Register
                 </button>
             </div>
 
-            <!-- Card 2: Photo Upload -->
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-step border-t-4 border-teal-500 flex flex-col">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="card2_title">2. Upload Photos / Scans</h2>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="card2_desc">Upload recent photos of your teeth, jaw, or posture, or past scans.</p>
-                
-                <!-- Mock Upload Area -->
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center flex-grow flex flex-col justify-center items-center mb-6">
-                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <p class="mt-2 text-sm text-gray-500">Drag and drop files here or click to browse</p>
-                    <input type="file" multiple class="hidden" id="file-upload" onchange="simulateUpload(this.files.length)">
+            <!-- Card 2: Client / Patient -->
+            <div id="client-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-sky-500 flex flex-col items-center text-center cursor-pointer" onclick="handleLogin('Client')">
+                <div class="text-5xl text-sky-500 mb-4" role="img" aria-label="Person in box icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
-
-                <button class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150" data-key="card2_upload" onclick="document.getElementById('file-upload').click()">
-                    Upload Files
+                <h3 class="text-2xl font-bold text-gray-800 mb-2" data-key="client_card_title">Client / Patient</h3>
+                <p class="text-gray-500 mb-6 flex-grow" data-key="client_card_desc">
+                    Access your treatment plan, schedule appointments, review progress, and communicate securely with your AMD team.
+                </p>
+                <button class="w-full py-3 px-6 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="client_card_button">
+                    Log In / View Records
                 </button>
             </div>
 
+            <!-- Card 3: Airway Mouth Coordinator (AMC) -->
+            <div id="amc-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-indigo-500 flex flex-col items-center text-center cursor-pointer" onclick="handleLogin('AMC')">
+                <div class="text-5xl text-indigo-500 mb-4" role="img" aria-label="Gear icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 1-2 2H4a2 2 0 0 0-2 2v.44a2 2 0 0 1-2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2-2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 1 2-2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 1 2-2v-.44a2 2 0 0 0-2-2h-.44a2 2 0 0 1-2-2v-.44a2 2 0 0 0-2-2h-.44a2 2 0 0 1-2-2v-.44a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2" data-key="amc_card_title">AMC Coordinator</h3>
+                <p class="text-gray-500 mb-6 flex-grow" data-key="amc_card_desc">
+                    Airway Mouth Coordinators support your patient journey ensuring you get the best results.
+                </p>
+                <button class="w-full py-3 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150" data-key="amc_card_button">
+                    Log In / Admin Access
+                </button>
+            </div>
         </main>
 
-        <!-- Navigation Buttons -->
-        <div class="w-full max-w-5xl flex justify-between mt-10 space-x-4">
-            <button onclick="window.location.href='ClientDashboard.html'" class="py-3 px-6 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-150" data-key="skip_button">
-                Skip & Go to Dashboard
-            </button>
-            <button onclick="window.location.href='ClientDashboard.html'" class="py-3 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150" data-key="next_button">
-                Next Step
-            </button>
+        <!-- Message Box for Login Simulation (Replaces alert()) -->
+        <div id="message-box" class="fixed bottom-4 right-4 bg-white border-l-4 border-teal-500 text-gray-800 p-4 rounded-lg shadow-xl hidden transition-opacity duration-300" role="alert">
+            <p id="message-text" class="font-semibold"></p>
         </div>
     </div>
 
-    <!-- JavaScript for translations and mock actions -->
-    <script>
-        let currentLang = 'en';
+    <!-- Login Modal Structure -->
+    <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <!-- Modal Content -->
+        <div id="modal-content-container" class="bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl relative modal-fade-enter">
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
 
+            <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2 text-center"></h3>
+            <p id="modal-subtitle" class="text-sm text-gray-500 mb-6 text-center"></p>
+
+            <!-- Tab/Toggle for Sign In / Sign Up -->
+            <div class="flex justify-center mb-8 bg-gray-100 p-1 rounded-lg">
+                <button id="tab-signin" onclick="setMode('signin')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 hover:text-gray-900 transition duration-150"></button>
+                <button id="tab-signup" onclick="setMode('signup')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 hover:text-gray-900 transition duration-150"></button>
+            </div>
+
+            <!-- Authentication Options -->
+            <div class="space-y-4">
+                <!-- Email/Password Mock -->
+                <button id="auth-email" onclick="simulateLogin('email')" class="w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-150">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-8 12a9 9 0 110-18 9 9 0 010 18z"/></svg>
+                    <span id="auth-email-text" class="text-gray-700 font-medium"></span>
+                </button>
+
+                <!-- Line Mock (Using a simple icon and a brand color) -->
+                <button id="auth-line" onclick="simulateLogin('line')" class="w-full flex items-center justify-center p-3 bg-[#00C300] text-white font-semibold rounded-lg hover:bg-[#00A000] transition duration-150">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#FFF"/><path fill="#00C300" d="M12.91 14.509h18.179v1.94h-18.179zM12.91 21.018h18.179v1.94h-18.179zM12.91 27.527h18.179v1.94h-18.179zM12.91 34.036h18.179v1.94h-18.179z"/></svg>
+                    <span id="auth-line-text"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for translations and simulated login action -->
+    <script>
+        // Global variables for modal state
+        let currentLang = 'en';
+        let currentUserType = ''; // 'Health Professional', 'Client', or 'AMC'
+        let currentMode = 'signin'; // 'signin' or 'signup'
+        
         // --- Translation Data Structure (JSON) ---
         const translations = {
             'en': {
-                'title': 'Client Onboarding: First Steps',
-                'subtitle': 'Help us understand your health by completing one of the steps below.',
-                'skip_button': 'Skip & Go to Dashboard',
-                'next_button': 'Next Step',
-                'card1_title': '1. Impaired Mouth Syndrome Questionnaire',
-                'card1_desc': 'Answer 5 quick questions about your daily symptoms and habits.',
-                'card1_start': 'Start Questionnaire',
-                'card2_title': '2. Upload Photos / Scans',
-                'card2_desc': 'Upload recent photos of your teeth, jaw, or posture, or past scans.',
-                'card2_upload': 'Upload Files',
-                'q1': 'Q1: Do you frequently wake up with a dry mouth or headache?',
-                'q2': 'Q2: Do you often experience neck pain, shoulder tension, or poor posture?',
-                'q3': 'Q3: Do you have difficulty chewing or experience jaw joint (TMJ) discomfort?',
-                'q4': 'Q4: Do you notice teeth grinding or clenching during the day or night?',
-                'q5': 'Q5: Do you frequently use mouthwash or chewing gum to manage dry mouth/bad breath?',
-                'yes': 'Yes',
-                'no': 'No',
-                'toggle_text': '中文'
+                'portal_title_h1': 'AMD Portal',
+                'portal_title_h2': 'Airway Mouth Doctor Holistic Health',
+                'mission_statement_start': 'Your single platform to manage, track, and service the needs of the ',
+                'mission_statement_emphasis': 'Holistic Mouth Solutions',
+                'mission_statement_end': ' approach, addressing Impaired Mouth Syndrome.',
+                'hp_card_title': 'Health Professional',
+                'hp_card_desc': 'Dentists, Doctors, and Certified Consultants. Manage patient treatments, access diagnostic tools, and collaborate with the AMD network.',
+                'hp_card_button': 'Log In / Register',
+                'client_card_title': 'Client / Patient',
+                'client_card_desc': 'Access your treatment plan, schedule appointments, review progress, and communicate securely with your AMD team.',
+                'client_card_button': 'Log In / View Records',
+                'amc_card_title': 'AMC Coordinator',
+                'amc_card_desc': 'Airway Mouth Coordinators support your patient journey ensuring you get the best results.',
+                'amc_card_button': 'Log In / Admin Access',
+                'toggle_text': '中文',
+                'modal_sign_in_title': 'Sign In to continue',
+                'modal_sign_up_title': 'Create Your Account',
+                'modal_subtitle_hp': 'Access your professional AMD dashboard.',
+                'modal_subtitle_client': 'Access your personalized treatment records.',
+                'modal_subtitle_amc': 'Access administrative and coordination tools.',
+                'tab_sign_in': 'Sign In',
+                'tab_sign_up': 'Sign Up',
+                'auth_email_text': 'Continue with Email/Password',
+                'auth_line_text': 'Continue with LINE'
             },
             'zh': {
-                'title': '客戶註冊：第一步',
-                'subtitle': '請完成以下其中一項步驟，幫助我們了解您的健康狀況。',
-                'skip_button': '跳過並前往儀表板',
-                'next_button': '下一步',
-                'card1_title': '1. 口腔功能障礙綜合徵問卷',
-                'card1_desc': '回答 5 個關於您日常症狀和習慣的快速問題。',
-                'card1_start': '開始填寫問卷',
-                'card2_title': '2. 上傳照片/掃描件',
-                'card2_desc': '上傳您牙齒、下巴或姿勢的近期照片，或過往的掃描件。',
-                'card2_upload': '上傳文件',
-                'q1': 'Q1: 您是否經常醒來時口乾或頭痛？',
-                'q2': 'Q2: 您是否經常感到頸部疼痛、肩部緊張或姿勢不良？',
-                'q3': 'Q3: 您咀嚼是否困難或感覺下巴關節（TMJ）不適？',
-                'q4': 'Q4: 您白天或晚上是否會磨牙或緊咬牙齒？',
-                'q5': 'Q5: 您是否經常使用漱口水或口香糖來應對口乾/口臭？',
-                'yes': '是',
-                'no': '否',
-                'toggle_text': 'English'
+                // Traditional Chinese translations suitable for Taiwan
+                'portal_title_h1': 'AMD 入口網站',
+                'portal_title_h2': '口腔氣道醫生整體健康',
+                'mission_statement_start': '您的單一平台，用於管理、追蹤和服務 ',
+                'mission_statement_emphasis': '整體口腔解決方案',
+                'mission_statement_end': ' 方法的需求，解決口腔功能障礙綜合徵。',
+                'hp_card_title': '衛生專業人員',
+                'hp_card_desc': '牙醫、醫生和認證顧問。管理患者治療、訪問診斷工具並與 AMD 網絡協作。',
+                'hp_card_button': '登錄 / 註冊',
+                'client_card_title': '客戶 / 患者',
+                'client_card_desc': '訪問您的治療計劃、安排預約、查看進度並與您的 AMD 團隊安全溝通。',
+                'client_card_button': '登錄 / 查看記錄',
+                'amc_card_title': 'AMC 協調員',
+                'amc_card_desc': '口腔氣道協調員支持您的患者旅程，確保您獲得最佳結果。',
+                'amc_card_button': '登錄 / 管理員訪問',
+                'toggle_text': 'English',
+                'modal_sign_in_title': '登入以繼續',
+                'modal_sign_up_title': '創建您的帳戶',
+                'modal_subtitle_hp': '進入您的專業 AMD 儀表板。',
+                'modal_subtitle_client': '訪問您的個人化治療記錄。',
+                'modal_subtitle_amc': '訪問管理和協調工具。',
+                'tab_sign_in': '登入',
+                'tab_sign_up': '註冊',
+                'auth_email_text': '使用電子郵件/密碼繼續',
+                'auth_line_text': '使用 LINE 繼續'
             }
         };
 
+        // --- Core Translation Function ---
         function updateText() {
             const langData = translations[currentLang];
             
@@ -178,40 +228,166 @@
                 }
             });
 
-            // Update Radio Button Labels (which don't have data-key naturally)
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                const labelSpan = radio.nextElementSibling;
-                if (labelSpan && radio.value === 'yes') {
-                    labelSpan.textContent = langData.yes;
-                } else if (labelSpan && radio.value === 'no') {
-                    labelSpan.textContent = langData.no;
-                }
-            });
+            // Update the language toggle button text
+            const toggleButton = document.getElementById('lang-toggle');
+            toggleButton.textContent = langData.toggle_text;
 
-            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            // Update the HTML lang attribute
             document.documentElement.setAttribute('lang', currentLang);
-            document.title = (currentLang === 'en' ? 'AMD Client Onboarding' : 'AMD 客戶註冊')
+            
+            // Update the document title
+            document.title = (currentLang === 'en' ? 'AMD Portal' : 'AMD 入口網站') + ' | Airway Mouth Doctor Solutions';
+            
+            // Update modal specific text if modal is open
+            if (!document.getElementById('login-modal').classList.contains('hidden')) {
+                setModalContent();
+            }
         }
 
+        // --- Language Toggle ---
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             updateText();
         }
 
-        function simulateStart(action) {
-            console.log(`Simulating start of ${action}.`);
-            // In a real app, validation and data submission would happen here.
-            // For now, we proceed to the next step.
-            window.location.href = 'ClientDashboard.html';
+        // --- Modal Control Functions ---
+        function handleLogin(userType) {
+            currentUserType = userType;
+            currentMode = 'signin'; // Default to Sign In
+            
+            const modal = document.getElementById('login-modal');
+            const modalContent = document.getElementById('modal-content-container');
+            
+            modal.classList.remove('hidden');
+            // Apply entrance transition classes
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10); 
+            
+            setModalContent();
         }
 
-        function simulateUpload(count) {
-            console.log(`Simulating upload of ${count} files.`);
-            // In a real app, file handling would occur here.
-            // For now, we proceed to the next step.
-            window.location.href = 'ClientDashboard.html';
+        function closeModal() {
+            const modal = document.getElementById('login-modal');
+            const modalContent = document.getElementById('modal-content-container');
+            
+            // Apply exit transition classes
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200); // Match CSS transition time
+        }
+        
+        function setMode(mode) {
+            currentMode = mode;
+            setModalContent();
+        }
+        
+        function setModalContent() {
+            const langData = translations[currentLang];
+            const isSignIn = currentMode === 'signin';
+            
+            // 1. Update Title and Subtitle
+            document.getElementById('modal-title').textContent = isSignIn ? langData.modal_sign_in_title : langData.modal_sign_up_title;
+            
+            let subtitleKey;
+            if (currentUserType === 'Health Professional') subtitleKey = 'modal_subtitle_hp';
+            else if (currentUserType === 'Client') subtitleKey = 'modal_subtitle_client';
+            else if (currentUserType === 'AMC') subtitleKey = 'modal_subtitle_amc';
+            document.getElementById('modal-subtitle').textContent = langData[subtitleKey];
+
+            // 2. Update Tabs
+            const tabSignIn = document.getElementById('tab-signin');
+            const tabSignUp = document.getElementById('tab-signup');
+            
+            tabSignIn.textContent = langData.tab_sign_in;
+            tabSignUp.textContent = langData.tab_sign_up;
+
+            // Style active tab
+            const activeClasses = 'bg-white text-gray-900 shadow';
+            const inactiveClasses = 'bg-gray-100 text-gray-500 hover:bg-white';
+
+            if (isSignIn) {
+                tabSignIn.className = tabSignIn.className.replace(inactiveClasses, activeClasses);
+                tabSignUp.className = tabSignUp.className.replace(activeClasses, inactiveClasses);
+            } else {
+                tabSignIn.className = tabSignIn.className.replace(activeClasses, inactiveClasses);
+                tabSignUp.className = tabSignUp.className.replace(inactiveClasses, activeClasses);
+            }
+            
+            // 3. Update Auth Buttons
+            document.getElementById('auth-email-text').textContent = isSignIn ? langData.auth_email_text : langData.auth_email_text.replace('Continue', 'Sign Up');
+            document.getElementById('auth-line-text').textContent = isSignIn ? langData.auth_line_text : langData.auth_line_text.replace('Continue', 'Sign Up');
         }
 
+        function simulateLogin(authMethod) {
+            closeModal();
+            const isSignUp = currentMode === 'signup';
+            let targetUrl = '';
+            
+            // Determine the target URL based on user type and action (Sign In vs Sign Up)
+            if (!isSignUp) {
+                // Sign In (All types go to their respective dashboards)
+                if (currentUserType === 'Health Professional') {
+                    targetUrl = 'PractitionerDashboard.html';
+                } else if (currentUserType === 'Client') {
+                    targetUrl = 'ClientDashboard.html';
+                } else if (currentUserType === 'AMC') {
+                    targetUrl = 'AMC.html';
+                }
+            } else {
+                // Sign Up (Client goes to onboarding, others go to dashboard for mock)
+                if (currentUserType === 'Client') {
+                    targetUrl = 'ClientOnboarding.html'; // Specific requirement
+                } else if (currentUserType === 'Health Professional') {
+                    targetUrl = 'PractitionerDashboard.html';
+                } else if (currentUserType === 'AMC') {
+                    targetUrl = 'AMC.html';
+                }
+            }
+
+            // Optional: Show message before redirect (for user clarity in this mock environment)
+            const actionText = isSignUp ? (currentLang === 'en' ? 'Sign Up' : '註冊') : (currentLang === 'en' ? 'Log In' : '登入');
+            const userTypeText = currentLang === 'en' ? currentUserType : (currentUserType === 'Health Professional' ? '衛生專業人員' : currentUserType === 'Client' ? '客戶/患者' : 'AMC 協調員');
+            const methodText = authMethod === 'email' ? (currentLang === 'en' ? 'Email/Password' : '電子郵件/密碼') : 'LINE';
+            const message = `${userTypeText} ${actionText} via ${methodText}. Redirecting to ${targetUrl}...`;
+            showMessage(message, currentUserType);
+
+            // ACTUAL REDIRECTION
+            setTimeout(() => {
+                 window.location.href = targetUrl;
+            }, 500); // Small delay to allow message to show briefly
+           
+        }
+
+        // Function to display the simulation message box
+        function showMessage(text, userType) {
+            const messageBox = document.getElementById('message-box');
+            const messageText = document.getElementById('message-text');
+            
+            messageText.textContent = text;
+            
+            let borderColorClass = 'border-teal-500'; // Default to HP color
+            if (userType === 'Client') borderColorClass = 'border-sky-500';
+            else if (userType === 'AMC') borderColorClass = 'border-indigo-500';
+            
+            messageBox.className = `fixed bottom-4 right-4 bg-white border-l-4 ${borderColorClass} text-gray-800 p-4 rounded-lg shadow-xl transition-opacity duration-300`;
+            messageBox.classList.remove('hidden');
+            messageBox.style.opacity = '1';
+
+            // Automatically hide the message box after 4 seconds
+            setTimeout(() => {
+                messageBox.style.opacity = '0';
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 300); 
+            }, 4000);
+        }
+
+        // Initialize the page with the default language
         document.addEventListener('DOMContentLoaded', updateText);
     </script>
 </body>
