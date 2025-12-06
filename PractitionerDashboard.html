@@ -11,66 +11,608 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
         }
+        .bg-teal-gradient {
+            background-image: linear-gradient(to right, #0d9488, #059669); /* Teal 700 to 600 */
+        }
+        .section-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .tab-button {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #4b5563;
+            border-radius: 0.5rem;
+            transition: all 0.15s ease;
+        }
+        .tab-button.active {
+            background-color: #e6fffa; /* Teal 100 */
+            color: #0d9488; /* Teal 700 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            border-right: 3px solid #0d9488;
+        }
+        .tab-button:not(.active):hover {
+            background-color: #f0fdfa;
+        }
+        .alert-red {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #b91c1c;
+        }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
     </style>
 </head>
 <body>
-    <div class="min-h-screen bg-gray-50">
-        <!-- Navigation Header -->
-        <header class="bg-teal-600 shadow">
+
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-teal-gradient shadow-md">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 class="text-3xl font-bold text-white">AMD Practitioner Portal</h1>
-                <a href="index.html" class="text-sm font-medium text-teal-200 hover:text-white">← Back to Portal</a>
+                 <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">AMD Practitioner Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Toggle Button -->
+                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-teal-700 border border-teal-500 hover:bg-teal-100 transition duration-150 font-semibold text-sm shadow">
+                        <!-- Text updated by JavaScript -->
+                    </button>
+                    <a href="index.html" class="text-sm font-medium text-teal-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
+                </div>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main class="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Patient Management Overview</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-teal-500">
-                    <p class="text-sm text-gray-500">Active Patients</p>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">45</p>
+        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            
+            <!-- Client Search and Selection -->
+            <div class="section-card mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-teal-600" data-key="search_title">Client Search</h2>
+                <div class="flex flex-col md:flex-row gap-4 items-center">
+                    <input type="text" id="client-search" data-key="search_placeholder" placeholder="Search by Name, DOB, or Phone Number..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500">
+                    <button onclick="searchClients()" class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
+                        Search Clients
+                    </button>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-amber-500">
-                    <p class="text-sm text-gray-500">New Onboardings (7 days)</p>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">8</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-sky-500">
-                    <p class="text-sm text-gray-500">Pending Review</p>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">3</p>
+                
+                <!-- Mock Results List -->
+                <div id="client-list" class="mt-4 space-y-2">
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-teal-50 cursor-pointer" onclick="selectClient(1, 'Jane Chen', 'M-5', '12 Months')">
+                        <div>
+                            <p class="font-semibold text-gray-800" data-client-id="4892">Jane Chen (Client ID: 4892)</p>
+                            <p class="text-sm text-gray-500" data-key="client1_info">DOB: 1995/03/15 | Phone: +886 912 345 678</p>
+                        </div>
+                        <span class="text-sm text-teal-600 font-medium" data-key="btn_view_file">View Patient File →</span>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-teal-50 cursor-pointer" onclick="selectClient(2, 'David Lee', 'M-2', '6 Months')">
+                        <div>
+                            <p class="font-semibold text-gray-800" data-client-id="9011">David Lee (Client ID: 9011)</p>
+                            <p class="text-sm text-gray-500" data-key="client2_info">DOB: 1988/11/22 | Phone: +886 933 444 555</p>
+                        </div>
+                        <span class="text-sm text-teal-600 font-medium" data-key="btn_view_file">View Patient File →</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Patient List Mock -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-xl font-medium text-gray-700">Upcoming Appointments</h3>
+            <!-- Client Details View (Hidden initially) -->
+            <div id="client-details-view" class="hidden">
+                <div class="flex justify-between items-center mb-6 border-b pb-4">
+                    <h2 id="client-name-display" class="text-3xl font-bold text-gray-900"></h2>
+                    <button onclick="requestConsultation()" class="py-2 px-4 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-150 flex items-center" data-key="btn_consult">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 3h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.3 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Request Specialist Consultation
+                    </button>
                 </div>
-                <ul role="list" class="divide-y divide-gray-200">
-                    <li class="p-6 hover:bg-gray-50 flex justify-between items-center">
-                        <div>
-                            <p class="text-lg font-semibold text-gray-900">John Doe</p>
-                            <p class="text-sm text-gray-500">Diagnosis: Airway Restriction | Phase 2 Review</p>
+
+                <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+                    
+                    <!-- LEFT COLUMN: Navigation Tabs (Mirroring Client Dashboard) -->
+                    <div class="lg:col-span-1 mb-8 lg:mb-0">
+                        <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_client_title">Client File Navigation</h3>
+                            <nav class="flex flex-col space-y-2">
+                                <button class="tab-button active" onclick="switchClientTab('client-plan')" data-key="client_tab_plan">My Plan & Support</button>
+                                <button class="tab-button" onclick="switchClientTab('client-diagnostics')" data-key="client_tab_diagnostics">Diagnostic Inputs</button>
+                                <button class="tab-button" onclick="switchClientTab('client-progress')" data-key="client_tab_progress">Progress Tracker</button>
+                                <button class="tab-button" onclick="switchClientTab('client-chat')" data-key="client_tab_chat">Secure Group Chat</button>
+                            </nav>
                         </div>
-                        <div class="text-right">
-                            <p class="text-md font-medium text-teal-600">Today, 2:00 PM</p>
-                            <button class="mt-1 text-sm text-indigo-500 hover:text-indigo-700">View Chart</button>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Client Tab Content (Replicating ClientDashboard Structure) -->
+                    <div class="lg:col-span-3 space-y-8">
+                        
+                        <!-- 1. My Plan & Support Tab -->
+                        <div id="tab-client-plan" class="client-tab-content space-y-8">
+                            <!-- Goals & Pains -->
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-sky-600" data-key="goals_pains_title">Client Goals & Pains</h2>
+                                <p class="text-sm text-gray-600 mb-4" id="client-goals-intro" data-key="goals_intro">Client is motivated to eliminate chronic fatigue and improve posture.</p>
+                                <div class="mb-5">
+                                    <h3 class="font-bold text-gray-700 mb-2" data-key="symptoms_title">Symptoms to Eliminate:</h3>
+                                    <ul class="list-disc list-inside text-sm text-sky-700 font-semibold space-y-1 pl-4">
+                                        <li data-key="goal_1">Chronic Daytime Fatigue</li>
+                                        <li data-key="goal_2">Frequent Neck/Shoulder Tension</li>
+                                        <li data-key="goal_3">Waking up with dry mouth</li>
+                                    </ul>
+                                </div>
+                                <div class="mb-5">
+                                    <h3 class="font-bold text-gray-700 mb-2" data-key="conditions_title">Existing Pains/Conditions:</h3>
+                                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 pl-4">
+                                        <li data-key="pain_1">Jaw clicking (Left TMJ)</li>
+                                        <li data-key="pain_2">Morning headaches</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Treatment Interventions -->
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="interventions_title">Treatment Interventions</h2>
+                                <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="appliance_name">Start Thriving Appliance (TM)</h3>
+                                    <div class="text-lg font-medium text-yellow-700 mb-1" data-key="appliance_setting">Current Setting: 2.0 Turns / 0.50mm Expansion</div>
+                                    <p class="text-sm text-gray-500" data-key="appliance_status">Active expansion phase (Month 6 of 24).</p>
+                                </div>
+                                <div class="p-4 border rounded-lg bg-teal-50/50">
+                                    <h3 class="font-bold text-gray-700 mb-2" data-key="nutrition_focus">Prescribed Nutrition Focus:</h3>
+                                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 pl-4 mb-3">
+                                        <li data-key="nut_1">Increase intake of bone broth for collagen support.</li>
+                                        <li data-key="nut_2">Ensure adequate calcium and magnesium levels.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- AMC Support -->
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-teal-600" data-key="amc_support_title">AMC & Support</h2>
+                                <h3 class="font-bold text-gray-700 mb-2" data-key="amc_coordinator_title">Assigned Coordinator: Jane Chen (AMC)</h3>
+                                <p class="text-sm text-gray-600 mb-3" data-key="amc_session">Current Coaching Session: Next Tuesday at 4 PM.</p>
+                            </div>
                         </div>
-                    </li>
-                    <li class="p-6 hover:bg-gray-50 flex justify-between items-center">
-                        <div>
-                            <p class="text-lg font-semibold text-gray-900">Jane Smith</p>
-                            <p class="text-sm text-gray-500">Diagnosis: TMJ Discomfort | Initial Consultation</p>
+
+                        <!-- 2. Diagnostic Inputs Tab -->
+                        <div id="tab-client-diagnostics" class="client-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="diagnostics_title">AMD Diagnostic Inputs</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
+                                        <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red" data-key="mcs_value_status">MCS: 285 mm² (Critical!)</div>
+                                        <p class="text-xs text-gray-500" data-key="cbct_note">Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.</p>
+                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
+                                        <p class="text-xs text-gray-500" data-key="schwarz_note">Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.</p>
+                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">Ceph Flow Metric Analysis</h3>
+                                        <p class="text-xs text-gray-500" data-key="sassouni_note">Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.</p>
+                                    </div>
+                                </div>
+                                <button onclick="requestConsultation()" class="mt-6 py-2 px-4 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-150" data-key="btn_consult_diagnostics">
+                                    Consultation on Diagnostics
+                                </button>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-md font-medium text-teal-600">Tomorrow, 10:30 AM</p>
-                            <button class="mt-1 text-sm text-indigo-500 hover:text-indigo-700">View Chart</button>
+                        
+                        <!-- 3. Progress Tracker Tab -->
+                        <div id="tab-client-progress" class="client-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_tracker_title">Progress Photo Timeline</h2>
+                                <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
+                                
+                                <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                    <label for="p-comparison-slider" id="p-comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
+                                    <input type="range" min="0" max="4" value="2" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="p-comparison-slider">
+                                    <div class="flex justify-between text-xs mt-1 text-gray-500">
+                                        <span data-key="c0">Initial</span><span data-key="c1">Month 3</span><span data-key="c2">Month 6</span><span data-key="c3">Month 12</span><span data-key="c4">Current</span>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
+                                        <img src="https://placehold.co/180x200/4c7c8c/ffffff?text=Jaw\n(Front)" alt="Jaw Front" class="w-full rounded-lg mb-2">
+                                        <span class="text-xs text-gray-700 font-medium" data-key="photo_jaw_front">Jaw (Front)</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
+                                        <img src="https://placehold.co/180x200/8c4c7c/ffffff?text=Posture\n(Side)" alt="Posture Side" class="w-full rounded-lg mb-2">
+                                        <span class="text-xs text-gray-700 font-medium" data-key="photo_posture_side">Posture (Side)</span>
+                                    </div>
+                                    <!-- Mock other photos -->
+                                    <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
+                                        <img src="https://placehold.co/180x200/7c8c4c/ffffff?text=Jaw\n(Side)" alt="Jaw Side" class="w-full rounded-lg mb-2">
+                                        <span class="text-xs text-gray-700 font-medium" data-key="photo_jaw_side">Jaw (Side)</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
+                                        <img src="https://placehold.co/180x200/4c8c7c/ffffff?text=Jaw\n(Bottom)" alt="Jaw Bottom" class="w-full rounded-lg mb-2">
+                                        <span class="text-xs text-gray-700 font-medium" data-key="photo_jaw_bottom">Jaw (Bottom)</span>
+                                    </div>
+                                </div>
+
+                                <button onclick="requestConsultation()" class="mt-6 w-full py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-150" data-key="btn_consult_progress">
+                                    Consultation on Progress Photos
+                                </button>
+                            </div>
                         </div>
-                    </li>
-                </ul>
+
+                        <!-- 4. Secure Group Chat Tab -->
+                        <div id="tab-client-chat" class="client-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-blue-600" data-key="chat_title">Secure Group Chat</h2>
+                                <p class="text-sm text-gray-500 mb-4" data-key="chat_subtitle">Review communications between the client, AMC, and yourself.</p>
+                                
+                                <div class="h-80 overflow-y-auto p-4 border rounded-lg bg-gray-50 flex flex-col space-y-3">
+                                    <!-- Mock messages identifying sender -->
+                                    <div class="p-3 rounded-xl max-w-[80%] bg-teal-100 shadow-sm self-start">
+                                        <p class="text-xs font-semibold text-teal-800" data-key="msg_practitioner">You (Practitioner)</p>
+                                        <p class="text-sm text-gray-800 mt-1" data-key="msg_p_text">Hello, I have reviewed your latest CBCT. Please ensure you are wearing the appliance for the full prescribed time daily.</p>
+                                        <p class="text-xs text-gray-500 text-right mt-1">11:30 AM</p>
+                                    </div>
+                                    <div class="p-3 rounded-xl max-w-[80%] bg-indigo-100 shadow-sm self-start">
+                                        <p class="text-xs font-semibold text-indigo-800" data-key="msg_amc">Jane Chen (AMC)</p>
+                                        <p class="text-sm text-gray-800 mt-1" data-key="msg_a_text">I've scheduled your next nutrition coaching session for next Tuesday at 4 PM.</p>
+                                        <p class="text-xs text-gray-500 text-right mt-1">1:45 PM</p>
+                                    </div>
+                                    <div class="p-3 rounded-xl max-w-[80%] bg-blue-100 shadow-sm self-end">
+                                        <p class="text-xs font-semibold text-blue-800" data-key="msg_client">Client</p>
+                                        <p class="text-sm text-gray-800 mt-1" data-key="msg_c_text">Understood, Dr. Smith. I've been consistent. Jane, thank you for setting that up!</p>
+                                        <p class="text-xs text-gray-500 text-right mt-1">2:01 PM</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 flex space-x-2">
+                                    <input type="text" id="chat-input-practitioner" placeholder="Reply to the client..." class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium" data-key="btn_send">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
+
+    <!-- PDPA Confirmation Modal -->
+    <div id="pdpa-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <!-- Modal Content -->
+        <div id="pdpa-modal-content" class="bg-white w-full max-w-lg p-8 rounded-xl shadow-2xl relative modal-fade-enter">
+            <h3 class="text-2xl font-bold text-red-600 mb-4 border-b pb-2" data-key="modal_title">Specialist Consultation Request</h3>
+            
+            <p class="text-lg text-gray-800 mb-6" data-key="modal_subtitle">You are about to share client data with an external consultant.</p>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded-lg">
+                <p class="font-semibold text-yellow-800 mb-2" data-key="compliance_check">Compliance Check Required (PDPA/DPA):</p>
+                <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
+                    <li data-key="pdpa_1"><strong class="text-red-600">(1) Written Consent:</strong> Confirm written consent is obtained from the patient.</li>
+                    <li data-key="pdpa_2"><strong class="text-red-600">(2) Data Processing Agreement (DPA):</strong> Confirm DPA is in place with the consultant.</li>
+                    <li data-key="pdpa_3"><strong class="text-red-600">(3) Pseudonymization:</strong> Ensure data shared is pseudonymized to prevent direct identification.</li>
+                </ul>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-6" data-key="modal_confirmation">By proceeding, you confirm all three compliance points have been met for sharing <span id="consult-client-name" class="font-bold text-gray-900"></span>'s data.</p>
+
+            <div class="flex justify-end space-x-4">
+                <button onclick="closeModal('pdpa-modal')" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400" data-key="btn_cancel">Cancel</button>
+                <button onclick="confirmConsultation()" class="py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold" data-key="btn_confirm_share">Confirm & Share Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Functionality -->
+    <script>
+        let currentClient = null;
+        let currentLang = 'en';
+
+        // --- Translation Data Structure (JSON) ---
+        const translations = {
+            'en': {
+                'header_title': 'AMD Practitioner Dashboard',
+                'logout_link': '← Log Out / Portal',
+                'search_title': 'Client Search',
+                'search_placeholder': 'Search by Name, DOB, or Phone Number...',
+                'btn_search': 'Search Clients',
+                'client1_info': 'DOB: 1995/03/15 | Phone: +886 912 345 678',
+                'client2_info': 'DOB: 1988/11/22 | Phone: +886 933 444 555',
+                'btn_view_file': 'View Patient File →',
+                'btn_consult': 'Request Specialist Consultation',
+                'nav_client_title': 'Client File Navigation',
+                'client_tab_plan': 'My Plan & Support',
+                'client_tab_diagnostics': 'Diagnostic Inputs',
+                'client_tab_progress': 'Progress Tracker',
+                'client_tab_chat': 'Secure Group Chat',
+                'goals_pains_title': 'Client Goals & Pains',
+                'goals_intro': 'Client is motivated to eliminate chronic fatigue and improve posture.',
+                'symptoms_title': 'Symptoms to Eliminate:',
+                'goal_1': 'Chronic Daytime Fatigue',
+                'goal_2': 'Frequent Neck/Shoulder Tension',
+                'goal_3': 'Waking up with dry mouth',
+                'conditions_title': 'Existing Pains/Conditions:',
+                'pain_1': 'Jaw clicking (Left TMJ)',
+                'pain_2': 'Morning headaches',
+                'interventions_title': 'Treatment Interventions',
+                'appliance_name': 'Start Thriving Appliance (TM)',
+                'appliance_setting': 'Current Setting: 2.0 Turns / 0.50mm Expansion',
+                'appliance_status': 'Active expansion phase (Month 6 of 24).',
+                'nutrition_focus': 'Prescribed Nutrition Focus:',
+                'nut_1': 'Increase intake of bone broth for collagen support.',
+                'nut_2': 'Ensure adequate calcium and magnesium levels.',
+                'amc_support_title': 'AMC & Support',
+                'amc_coordinator_title': 'Assigned Coordinator: Jane Chen (AMC)',
+                'amc_session': 'Current Coaching Session: Next Tuesday at 4 PM.',
+                'diagnostics_title': 'AMD Diagnostic Inputs',
+                'cbct_title': 'CB CT Scan (Airway)',
+                'mcs_value_status': 'MCS: 285 mm² (Critical!)',
+                'cbct_note': 'Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.',
+                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
+                'schwarz_note': 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
+                'ceph_title': 'Ceph Flow Metric Analysis',
+                'sassouni_note': 'Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.',
+                'btn_consult_diagnostics': 'Consultation on Diagnostics',
+                'progress_tracker_title': 'Progress Photo Timeline',
+                'comparison_view_title': 'Historical Comparison View',
+                'viewing_photos': 'Viewing photos from: Month 6 Check',
+                'c0': 'Initial', 'c1': 'Month 3', 'c2': 'Month 6', 'c3': 'Month 12', 'c4': 'Current',
+                'photo_jaw_front': 'Jaw (Front)',
+                'photo_posture_side': 'Posture (Side)',
+                'photo_jaw_side': 'Jaw (Side)',
+                'photo_jaw_bottom': 'Jaw (Bottom)',
+                'btn_consult_progress': 'Consultation on Progress Photos',
+                'chat_title': 'Secure Group Chat',
+                'chat_subtitle': 'Review communications between the client, AMC, and yourself.',
+                'msg_practitioner': 'You (Practitioner)',
+                'msg_p_text': 'Hello, I have reviewed your latest CBCT. Please ensure you are wearing the appliance for the full prescribed time daily.',
+                'msg_amc': 'Jane Chen (AMC)',
+                'msg_a_text': "I've scheduled your next nutrition coaching session for next Tuesday at 4 PM.",
+                'msg_client': 'Client',
+                'msg_c_text': "Understood, Dr. Smith. I've been consistent. Jane, thank you for setting that up!",
+                'btn_send': 'Send',
+                'modal_title': 'Specialist Consultation Request',
+                'modal_subtitle': 'You are about to share client data with an external consultant.',
+                'compliance_check': 'Compliance Check Required (PDPA/DPA):',
+                'pdpa_1': '(1) Written Consent: Confirm written consent is obtained from the patient.',
+                'pdpa_2': '(2) Data Processing Agreement (DPA): Confirm DPA is in place with the consultant.',
+                'pdpa_3': '(3) Pseudonymization: Ensure data shared is pseudonymized to prevent direct identification.',
+                'modal_confirmation': 'By proceeding, you confirm all three compliance points have been met for sharing [Client Name]\'s data.',
+                'btn_cancel': 'Cancel',
+                'btn_confirm_share': 'Confirm & Share Data',
+                'toggle_text': '中文'
+            },
+            'zh': {
+                'header_title': 'AMD 執業醫師儀表板',
+                'logout_link': '← 登出 / 入口網站',
+                'search_title': '客戶搜尋',
+                'search_placeholder': '按姓名、出生日期或電話號碼搜尋...',
+                'btn_search': '搜尋客戶',
+                'client1_info': '出生日期: 1995/03/15 | 電話: +886 912 345 678',
+                'client2_info': '出生日期: 1988/11/22 | 電話: +886 933 444 555',
+                'btn_view_file': '查看患者檔案 →',
+                'btn_consult': '請求專家會診',
+                'nav_client_title': '客戶檔案導航',
+                'client_tab_plan': '我的計劃與支持',
+                'client_tab_diagnostics': '診斷輸入',
+                'client_tab_progress': '進度追踪器',
+                'client_tab_chat': '安全群組聊天',
+                'goals_pains_title': '客戶目標與疼痛',
+                'goals_intro': '客戶積極消除慢性疲勞並改善姿勢。',
+                'symptoms_title': '欲消除症狀:',
+                'goal_1': '慢性白天疲勞',
+                'goal_2': '頻繁頸部/肩部緊張',
+                'goal_3': '醒來時口乾',
+                'conditions_title': '現有疼痛/狀況:',
+                'pain_1': '下巴顳顎關節(左側)咯咯作響',
+                'pain_2': '早上頭痛',
+                'interventions_title': '治療干預措施',
+                'appliance_name': '開始興盛矯治器 (TM)',
+                'appliance_setting': '當前設置: 2.0 圈 / 0.50mm 擴展',
+                'appliance_status': '活躍擴展階段 (24 個月中的第 6 個月)。',
+                'nutrition_focus': '處方營養重點:',
+                'nut_1': '增加骨湯攝取以支持膠原蛋白。',
+                'nut_2': '確保充足的鈣和鎂水平。',
+                'amc_support_title': 'AMC 與支持',
+                'amc_coordinator_title': '指定協調員: Jane Chen (AMC)',
+                'amc_session': '當前指導課程: 下週二下午 4 點。',
+                'diagnostics_title': 'AMD 診斷輸入',
+                'cbct_title': '錐束CT掃描 (氣道)',
+                'mcs_value_status': 'MCS: 285 毫米² (危急!)',
+                'cbct_note': '醫生備註: 鼻咽部有明顯受限。需立即干預。',
+                'intraoral_title': '3D 口內掃描 (牙齒)',
+                'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的上頜後部反頜。',
+                'ceph_title': '頭影流動測量分析',
+                'sassouni_note': 'Sassouni Plus 報告: 指導矯治器生長角度。當前 FMA: 23°。',
+                'btn_consult_diagnostics': '診斷會診',
+                'progress_tracker_title': '進度照片追踪器',
+                'comparison_view_title': '歷史比較視圖',
+                'viewing_photos': '查看照片來自: 第 6 個月檢查',
+                'c0': '初始', 'c1': '第 3 個月', 'c2': '第 6 個月', 'c3': '第 12 個月', 'c4': '當前',
+                'photo_jaw_front': '下巴 (正面)',
+                'photo_posture_side': '姿勢 (側面)',
+                'photo_jaw_side': '下巴 (側面)',
+                'photo_jaw_bottom': '下巴 (底部)',
+                'btn_consult_progress': '進度照片會診',
+                'chat_title': '安全群組聊天',
+                'chat_subtitle': '審閱客戶、AMC 和您之間的溝通記錄。',
+                'msg_practitioner': '您 (執業醫師)',
+                'msg_p_text': '您好，我已經審閱了您最新的 CBCT。請確保每天在規定的時間內全程佩戴矯治器。',
+                'msg_amc': 'Jane Chen (AMC)',
+                'msg_a_text': '我已經為您預約了下週二下午 4 點的營養指導課程。',
+                'msg_client': '客戶',
+                'msg_c_text': '明白了，Smith 醫生。我一直很堅持。Jane，謝謝您的安排！',
+                'btn_send': '發送',
+                'modal_title': '專家會診請求',
+                'modal_subtitle': '您即將與外部顧問分享客戶數據。',
+                'compliance_check': '合規性檢查要求 (PDPA/DPA):',
+                'pdpa_1': '(1) 書面同意: 確認已獲得患者的書面同意。',
+                'pdpa_2': '(2) 數據處理協議 (DPA): 確認已與顧問簽訂 DPA。',
+                'pdpa_3': '(3) 假名化: 確保共享數據已進行假名化處理，以防止直接識別患者。',
+                'modal_confirmation': '繼續即表示您確認已滿足所有三個合規點，可分享 [Client Name] 的數據。',
+                'btn_cancel': '取消',
+                'btn_confirm_share': '確認並分享數據',
+                'toggle_text': 'English'
+            }
+        };
+
+        // --- Core Translation Function ---
+        function updateText() {
+            const langData = translations[currentLang];
+            
+            // 1. Update elements with data-key attribute
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    // Check if the element contains a nested span (like Client ID) and only update text content if it doesn't break structure
+                    if (element.children.length === 0) {
+                        element.textContent = langData[key];
+                    }
+                }
+            });
+
+            // 2. Update specific placeholders and elements
+            document.getElementById('header-title').textContent = langData.header_title;
+            document.getElementById('client-search').placeholder = langData.search_placeholder;
+            
+            // 3. Update toggle button text
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+
+            // 4. Update Modal Placeholder Confirmation Text (since the client name is a nested span)
+            const confirmationElement = document.getElementById('consult-client-name').parentNode;
+            const clientNameSpan = document.getElementById('consult-client-name');
+            confirmationElement.textContent = langData.modal_confirmation.replace('[Client Name]', clientNameSpan.textContent);
+            confirmationElement.appendChild(clientNameSpan);
+            
+            // 5. Update HTML lang attribute and title
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+            
+            // 6. Update chat input placeholder
+            const chatInput = document.getElementById('chat-input-practitioner');
+            if (chatInput) {
+                chatInput.placeholder = currentLang === 'en' ? 'Reply to the client...' : '回復給客戶...';
+            }
+        }
+
+        // --- Language Toggle ---
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        // --- Client Selection and Switching ---
+        function selectClient(id, name, monthMarker, prescription) {
+            currentClient = { id, name, monthMarker, prescription };
+            
+            // Find the client name element and wrap it for dynamic update
+            let nameDisplay = document.getElementById('client-name-display');
+            nameDisplay.innerHTML = `<span data-key="client_file_name">Client File: </span>${name} (ID: ${id})`;
+
+            document.getElementById('client-details-view').classList.remove('hidden');
+            
+            // Set initial tab view
+            switchClientTab('client-plan'); 
+            
+            // Update all texts immediately after selecting client
+            updateText(); 
+            
+            console.log(`Switched to client: ${name}`);
+        }
+
+        function searchClients() {
+            const searchTerm = document.getElementById('client-search').value.toLowerCase();
+            const list = document.getElementById('client-list');
+            
+            // Mock search simulation
+            if (searchTerm.includes('jane') || searchTerm.includes('4892')) {
+                list.children[0].style.display = 'flex';
+                list.children[1].style.display = 'none';
+            } else if (searchTerm.includes('david') || searchTerm.includes('9011')) {
+                list.children[0].style.display = 'none';
+                list.children[1].style.display = 'flex';
+            } else if (searchTerm === '') {
+                list.children[0].style.display = 'flex';
+                list.children[1].style.display = 'flex';
+            } else {
+                list.children[0].style.display = 'none';
+                list.children[1].style.display = 'none';
+            }
+        }
+
+        function switchClientTab(tabId) {
+            // 1. Hide all content tabs
+            document.querySelectorAll('.client-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // 2. Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 3. Show the requested content tab
+            const activeContent = document.getElementById('tab-' + tabId);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+            }
+
+            // 4. Activate the clicked button
+            const activeButton = document.querySelector(`[onclick="switchClientTab('${tabId}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        // --- PDPA Modal and Consultation Logic ---
+        function requestConsultation() {
+            if (!currentClient) {
+                alert('Please select a client first.');
+                return;
+            }
+            
+            document.getElementById('consult-client-name').textContent = currentClient.name;
+            updateText(); // Ensure modal text is correctly translated after setting name
+            
+            const modal = document.getElementById('pdpa-modal');
+            const modalContent = document.getElementById('pdpa-modal-content');
+            
+            modal.classList.remove('hidden');
+            // Apply entrance transition classes
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10); 
+        }
+
+        function confirmConsultation() {
+            closeModal('pdpa-modal');
+            const message = currentLang === 'en' ? 
+                `Client ${currentClient.name}'s data has been pseudonymized and shared with the professional consultant. Compliance confirmed.` :
+                `客戶 ${currentClient.name} 的數據已進行假名化並分享給專業顧問。合規性已確認。`;
+            alert(message);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+            
+            // Apply exit transition classes
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Initialize translation on load
+        document.addEventListener('DOMContentLoaded', updateText);
+
+    </script>
 </body>
 </html>
