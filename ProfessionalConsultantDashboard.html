@@ -170,11 +170,11 @@
                                     </div>
                                     <div class="border p-4 rounded-lg bg-gray-50">
                                         <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
-                                        <p class="text-xs text-gray-500" data-key="schwarz_note">Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.</p>
+                                        <p id="schwarz-note-display" class="text-xs text-gray-500" data-key="schwarz_note">Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.</p>
                                     </div>
                                     <div class="border p-4 rounded-lg bg-gray-50">
                                         <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">Ceph Flow Metric Analysis</h3>
-                                        <p class="text-xs text-gray-500" data-key="sassouni_note">Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.</p>
+                                        <p id="sassouni-note-display" class="text-xs text-gray-500" data-key="sassouni_note">Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.</p>
                                     </div>
                                 </div>
                             </div>
@@ -222,11 +222,11 @@
                                     <!-- History data point updated by JS -->
                                     <div id="history-entry-1" class="data-point">
                                         <p class="font-bold text-gray-800" data-key="history_entry_1_title">Request sent by Dr. Smith</p>
-                                        <p class="text-sm text-gray-600" data-key="history_entry_1_details">Requested opinion on MCS findings and initial expansion rate. (2025/11/22)</p>
+                                        <p id="history-details-1" class="text-sm text-gray-600" data-key="history_entry_1_details">Requested opinion on MCS findings and initial expansion rate. (2025/11/22)</p>
                                     </div>
                                     <div id="history-entry-2" class="data-point bg-green-50 border-green-500">
                                         <p class="font-bold text-green-800" data-key="history_entry_2_title">Your Opinion (Mock)</p>
-                                        <p class="text-sm text-gray-600" data-key="history_entry_2_details">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)</p>
+                                        <p id="history-details-2" class="text-sm text-gray-600" data-key="history_entry_2_details">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)</p>
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
     <div id="opinion-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
         <!-- Modal Content -->
         <div id="opinion-modal-content" class="bg-white w-full max-w-xl p-8 rounded-xl shadow-2xl relative modal-fade-enter">
-            <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="opinion_modal_title">Submit Professional Opinion for Client ID <span id="opinion-client-id"></span></h3>
+            <h3 id="opinion_modal_title" class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="opinion_modal_title">Submit Professional Opinion for Client ID <span id="opinion-client-id"></span></h3>
             
             <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your detailed recommendation regarding the current diagnostics and treatment progress.</p>
 
@@ -484,14 +484,16 @@
                  mcsElement.style.borderLeft = '4px solid #10b981';
             }
             
-            document.querySelector('[data-key="schwarz_note"]').textContent = data.schwarz_note;
+            document.getElementById('schwarz-note-display').textContent = data.schwarz_note;
+            document.getElementById('sassouni-note-display').textContent = data.sassouni_note;
+
 
             // 2. Appliance Setting Update
             document.getElementById('appliance-setting-display').textContent = data.appliance_setting;
             document.getElementById('appliance-status-display').textContent = data.appliance_status;
             
             // 3. History Tab Update
-            document.querySelector('[data-key="history_entry_1_details"]').textContent = data.history_details;
+            document.getElementById('history-details-1').textContent = data.history_details;
             
             // 4. Progress Tracker Default Slider Value
             const progressSlider = document.getElementById('c-comparison-slider');
