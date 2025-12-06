@@ -133,24 +133,43 @@
                         
                         <!-- 1. My Plan & Support Tab -->
                         <div id="tab-client-plan" class="client-tab-content space-y-8">
-                            <!-- Goals & Pains -->
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-sky-600" data-key="goals_pains_title">Client Goals & Pains</h2>
-                                <p class="text-sm text-gray-600 mb-4" id="client-goals-intro" data-key="goals_intro">Client is motivated to eliminate chronic fatigue and improve posture.</p>
-                                <div class="mb-5">
-                                    <h3 class="font-bold text-gray-700 mb-2" data-key="symptoms_title">Symptoms to Eliminate:</h3>
-                                    <ul class="list-disc list-inside text-sm text-sky-700 font-semibold space-y-1 pl-4">
-                                        <li data-key="goal_1">Chronic Daytime Fatigue</li>
-                                        <li data-key="goal_2">Frequent Neck/Shoulder Tension</li>
-                                        <li data-key="goal_3">Waking up with dry mouth</li>
-                                    </ul>
+                            
+                            <!-- Goals & Pains & Consultation Feedback -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Left: Goals & Pains -->
+                                <div class="section-card">
+                                    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-sky-600" data-key="goals_pains_title">Client Goals & Pains</h2>
+                                    <p class="text-sm text-gray-600 mb-4" id="client-goals-intro" data-key="goals_intro">Client is motivated to eliminate chronic fatigue and improve posture.</p>
+                                    <div class="mb-5">
+                                        <h3 class="font-bold text-gray-700 mb-2" data-key="symptoms_title">Symptoms to Eliminate:</h3>
+                                        <ul class="list-disc list-inside text-sm text-sky-700 font-semibold space-y-1 pl-4">
+                                            <li data-key="goal_1">Chronic Daytime Fatigue</li>
+                                            <li data-key="goal_2">Frequent Neck/Shoulder Tension</li>
+                                            <li data-key="goal_3">Waking up with dry mouth</li>
+                                        </ul>
+                                    </div>
+                                    <div class="mb-5">
+                                        <h3 class="font-bold text-gray-700 mb-2" data-key="conditions_title">Existing Pains/Conditions:</h3>
+                                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 pl-4">
+                                            <li data-key="pain_1">Jaw clicking (Left TMJ)</li>
+                                            <li data-key="pain_2">Morning headaches</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div class="mb-5">
-                                    <h3 class="font-bold text-gray-700 mb-2" data-key="conditions_title">Existing Pains/Conditions:</h3>
-                                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 pl-4">
-                                        <li data-key="pain_1">Jaw clicking (Left TMJ)</li>
-                                        <li data-key="pain_2">Morning headaches</li>
-                                    </ul>
+                                
+                                <!-- Right: Expert Consultation Feedback -->
+                                <div class="section-card border-l-4 border-yellow-500">
+                                    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="expert_feedback_title">Expert Consultation Feedback</h2>
+                                    <div id="expert-feedback-content">
+                                        <!-- Content updated dynamically on client selection -->
+                                        <p class="text-sm text-gray-500 mb-2" data-key="expert_feedback_date">Last Updated: 2025/11/25</p>
+                                        <div class="p-3 bg-yellow-50 rounded-lg">
+                                            <p class="font-semibold text-yellow-800" data-key="expert_feedback_summary">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9.</p>
+                                        </div>
+                                    </div>
+                                    <button onclick="requestConsultation()" class="mt-4 py-2 px-4 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-150 w-full" data-key="btn_consult_followup">
+                                        Request Follow-up Consultation
+                                    </button>
                                 </div>
                             </div>
 
@@ -283,7 +302,7 @@
 
     <!-- PDPA Confirmation Modal -->
     <div id="pdpa-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <!-- Modal Content -->
+        <!-- Modal Content (PDPA Modal is unchanged from previous version) -->
         <div id="pdpa-modal-content" class="bg-white w-full max-w-lg p-8 rounded-xl shadow-2xl relative modal-fade-enter">
             <h3 class="text-2xl font-bold text-red-600 mb-4 border-b pb-2" data-key="modal_title">Specialist Consultation Request</h3>
             
@@ -384,7 +403,11 @@
                 'modal_confirmation': 'By proceeding, you confirm all three compliance points have been met for sharing [Client Name]\'s data.',
                 'btn_cancel': 'Cancel',
                 'btn_confirm_share': 'Confirm & Share Data',
-                'toggle_text': '中文'
+                'toggle_text': '中文',
+                'expert_feedback_title': 'Expert Consultation Feedback',
+                'expert_feedback_date': 'Last Updated: 2025/11/25',
+                'expert_feedback_summary': 'Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9.',
+                'btn_consult_followup': 'Request Follow-up Consultation'
             },
             'zh': {
                 'header_title': 'AMD 執業醫師儀表板',
@@ -425,7 +448,7 @@
                 'mcs_value_status': 'MCS: 285 毫米² (危急!)',
                 'cbct_note': '醫生備註: 鼻咽部有明顯受限。需立即干預。',
                 'intraoral_title': '3D 口內掃描 (牙齒)',
-                'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的上頜後部反頜。',
+                'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的反頜。',
                 'ceph_title': '頭影流動測量分析',
                 'sassouni_note': 'Sassouni Plus 報告: 指導矯治器生長角度。當前 FMA: 23°。',
                 'btn_consult_diagnostics': '診斷會診',
@@ -456,13 +479,33 @@
                 'modal_confirmation': '繼續即表示您確認已滿足所有三個合規點，可分享 [Client Name] 的數據。',
                 'btn_cancel': '取消',
                 'btn_confirm_share': '確認並分享數據',
-                'toggle_text': 'English'
+                'toggle_text': 'English',
+                'expert_feedback_title': '專家會診反饋',
+                'expert_feedback_date': '上次更新: 2025/11/25',
+                'expert_feedback_summary': '建議: 維持當前擴展率 3 個月，在第 9 個月重新評估 CBCT。',
+                'btn_consult_followup': '請求後續會診'
+            }
+        };
+
+        // --- Mock Expert Feedback Data (Practitioner Dashboard) ---
+        const mockExpertFeedback = {
+            '4892': {
+                date_key: 'expert_feedback_date',
+                summary_key: 'expert_feedback_summary'
+            },
+            '9011': {
+                date_key: 'expert_feedback_date', // Mock data sharing same keys
+                summary_key: 'expert_feedback_summary'
             }
         };
 
         // --- Core Translation Function ---
         function updateText() {
             const langData = translations[currentLang];
+            
+            // Get the ID span before the loop potentially wipes it
+            const consultClientName = document.getElementById('consult-client-name');
+            const chatInput = document.getElementById('chat-input-practitioner');
             
             // 1. Update elements with data-key attribute
             document.querySelectorAll('[data-key]').forEach(element => {
@@ -475,29 +518,43 @@
                 }
             });
 
-            // 2. Update specific placeholders and elements
+            // 2. Manual update for PDPA Modal Confirmation Text (to preserve nested span)
+            if (consultClientName) {
+                const confirmationElement = consultClientName.parentNode;
+                confirmationElement.textContent = langData.modal_confirmation.replace('[Client Name]', consultClientName.textContent);
+                confirmationElement.appendChild(consultClientName);
+            }
+            
+            // 3. Update specific dynamic elements
             document.getElementById('header-title').textContent = langData.header_title;
-            document.getElementById('client-search').placeholder = langData.search_placeholder;
-            
-            // 3. Update toggle button text
             document.getElementById('lang-toggle').textContent = langData.toggle_text;
-
-            // 4. Update Modal Placeholder Confirmation Text (since the client name is a nested span)
-            const confirmationElement = document.getElementById('consult-client-name').parentNode;
-            const clientNameSpan = document.getElementById('consult-client-name');
-            confirmationElement.textContent = langData.modal_confirmation.replace('[Client Name]', clientNameSpan.textContent);
-            confirmationElement.appendChild(clientNameSpan);
             
-            // 5. Update HTML lang attribute and title
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = langData.header_title;
-            
-            // 6. Update chat input placeholder
-            const chatInput = document.getElementById('chat-input-practitioner');
             if (chatInput) {
                 chatInput.placeholder = currentLang === 'en' ? 'Reply to the client...' : '回復給客戶...';
             }
+
+            // 4. Update HTML lang attribute and title
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+
+            // 5. Update content if a client is selected
+            const currentClientId = currentClient?.id;
+            if (currentClientId) {
+                updateExpertFeedbackContent(currentClientId);
+            }
         }
+        
+        // --- Expert Feedback Content Update (Practitioner Dashboard specific) ---
+        function updateExpertFeedbackContent(clientId) {
+            const feedbackData = mockExpertFeedback[clientId];
+            const langData = translations[currentLang];
+
+            if (feedbackData) {
+                document.querySelector('#expert-feedback-content [data-key="expert_feedback_date"]').textContent = langData[feedbackData.date_key];
+                document.querySelector('#expert-feedback-content [data-key="expert_feedback_summary"]').textContent = langData[feedbackData.summary_key];
+            }
+        }
+
 
         // --- Language Toggle ---
         function toggleLanguage() {
@@ -505,88 +562,86 @@
             updateText();
         }
 
-        // --- Client Selection and Switching ---
+        // --- Modal Control Functions (PDPA and generic) ---
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10); 
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+            
+            if (!modal || !modalContent) return;
+
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // --- Practitioner Dashboard Logic ---
+        
         function selectClient(id, name, monthMarker, prescription) {
             currentClient = { id, name, monthMarker, prescription };
             
-            // Find the client name element and wrap it for dynamic update
+            // Set name display
             let nameDisplay = document.getElementById('client-name-display');
             nameDisplay.innerHTML = `<span data-key="client_file_name">Client File: </span>${name} (ID: ${id})`;
+            
+            // Set PDPA Modal client name
+            document.getElementById('consult-client-name').textContent = name;
 
             document.getElementById('client-details-view').classList.remove('hidden');
             
             // Set initial tab view
             switchClientTab('client-plan'); 
             
-            // Update all texts immediately after selecting client
-            updateText(); 
+            // Update all texts and content based on selection
+            updateText();
+            updateExpertFeedbackContent(id); // Load specific mock feedback
             
-            console.log(`Switched to client: ${name}`);
+            // console.log(`Switched to client: ${name}`);
         }
 
         function searchClients() {
             const searchTerm = document.getElementById('client-search').value.toLowerCase();
             const list = document.getElementById('client-list');
             
-            // Mock search simulation
-            if (searchTerm.includes('jane') || searchTerm.includes('4892')) {
-                list.children[0].style.display = 'flex';
-                list.children[1].style.display = 'none';
-            } else if (searchTerm.includes('david') || searchTerm.includes('9011')) {
-                list.children[0].style.display = 'none';
-                list.children[1].style.display = 'flex';
-            } else if (searchTerm === '') {
-                list.children[0].style.display = 'flex';
-                list.children[1].style.display = 'flex';
-            } else {
-                list.children[0].style.display = 'none';
-                list.children[1].style.display = 'none';
-            }
+            // Mock search simulation (reusing existing mock result structure)
+            const results = Array.from(list.children);
+            results.forEach((item, index) => {
+                const text = item.textContent.toLowerCase();
+                const matches = text.includes(searchTerm) || searchTerm === '';
+                item.style.display = matches ? 'flex' : 'none';
+            });
         }
 
         function switchClientTab(tabId) {
-            // 1. Hide all content tabs
-            document.querySelectorAll('.client-tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
+            document.querySelectorAll('.client-tab-content').forEach(content => content.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
 
-            // 2. Deactivate all buttons
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-            });
-
-            // 3. Show the requested content tab
             const activeContent = document.getElementById('tab-' + tabId);
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
-            }
+            if (activeContent) activeContent.classList.remove('hidden');
 
-            // 4. Activate the clicked button
             const activeButton = document.querySelector(`[onclick="switchClientTab('${tabId}')"]`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
+            if (activeButton) activeButton.classList.add('active');
         }
 
-        // --- PDPA Modal and Consultation Logic ---
         function requestConsultation() {
             if (!currentClient) {
-                alert('Please select a client first.');
+                alert(translations[currentLang].search_title + ' ' + (currentLang === 'en' ? 'first.' : '先。'));
                 return;
             }
-            
-            document.getElementById('consult-client-name').textContent = currentClient.name;
-            updateText(); // Ensure modal text is correctly translated after setting name
-            
-            const modal = document.getElementById('pdpa-modal');
-            const modalContent = document.getElementById('pdpa-modal-content');
-            
-            modal.classList.remove('hidden');
-            // Apply entrance transition classes
-            setTimeout(() => {
-                modalContent.classList.remove('modal-fade-enter');
-                modalContent.classList.add('modal-fade-enter-active');
-            }, 10); 
+            openModal('pdpa-modal');
         }
 
         function confirmConsultation() {
@@ -597,18 +652,6 @@
             alert(message);
         }
 
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const modalContent = document.getElementById(modalId + '-content');
-            
-            // Apply exit transition classes
-            modalContent.classList.remove('modal-fade-enter-active');
-            modalContent.classList.add('modal-fade-enter');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
-        }
 
         // Initialize translation on load
         document.addEventListener('DOMContentLoaded', updateText);
