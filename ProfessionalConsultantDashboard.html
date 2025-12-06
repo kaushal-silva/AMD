@@ -105,14 +105,14 @@
 
                 <!-- Mock Results List (Only shared data is visible) -->
                 <div id="case-list" class="mt-4 space-y-2">
-                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase(1)">
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase('4892')">
                         <div>
                             <p class="font-semibold text-gray-800" data-key="case_1_id">Client ID: 4892 (Pseudonymized)</p>
                             <p class="text-sm text-gray-500" data-key="case_1_info">Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20</p>
                         </div>
                         <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
                     </div>
-                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase(2)">
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase('9011')">
                         <div>
                             <p class="font-semibold text-gray-800" data-key="case_2_id">Client ID: 9011 (Pseudonymized)</p>
                             <p class="text-sm text-gray-500" data-key="case_2_info">Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15</p>
@@ -125,7 +125,7 @@
             <!-- Case Details View (Hidden initially) -->
             <div id="case-details-view" class="hidden">
                 <div class="flex justify-between items-center mb-6 border-b pb-4 section-card">
-                    <h2 class="text-3xl font-bold text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display"></span></h2>
+                    <h2 id="case-details-title" class="text-3xl font-bold text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display"></span></h2>
                     <button class="py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion_header">
                         Submit Professional Opinion
                     </button>
@@ -155,7 +155,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div class="border p-4 rounded-lg bg-gray-50">
                                         <h3 class="font-bold text-indigo-700 mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
-                                        <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red" data-key="mcs_value_status_4892">MCS: 285 mm² (Critical!)</div>
+                                        <div id="mcs-status-display" class="font-semibold text-lg p-2 rounded-md mb-2" data-key="mcs_value_status">MCS: 285 mm² (Critical!)</div>
                                         <p class="text-xs text-gray-500" data-key="cbct_note">Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.</p>
                                     </div>
                                     <div class="border p-4 rounded-lg bg-gray-50">
@@ -174,8 +174,8 @@
                                 <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="appliance_setting_title">Appliance Setting Details</h2>
                                 <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
                                     <h3 class="text-xl font-bold text-gray-800" data-key="appliance_name">Start Thriving Appliance (TM)</h3>
-                                    <div class="text-lg font-medium text-yellow-700 mb-1" data-key="appliance_setting">Current Setting: 2.0 Turns / 0.50mm Expansion</div>
-                                    <p class="text-sm text-gray-500" data-key="appliance_status">Active expansion phase (Month 6 of 24).</p>
+                                    <div id="appliance-setting-display" class="text-lg font-medium text-yellow-700 mb-1" data-key="appliance_setting">Current Setting: 2.0 Turns / 0.50mm Expansion</div>
+                                    <p id="appliance-status-display" class="text-sm text-gray-500" data-key="appliance_status">Active expansion phase (Month 6 of 24).</p>
                                 </div>
                             </div>
                         </div>
@@ -209,11 +209,12 @@
                                 <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History & Practitioner Notes</h2>
                                 <p class="text-sm text-gray-500 mb-4" data-key="history_intro">Record of communication and previous external opinions regarding this case.</p>
                                 <div class="space-y-3">
-                                    <div class="data-point">
+                                    <!-- History data point updated by JS -->
+                                    <div id="history-entry-1" class="data-point">
                                         <p class="font-bold text-gray-800" data-key="history_entry_1_title">Request sent by Dr. Smith</p>
                                         <p class="text-sm text-gray-600" data-key="history_entry_1_details">Requested opinion on MCS findings and initial expansion rate. (2025/11/22)</p>
                                     </div>
-                                    <div class="data-point bg-green-50 border-green-500">
+                                    <div id="history-entry-2" class="data-point bg-green-50 border-green-500">
                                         <p class="font-bold text-green-800" data-key="history_entry_2_title">Your Opinion (Mock)</p>
                                         <p class="text-sm text-gray-600" data-key="history_entry_2_details">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)</p>
                                     </div>
@@ -341,10 +342,36 @@
             }
         };
 
+        // --- Mock Client Data for dynamic switching ---
+        const mockCaseData = {
+            '4892': {
+                mcs_status_key: 'mcs_value_status_4892', // Critical
+                appliance_setting: '2.0 Turns / 0.50mm Expansion',
+                appliance_status: 'Active expansion phase (Month 6 of 24).',
+                schwarz_note: 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
+                history_details: 'Requested opinion on MCS findings and initial expansion rate. (2025/11/22)',
+                // Progress Slider default to M6
+                slider_value: 2,
+            },
+            '9011': {
+                mcs_status_key: 'mcs_value_status_9011', // Stable
+                appliance_setting: '1.0 Turns / 0.25mm Expansion',
+                appliance_status: 'Early maintenance phase (Month 12 of 18).',
+                schwarz_note: 'Schwarz Analysis: Mild crowding, no crossbite. Monitoring intercanine width.',
+                history_details: 'Requested opinion on growth trajectory and mid-treatment photos. (2025/11/15)',
+                // Progress Slider default to M12
+                slider_value: 3,
+            }
+        };
+
+
         // --- Core Translation Function ---
         function updateText() {
             const langData = translations[currentLang];
             
+            // Get the ID span before the loop potentially wipes it
+            const clientIdDisplay = document.getElementById('client-id-display'); 
+
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.getAttribute('data-key');
                 if (langData[key]) {
@@ -352,10 +379,19 @@
                 }
             });
 
+            // Manual update of the Case Details Title to preserve the nested span
+            const caseTitleContainer = document.getElementById('case-details-title');
+            if (caseTitleContainer && clientIdDisplay) {
+                // Set the H2 content to the translated text *plus* the static ':',
+                // then re-append the dynamic ID span.
+                caseTitleContainer.textContent = langData.case_details_title + ': ';
+                caseTitleContainer.appendChild(clientIdDisplay); 
+            }
+            
             // Handle complex title update
-            const clientIdDisplay = document.getElementById('client-id-display');
-            if (clientIdDisplay) {
-                document.getElementById('case-details-title').textContent = langData.case_details_title + ': ' + clientIdDisplay.textContent;
+            const currentId = clientIdDisplay ? clientIdDisplay.textContent : null;
+            if (currentId) {
+                updateCaseContent(currentId);
             }
             
             // Update specific placeholders and elements
@@ -366,7 +402,7 @@
             // Update HTML lang attribute and title
             document.documentElement.setAttribute('lang', currentLang);
             document.title = langData.header_title;
-
+            
             // Re-run comparison view update to refresh image labels
             updateConsultantComparisonView(document.getElementById('c-comparison-slider')?.value || 0);
         }
@@ -375,6 +411,43 @@
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             updateText();
+        }
+
+        // --- Dynamic Content Update ---
+
+        function updateCaseContent(clientId) {
+            const data = mockCaseData[clientId];
+            const langData = translations[currentLang];
+            
+            if (!data) return;
+
+            // 1. Diagnostics Tab Update
+            const mcsElement = document.getElementById('mcs-status-display');
+            mcsElement.textContent = langData[data.mcs_status_key];
+            
+            // Apply styling based on criticality
+            mcsElement.classList.remove('alert-red', 'bg-green-50');
+            mcsElement.style.borderLeft = '';
+            if (clientId === '4892') {
+                mcsElement.classList.add('alert-red');
+            } else {
+                 mcsElement.classList.add('bg-green-50');
+                 mcsElement.style.borderLeft = '4px solid #10b981';
+            }
+            
+            document.querySelector('[data-key="schwarz_note"]').textContent = data.schwarz_note;
+
+            // 2. Appliance Setting Update
+            document.getElementById('appliance-setting-display').textContent = data.appliance_setting;
+            document.getElementById('appliance-status-display').textContent = data.appliance_status;
+            
+            // 3. History Tab Update
+            document.querySelector('[data-key="history_entry_1_details"]').textContent = data.history_details;
+            
+            // 4. Progress Tracker Default Slider Value
+            const progressSlider = document.getElementById('c-comparison-slider');
+            progressSlider.value = data.slider_value;
+            updateConsultantComparisonView(data.slider_value);
         }
 
         // --- Dashboard Functionality ---
@@ -421,22 +494,11 @@
             const detailsView = document.getElementById('case-details-view');
             const clientIdDisplay = document.getElementById('client-id-display');
             
-            // Mock data loading based on caseId
-            const id = caseId === 1 ? '4892' : '9011';
-            clientIdDisplay.textContent = id;
+            // Set client ID
+            clientIdDisplay.textContent = caseId;
             
-            // Mock the MCS status dynamically
-            const mcsElement = document.querySelector('[data-key^="mcs_value_status"]');
-            if (id === '4892') {
-                mcsElement.textContent = translations[currentLang]['mcs_value_status_4892'];
-                mcsElement.classList.add('alert-red');
-            } else {
-                 mcsElement.textContent = translations[currentLang]['mcs_value_status_9011'];
-                 mcsElement.classList.remove('alert-red');
-                 mcsElement.classList.add('bg-green-50');
-                 mcsElement.style.borderLeft = '4px solid #10b981';
-            }
-
+            // Update all content fields based on the selected case
+            updateCaseContent(caseId);
 
             detailsView.classList.remove('hidden');
             
