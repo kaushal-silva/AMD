@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMD Professional Consultant Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .bg-gray-gradient {
+            background-image: linear-gradient(to right, #6b7280, #4b5563); /* Gray 500 to 700 */
+        }
+        .section-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .data-point {
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-gray-gradient shadow-md">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">Professional Consultant Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Toggle Button -->
+                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-gray-700 border border-gray-500 hover:bg-gray-100 transition duration-150 font-semibold text-sm shadow">
+                        <!-- Text updated by JavaScript -->
+                    </button>
+                    <a href="index.html" class="text-sm font-medium text-gray-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            
+            <!-- PDPA Compliance & Pseudonymization Enforcement Banner -->
+            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-lg shadow-md" role="alert">
+                <p class="font-bold text-lg mb-2" data-key="pdpa_banner_title">PDPA Compliance & Pseudonymization Enforced</p>
+                <p class="text-sm" data-key="pdpa_banner_text_1">
+                    All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity.
+                </p>
+                <p class="text-sm mt-1 font-semibold" data-key="pdpa_banner_text_2">
+                    Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).
+                </p>
+            </div>
+
+            <!-- Case Search and List -->
+            <div class="section-card mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-gray-700" data-key="search_title">Shared Case Files</h2>
+                
+                <div class="flex flex-col md:flex-row gap-4 items-center mb-4">
+                    <input type="text" id="case-search" data-key="search_placeholder" placeholder="Search by Client ID or Practitioner Name..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                    <button onclick="searchCases()" class="py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
+                        Search Cases
+                    </button>
+                </div>
+
+                <!-- Mock Results List (Only shared data is visible) -->
+                <div id="case-list" class="mt-4 space-y-2">
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase(1)">
+                        <div>
+                            <p class="font-semibold text-gray-800" data-key="case_1_id">Client ID: 4892 (Pseudonymized)</p>
+                            <p class="text-sm text-gray-500" data-key="case_1_info">Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20</p>
+                        </div>
+                        <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase(2)">
+                        <div>
+                            <p class="font-semibold text-gray-800" data-key="case_2_id">Client ID: 9011 (Pseudonymized)</p>
+                            <p class="text-sm text-gray-500" data-key="case_2_info">Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15</p>
+                        </div>
+                        <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Details View (Hidden initially) -->
+            <div id="case-details-view" class="hidden section-card">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-4" data-key="case_details_title">Case Review: Client ID <span id="client-id-display">4892</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Shared Diagnostics -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-indigo-600 border-b pb-2" data-key="diagnostics_title">Shared Diagnostic Inputs</h3>
+                        <div class="data-point">
+                            <p class="font-bold text-gray-800" data-key="cbct_title">CB CT Scan (Airway)</p>
+                            <p class="text-sm text-gray-600" data-key="mcs_value">MCS: 285 mm² (Critical)</p>
+                        </div>
+                        <div class="data-point">
+                            <p class="font-bold text-gray-800" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</p>
+                            <p class="text-sm text-gray-600" data-key="schwarz_note">Schwarz Analysis: 5mm crossbite correction needed.</p>
+                        </div>
+                        <div class="data-point">
+                            <p class="font-bold text-gray-800" data-key="ceph_title">Ceph Flow Metric Analysis</p>
+                            <p class="text-sm text-gray-600" data-key="sassouni_note">Sassouni Plus Report: FMA 23°.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Photos & Context -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-sky-600 border-b pb-2" data-key="progress_title">Shared Progress Photos</h3>
+                        <p class="text-sm text-gray-600 mb-4" data-key="progress_context">Photos provided from Initial, Month 3, and Month 6 checkpoints.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <img src="https://placehold.co/180x150/4c7c8c/ffffff?text=Jaw\n(Initial)" alt="Jaw Initial" class="w-full rounded-lg">
+                            <img src="https://placehold.co/180x150/8c4c7c/ffffff?text=Posture\n(Month+6)" alt="Posture Month 6" class="w-full rounded-lg">
+                        </div>
+
+                        <h3 class="text-xl font-semibold text-yellow-600 border-b pt-4 pb-2" data-key="consultation_history_title">Consultation History</h3>
+                        <p class="text-sm text-gray-600 data-point" data-key="history_entry">
+                            Practitioner Dr. Smith: Requested opinion on MCS findings (2025/11/22).
+                        </p>
+                    </div>
+
+                </div>
+
+                <button class="mt-6 w-full py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion">
+                    Submit Professional Opinion
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript for Functionality and Translations -->
+    <script>
+        let currentLang = 'en';
+
+        // --- Translation Data Structure (JSON) ---
+        const translations = {
+            'en': {
+                'header_title': 'Professional Consultant Dashboard',
+                'logout_link': '← Log Out / Portal',
+                'pdpa_banner_title': 'PDPA Compliance & Pseudonymization Enforced',
+                'pdpa_banner_text_1': 'All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity.',
+                'pdpa_banner_text_2': 'Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).',
+                'search_title': 'Shared Case Files',
+                'search_placeholder': 'Search by Client ID or Practitioner Name...',
+                'btn_search': 'Search Cases',
+                'case_1_id': 'Client ID: 4892 (Pseudonymized)',
+                'case_1_info': 'Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20',
+                'case_2_id': 'Client ID: 9011 (Pseudonymized)',
+                'case_2_info': 'Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15',
+                'btn_view_case': 'Review Case →',
+                'case_details_title': 'Case Review: Client ID',
+                'diagnostics_title': 'Shared Diagnostic Inputs',
+                'cbct_title': 'CB CT Scan (Airway)',
+                'mcs_value': 'MCS: 285 mm² (Critical)',
+                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
+                'schwarz_note': 'Schwarz Analysis: 5mm crossbite correction needed.',
+                'ceph_title': 'Ceph Flow Metric Analysis',
+                'sassouni_note': 'Sassouni Plus Report: FMA 23°.',
+                'progress_title': 'Shared Progress Photos',
+                'progress_context': 'Photos provided from Initial, Month 3, and Month 6 checkpoints.',
+                'consultation_history_title': 'Consultation History',
+                'history_entry': 'Practitioner Dr. Smith: Requested opinion on MCS findings (2025/11/22).',
+                'btn_submit_opinion': 'Submit Professional Opinion',
+                'toggle_text': '中文'
+            },
+            'zh': {
+                'header_title': '專業顧問儀表板',
+                'logout_link': '← 登出 / 入口網站',
+                'pdpa_banner_title': 'PDPA 合規與假名化強制執行',
+                'pdpa_banner_text_1': '所有顯示的病例均已**假名化**（例如：僅客戶 ID）以保護患者身份。',
+                'pdpa_banner_text_2': '訪問要求: (1) 患者書面同意, (2) 已執行數據處理協議 (DPA)。',
+                'search_title': '共享病例檔案',
+                'search_placeholder': '按客戶 ID 或執業醫師姓名搜尋...',
+                'btn_search': '搜尋病例',
+                'case_1_id': '客戶 ID: 4892 (已假名化)',
+                'case_1_info': '共享者: Smith 醫生 (牙齒矯正) | 請求日期: 2025/11/20',
+                'case_2_id': '客戶 ID: 9011 (已假名化)',
+                'case_2_info': '共享者: Wu 醫生 (兒科) | 請求日期: 2025/11/15',
+                'btn_view_case': '審閱病例 →',
+                'case_details_title': '病例審閱: 客戶 ID',
+                'diagnostics_title': '共享診斷輸入',
+                'cbct_title': '錐束CT掃描 (氣道)',
+                'mcs_value': 'MCS: 285 毫米² (危急)',
+                'intraoral_title': '3D 口內掃描 (牙齒)',
+                'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的反頜。',
+                'ceph_title': '頭影流動測量分析',
+                'sassouni_note': 'Sassouni Plus 報告: FMA 23°。',
+                'progress_title': '共享進度照片',
+                'progress_context': '提供來自初始、第 3 個月和第 6 個月檢查點的照片。',
+                'consultation_history_title': '會診歷史記錄',
+                'history_entry': '執業醫師 Smith 醫生: 請求對 MCS 結果的意見 (2025/11/22)。',
+                'btn_submit_opinion': '提交專業意見',
+                'toggle_text': 'English'
+            }
+        };
+
+        // --- Core Translation Function ---
+        function updateText() {
+            const langData = translations[currentLang];
+            
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    element.textContent = langData[key];
+                }
+            });
+
+            // Handle complex title update
+            const clientIdDisplay = document.getElementById('client-id-display');
+            if (clientIdDisplay) {
+                document.getElementById('case-details-title').textContent = langData.case_details_title + ': ' + clientIdDisplay.textContent;
+            }
+            
+            // Update specific placeholders and elements
+            document.getElementById('case-search').placeholder = langData.search_placeholder;
+            document.getElementById('header-title').textContent = langData.header_title;
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            
+            // Update HTML lang attribute and title
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+        }
+
+        // --- Language Toggle ---
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        // --- Dashboard Functionality ---
+        function searchCases() {
+            const searchTerm = document.getElementById('case-search').value.toLowerCase();
+            const list = document.getElementById('case-list');
+            
+            // Mock search logic
+            Array.from(list.children).forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function viewCase(caseId) {
+            const detailsView = document.getElementById('case-details-view');
+            const clientIdDisplay = document.getElementById('client-id-display');
+            
+            // Mock data loading
+            clientIdDisplay.textContent = caseId === 1 ? '4892' : '9011';
+            
+            detailsView.classList.remove('hidden');
+            updateText(); // Ensure labels are translated after ID is updated
+            
+            // Scroll to details view for better UX
+            detailsView.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function submitOpinion() {
+            const clientId = document.getElementById('client-id-display').textContent;
+            const message = currentLang === 'en' ? 
+                `Opinion submitted for pseudonymized Client ID ${clientId}. Practitioner notified.` :
+                `已為假名化客戶 ID ${clientId} 提交意見。已通知執業醫師。`;
+            alert(message);
+        }
+
+        // Initialize translation on load
+        document.addEventListener('DOMContentLoaded', updateText);
+    </script>
+</body>
+</html>
