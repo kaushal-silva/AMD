@@ -59,6 +59,16 @@
             border-left: 4px solid #ef4444;
             color: #b91c1c;
         }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
     </style>
 </head>
 <body>
@@ -126,7 +136,7 @@
             <div id="case-details-view" class="hidden">
                 <div class="flex justify-between items-center mb-6 border-b pb-4 section-card">
                     <h2 id="case-details-title" class="text-3xl font-bold text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display"></span></h2>
-                    <button class="py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion_header">
+                    <button class="py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
                         Submit Professional Opinion
                     </button>
                 </div>
@@ -225,12 +235,30 @@
                     </div>
                 </div>
 
-                <button class="mt-6 w-full py-3 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion">
+                <button class="mt-6 w-full py-3 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion">
                     Submit Professional Opinion
                 </button>
             </div>
         </main>
     </div>
+    
+    <!-- Opinion Submission Modal -->
+    <div id="opinion-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <!-- Modal Content -->
+        <div id="opinion-modal-content" class="bg-white w-full max-w-xl p-8 rounded-xl shadow-2xl relative modal-fade-enter">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="opinion_modal_title">Submit Professional Opinion for Client ID <span id="opinion-client-id"></span></h3>
+            
+            <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your detailed recommendation regarding the current diagnostics and treatment progress.</p>
+
+            <textarea id="opinion-textarea" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500" placeholder="Type your professional opinion here (e.g., 'Recommend increasing expansion rate to 2.5 turns by month 8...')" data-key="opinion_textarea_placeholder"></textarea>
+            
+            <div class="flex justify-end space-x-4 mt-4">
+                <button onclick="closeModal('opinion-modal')" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400" data-key="btn_cancel">Cancel</button>
+                <button onclick="submitOpinion()" class="py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 font-semibold" data-key="btn_submit_final">Submit Final Opinion</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- JavaScript for Functionality and Translations -->
     <script>
@@ -287,6 +315,11 @@
                 'history_entry_2_title': 'Your Opinion (Mock)',
                 'history_entry_2_details': 'Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)',
                 'btn_submit_opinion': 'Submit Professional Opinion',
+                'btn_submit_final': 'Submit Final Opinion',
+                'btn_cancel': 'Cancel',
+                'opinion_modal_title': 'Submit Professional Opinion for Client ID',
+                'opinion_modal_prompt': 'Provide your detailed recommendation regarding the current diagnostics and treatment progress.',
+                'opinion_textarea_placeholder': 'Type your professional opinion here (e.g., \'Recommend increasing expansion rate to 2.5 turns by month 8...\')',
                 'toggle_text': '中文'
             },
             'zh': {
@@ -338,6 +371,11 @@
                 'history_entry_2_title': '您的意見 (模擬)',
                 'history_entry_2_details': '建議: 維持當前擴展率 3 個月，在第 9 個月重新評估 CBCT。 (2025/11/25)',
                 'btn_submit_opinion': '提交專業意見',
+                'btn_submit_final': '提交最終意見',
+                'btn_cancel': '取消',
+                'opinion_modal_title': '提交專業意見給客戶 ID',
+                'opinion_modal_prompt': '請提供您關於當前診斷和治療進度的詳細建議。',
+                'opinion_textarea_placeholder': '在此處輸入您的專業意見 (例如：「建議在第 8 個月將擴展率增加到 2.5 圈...」)',
                 'toggle_text': 'English'
             }
         };
@@ -371,6 +409,7 @@
             
             // Get the ID span before the loop potentially wipes it
             const clientIdDisplay = document.getElementById('client-id-display'); 
+            const opinionClientId = document.getElementById('opinion-client-id');
 
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.getAttribute('data-key');
@@ -382,12 +421,18 @@
             // Manual update of the Case Details Title to preserve the nested span
             const caseTitleContainer = document.getElementById('case-details-title');
             if (caseTitleContainer && clientIdDisplay) {
-                // Set the H2 content to the translated text *plus* the static ':',
-                // then re-append the dynamic ID span.
                 caseTitleContainer.textContent = langData.case_details_title + ': ';
                 caseTitleContainer.appendChild(clientIdDisplay); 
             }
             
+            // Manual update for the Opinion Modal Title
+             const opinionModalTitle = document.getElementById('opinion_modal_title');
+             if (opinionModalTitle && opinionClientId) {
+                 opinionModalTitle.textContent = langData.opinion_modal_title + ' ';
+                 opinionModalTitle.appendChild(opinionClientId);
+             }
+
+
             // Handle complex title update
             const currentId = clientIdDisplay ? clientIdDisplay.textContent : null;
             if (currentId) {
@@ -403,6 +448,10 @@
             document.documentElement.setAttribute('lang', currentLang);
             document.title = langData.header_title;
             
+            // Update textarea placeholder manually
+            document.getElementById('opinion-textarea').placeholder = langData.opinion_textarea_placeholder;
+
+
             // Re-run comparison view update to refresh image labels
             updateConsultantComparisonView(document.getElementById('c-comparison-slider')?.value || 0);
         }
@@ -493,10 +542,12 @@
         function viewCase(caseId) {
             const detailsView = document.getElementById('case-details-view');
             const clientIdDisplay = document.getElementById('client-id-display');
+            const opinionClientId = document.getElementById('opinion-client-id');
             
             // Set client ID
             clientIdDisplay.textContent = caseId;
-            
+            opinionClientId.textContent = caseId;
+
             // Update all content fields based on the selected case
             updateCaseContent(caseId);
 
@@ -509,6 +560,57 @@
             
             // Scroll to details view for better UX
             detailsView.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openSubmitModal() {
+            const modal = document.getElementById('opinion-modal');
+            const modalContent = document.getElementById('opinion-modal-content');
+            
+            modal.classList.remove('hidden');
+            // Apply entrance transition classes
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10);
+            document.getElementById('opinion-textarea').value = ''; // Clear previous text
+        }
+        
+        function submitOpinion() {
+            const opinionText = document.getElementById('opinion-textarea').value.trim();
+            const clientId = document.getElementById('client-id-display').textContent;
+            
+            if (opinionText.length < 10) {
+                 const message = currentLang === 'en' ? 
+                    'Please provide a detailed opinion (at least 10 characters).' :
+                    '請提供詳細意見 (至少 10 個字符)。';
+                alert(message);
+                return;
+            }
+
+            closeModal('opinion-modal');
+            const message = currentLang === 'en' ? 
+                `Opinion submitted for pseudonymized Client ID ${clientId}. Practitioner notified. Opinion: "${opinionText.substring(0, 50)}..."` :
+                `已為假名化客戶 ID ${clientId} 提交意見。已通知執業醫師。意見: "${opinionText.substring(0, 50)}..."`;
+            
+            // Mock practitioner notification
+            console.log("MOCK EXPERT OPINION SENT:", opinionText);
+
+            alert(message);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+            
+            if (!modal || !modalContent) return;
+
+            // Apply exit transition classes
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
         }
         
         // Function to update the images and label in the Progress Tracker tab based on slider value
@@ -547,14 +649,6 @@
             `).join('');
         }
         
-        function submitOpinion() {
-            const clientId = document.getElementById('client-id-display').textContent;
-            const message = currentLang === 'en' ? 
-                `Opinion submitted for pseudonymized Client ID ${clientId}. Practitioner notified.` :
-                `已為假名化客戶 ID ${clientId} 提交意見。已通知執業醫師。`;
-            alert(message);
-        }
-
         // Initialize translation on load
         document.addEventListener('DOMContentLoaded', updateText);
     </script>
