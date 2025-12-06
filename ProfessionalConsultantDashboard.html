@@ -26,6 +26,39 @@
             border-radius: 0.5rem;
             border: 1px solid #e5e7eb;
         }
+        .tab-button {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #4b5563;
+            border-radius: 0.5rem;
+            transition: all 0.15s ease;
+        }
+        .tab-button.active {
+            background-color: #e5e7eb; 
+            color: #1f2937;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            border-right: 3px solid #4b5563;
+        }
+        .tab-button:not(.active):hover {
+            background-color: #f3f4f6;
+        }
+        /* Custom styling for the range input track/thumb */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #4b5563; /* Gray 600 */
+            cursor: pointer;
+            margin-top: -7px; 
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        }
+        .alert-red {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #b91c1c;
+        }
     </style>
 </head>
 <body>
@@ -90,47 +123,108 @@
             </div>
 
             <!-- Case Details View (Hidden initially) -->
-            <div id="case-details-view" class="hidden section-card">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-4" data-key="case_details_title">Case Review: Client ID <span id="client-id-display">4892</span></h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <!-- Shared Diagnostics -->
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-semibold text-indigo-600 border-b pb-2" data-key="diagnostics_title">Shared Diagnostic Inputs</h3>
-                        <div class="data-point">
-                            <p class="font-bold text-gray-800" data-key="cbct_title">CB CT Scan (Airway)</p>
-                            <p class="text-sm text-gray-600" data-key="mcs_value">MCS: 285 mm² (Critical)</p>
-                        </div>
-                        <div class="data-point">
-                            <p class="font-bold text-gray-800" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</p>
-                            <p class="text-sm text-gray-600" data-key="schwarz_note">Schwarz Analysis: 5mm crossbite correction needed.</p>
-                        </div>
-                        <div class="data-point">
-                            <p class="font-bold text-gray-800" data-key="ceph_title">Ceph Flow Metric Analysis</p>
-                            <p class="text-sm text-gray-600" data-key="sassouni_note">Sassouni Plus Report: FMA 23°.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Progress Photos & Context -->
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-semibold text-sky-600 border-b pb-2" data-key="progress_title">Shared Progress Photos</h3>
-                        <p class="text-sm text-gray-600 mb-4" data-key="progress_context">Photos provided from Initial, Month 3, and Month 6 checkpoints.</p>
-                        
-                        <div class="grid grid-cols-2 gap-3">
-                            <img src="https://placehold.co/180x150/4c7c8c/ffffff?text=Jaw\n(Initial)" alt="Jaw Initial" class="w-full rounded-lg">
-                            <img src="https://placehold.co/180x150/8c4c7c/ffffff?text=Posture\n(Month+6)" alt="Posture Month 6" class="w-full rounded-lg">
-                        </div>
-
-                        <h3 class="text-xl font-semibold text-yellow-600 border-b pt-4 pb-2" data-key="consultation_history_title">Consultation History</h3>
-                        <p class="text-sm text-gray-600 data-point" data-key="history_entry">
-                            Practitioner Dr. Smith: Requested opinion on MCS findings (2025/11/22).
-                        </p>
-                    </div>
-
+            <div id="case-details-view" class="hidden">
+                <div class="flex justify-between items-center mb-6 border-b pb-4 section-card">
+                    <h2 class="text-3xl font-bold text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display"></span></h2>
+                    <button class="py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion_header">
+                        Submit Professional Opinion
+                    </button>
                 </div>
 
-                <button class="mt-6 w-full py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion">
+                <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+                    
+                    <!-- LEFT COLUMN: Navigation Tabs -->
+                    <div class="lg:col-span-1 mb-8 lg:mb-0">
+                        <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_case_title">Case File Navigation</h3>
+                            <nav class="flex flex-col space-y-2">
+                                <button class="tab-button active" onclick="switchCaseTab('case-diagnostics')" data-key="case_tab_diagnostics">Diagnostic Inputs</button>
+                                <button class="tab-button" onclick="switchCaseTab('case-progress')" data-key="case_tab_progress">Progress Tracker</button>
+                                <button class="tab-button" onclick="switchCaseTab('case-history')" data-key="case_tab_history">Consultation History</button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Case Tab Content -->
+                    <div class="lg:col-span-3 space-y-8">
+                        
+                        <!-- 1. Diagnostic Inputs Tab (Default) -->
+                        <div id="tab-case-diagnostics" class="case-tab-content space-y-8">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="diagnostics_title">Shared Diagnostic Inputs</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
+                                        <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red" data-key="mcs_value_status_4892">MCS: 285 mm² (Critical!)</div>
+                                        <p class="text-xs text-gray-500" data-key="cbct_note">Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.</p>
+                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
+                                        <p class="text-xs text-gray-500" data-key="schwarz_note">Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.</p>
+                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">Ceph Flow Metric Analysis</h3>
+                                        <p class="text-xs text-gray-500" data-key="sassouni_note">Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Appliance Setting at Current Stage -->
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="appliance_setting_title">Appliance Setting Details</h2>
+                                <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
+                                    <h3 class="text-xl font-bold text-gray-800" data-key="appliance_name">Start Thriving Appliance (TM)</h3>
+                                    <div class="text-lg font-medium text-yellow-700 mb-1" data-key="appliance_setting">Current Setting: 2.0 Turns / 0.50mm Expansion</div>
+                                    <p class="text-sm text-gray-500" data-key="appliance_status">Active expansion phase (Month 6 of 24).</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Progress Tracker Tab -->
+                        <div id="tab-case-progress" class="case-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_tracker_title">Progress Photo Timeline</h2>
+                                <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Review historical jaw and posture progress photos.</p>
+                                
+                                <!-- Comparison Slider and Images -->
+                                <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
+                                
+                                <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                    <label for="c-comparison-slider" id="c-comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
+                                    <input type="range" min="0" max="4" value="2" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="c-comparison-slider" oninput="updateConsultantComparisonView(this.value)">
+                                    <div class="flex justify-between text-xs mt-1 text-gray-500">
+                                        <span data-key="c0">Initial</span><span data-key="c1">Month 3</span><span data-key="c2">Month 6</span><span data-key="c3">Month 12</span><span data-key="c4">Current</span>
+                                    </div>
+                                </div>
+
+                                <div id="photo-comparison-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <!-- Photos dynamically populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Consultation History Tab -->
+                        <div id="tab-case-history" class="case-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History & Practitioner Notes</h2>
+                                <p class="text-sm text-gray-500 mb-4" data-key="history_intro">Record of communication and previous external opinions regarding this case.</p>
+                                <div class="space-y-3">
+                                    <div class="data-point">
+                                        <p class="font-bold text-gray-800" data-key="history_entry_1_title">Request sent by Dr. Smith</p>
+                                        <p class="text-sm text-gray-600" data-key="history_entry_1_details">Requested opinion on MCS findings and initial expansion rate. (2025/11/22)</p>
+                                    </div>
+                                    <div class="data-point bg-green-50 border-green-500">
+                                        <p class="font-bold text-green-800" data-key="history_entry_2_title">Your Opinion (Mock)</p>
+                                        <p class="text-sm text-gray-600" data-key="history_entry_2_details">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="mt-6 w-full py-3 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150" onclick="submitOpinion()" data-key="btn_submit_opinion">
                     Submit Professional Opinion
                 </button>
             </div>
@@ -158,17 +252,39 @@
                 'case_2_info': 'Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15',
                 'btn_view_case': 'Review Case →',
                 'case_details_title': 'Case Review: Client ID',
+                'btn_submit_opinion_header': 'Submit Professional Opinion',
+                'nav_case_title': 'Case File Navigation',
+                'case_tab_diagnostics': 'Diagnostic Inputs',
+                'case_tab_progress': 'Progress Tracker',
+                'case_tab_history': 'Consultation History',
                 'diagnostics_title': 'Shared Diagnostic Inputs',
                 'cbct_title': 'CB CT Scan (Airway)',
-                'mcs_value': 'MCS: 285 mm² (Critical)',
+                'mcs_value_status_4892': 'MCS: 285 mm² (Critical!)',
+                'mcs_value_status_9011': 'MCS: 350 mm² (Stable)',
+                'cbct_note': 'Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.',
                 'intraoral_title': '3D Intra-Oral Scan (Teeth)',
-                'schwarz_note': 'Schwarz Analysis: 5mm crossbite correction needed.',
+                'schwarz_note': 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
                 'ceph_title': 'Ceph Flow Metric Analysis',
-                'sassouni_note': 'Sassouni Plus Report: FMA 23°.',
-                'progress_title': 'Shared Progress Photos',
-                'progress_context': 'Photos provided from Initial, Month 3, and Month 6 checkpoints.',
-                'consultation_history_title': 'Consultation History',
-                'history_entry': 'Practitioner Dr. Smith: Requested opinion on MCS findings (2025/11/22).',
+                'sassouni_note': 'Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.',
+                'appliance_setting_title': 'Appliance Setting Details',
+                'appliance_name': 'Start Thriving Appliance (TM)',
+                'appliance_setting': 'Current Setting: 2.0 Turns / 0.50mm Expansion',
+                'appliance_status': 'Active expansion phase (Month 6 of 24).',
+                'progress_tracker_title': 'Progress Photo Timeline',
+                'progress_subtitle': 'Review historical jaw and posture progress photos.',
+                'comparison_view_title': 'Historical Comparison View',
+                'viewing_photos': 'Viewing photos from: Month 6 Check',
+                'c0': 'Initial', 'c1': 'Month 3', 'c2': 'Month 6', 'c3': 'Month 12', 'c4': 'Current',
+                'photo_jaw_front': 'Jaw (Front)',
+                'photo_posture_side': 'Posture (Side)',
+                'photo_jaw_side': 'Jaw (Side)',
+                'photo_jaw_bottom': 'Jaw (Bottom)',
+                'consultation_history_title': 'Consultation History & Practitioner Notes',
+                'history_intro': 'Record of communication and previous external opinions regarding this case.',
+                'history_entry_1_title': 'Request sent by Dr. Smith',
+                'history_entry_1_details': 'Requested opinion on MCS findings and initial expansion rate. (2025/11/22)',
+                'history_entry_2_title': 'Your Opinion (Mock)',
+                'history_entry_2_details': 'Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)',
                 'btn_submit_opinion': 'Submit Professional Opinion',
                 'toggle_text': '中文'
             },
@@ -187,17 +303,39 @@
                 'case_2_info': '共享者: Wu 醫生 (兒科) | 請求日期: 2025/11/15',
                 'btn_view_case': '審閱病例 →',
                 'case_details_title': '病例審閱: 客戶 ID',
+                'btn_submit_opinion_header': '提交專業意見',
+                'nav_case_title': '病例檔案導航',
+                'case_tab_diagnostics': '診斷輸入',
+                'case_tab_progress': '進度追踪器',
+                'case_tab_history': '會診歷史記錄',
                 'diagnostics_title': '共享診斷輸入',
                 'cbct_title': '錐束CT掃描 (氣道)',
-                'mcs_value': 'MCS: 285 毫米² (危急)',
+                'mcs_value_status_4892': 'MCS: 285 毫米² (危急!)',
+                'mcs_value_status_9011': 'MCS: 350 毫米² (穩定)',
+                'cbct_note': '醫生備註: 鼻咽部有明顯受限。需立即干預。',
                 'intraoral_title': '3D 口內掃描 (牙齒)',
                 'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的反頜。',
                 'ceph_title': '頭影流動測量分析',
-                'sassouni_note': 'Sassouni Plus 報告: FMA 23°。',
-                'progress_title': '共享進度照片',
-                'progress_context': '提供來自初始、第 3 個月和第 6 個月檢查點的照片。',
-                'consultation_history_title': '會診歷史記錄',
-                'history_entry': '執業醫師 Smith 醫生: 請求對 MCS 結果的意見 (2025/11/22)。',
+                'sassouni_note': 'Sassouni Plus 報告: 指導矯治器生長角度。當前 FMA: 23°。',
+                'appliance_setting_title': '矯治器設置詳情',
+                'appliance_name': '開始興盛矯治器 (TM)',
+                'appliance_setting': '當前設置: 2.0 圈 / 0.50mm 擴展',
+                'appliance_status': '活躍擴展階段 (24 個月中的第 6 個月)。',
+                'progress_tracker_title': '進度照片追踪器',
+                'progress_subtitle': '審閱歷史下巴和姿勢進度照片。',
+                'comparison_view_title': '歷史比較視圖',
+                'viewing_photos': '查看照片來自: 第 6 個月檢查',
+                'c0': '初始', 'c1': '第 3 個月', 'c2': '第 6 個月', 'c3': '第 12 個月', 'c4': '當前',
+                'photo_jaw_front': '下巴 (正面)',
+                'photo_posture_side': '姿勢 (側面)',
+                'photo_jaw_side': '下巴 (側面)',
+                'photo_jaw_bottom': '下巴 (底部)',
+                'consultation_history_title': '會診歷史記錄與執業醫師備註',
+                'history_intro': '關於此病例的溝通記錄和先前外部意見。',
+                'history_entry_1_title': 'Smith 醫生發送的請求',
+                'history_entry_1_details': '請求對 MCS 發現和初始擴展率的意見。 (2025/11/22)',
+                'history_entry_2_title': '您的意見 (模擬)',
+                'history_entry_2_details': '建議: 維持當前擴展率 3 個月，在第 9 個月重新評估 CBCT。 (2025/11/25)',
                 'btn_submit_opinion': '提交專業意見',
                 'toggle_text': 'English'
             }
@@ -228,6 +366,9 @@
             // Update HTML lang attribute and title
             document.documentElement.setAttribute('lang', currentLang);
             document.title = langData.header_title;
+
+            // Re-run comparison view update to refresh image labels
+            updateConsultantComparisonView(document.getElementById('c-comparison-slider')?.value || 0);
         }
 
         // --- Language Toggle ---
@@ -250,19 +391,98 @@
                 }
             });
         }
+        
+        function switchCaseTab(tabId) {
+            // 1. Hide all content tabs
+            document.querySelectorAll('.case-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // 2. Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 3. Show the requested content tab
+            const activeContent = document.getElementById('tab-' + tabId);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+            }
+
+            // 4. Activate the clicked button
+            const activeButton = document.querySelector(`[onclick="switchCaseTab('${tabId}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
 
         function viewCase(caseId) {
             const detailsView = document.getElementById('case-details-view');
             const clientIdDisplay = document.getElementById('client-id-display');
             
-            // Mock data loading
-            clientIdDisplay.textContent = caseId === 1 ? '4892' : '9011';
+            // Mock data loading based on caseId
+            const id = caseId === 1 ? '4892' : '9011';
+            clientIdDisplay.textContent = id;
             
+            // Mock the MCS status dynamically
+            const mcsElement = document.querySelector('[data-key^="mcs_value_status"]');
+            if (id === '4892') {
+                mcsElement.textContent = translations[currentLang]['mcs_value_status_4892'];
+                mcsElement.classList.add('alert-red');
+            } else {
+                 mcsElement.textContent = translations[currentLang]['mcs_value_status_9011'];
+                 mcsElement.classList.remove('alert-red');
+                 mcsElement.classList.add('bg-green-50');
+                 mcsElement.style.borderLeft = '4px solid #10b981';
+            }
+
+
             detailsView.classList.remove('hidden');
+            
+            // Ensure first tab is active
+            switchCaseTab('case-diagnostics'); 
+
             updateText(); // Ensure labels are translated after ID is updated
             
             // Scroll to details view for better UX
             detailsView.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Function to update the images and label in the Progress Tracker tab based on slider value
+        function updateConsultantComparisonView(sliderValue) {
+            const langData = translations[currentLang];
+            const grid = document.getElementById('photo-comparison-grid');
+            const label = document.getElementById('c-comparison-label');
+            
+            // Mapping for 5 checkpoints (0 to 4)
+            const checkpointData = [
+                { titleKey: 'c0', phase: '(Initial)' },
+                { titleKey: 'c1', phase: '(Month 3)' },
+                { titleKey: 'c2', phase: '(Month 6)' },
+                { titleKey: 'c3', phase: '(Month 12)' },
+                { titleKey: 'c4', phase: '(Current)' }
+            ];
+            
+            const currentCheckpoint = checkpointData[sliderValue];
+
+            label.textContent = langData.viewing_photos + `: ${langData[currentCheckpoint.titleKey]}`;
+
+            // Image Placeholders - using unique colors for visual differentiation of photo types
+            const photos = [
+                { titleKey: 'photo_jaw_front', color: '4c7c8c' },
+                { titleKey: 'photo_posture_side', color: '8c4c7c' },
+                { titleKey: 'photo_jaw_side', color: '7c8c4c' },
+                { titleKey: 'photo_jaw_bottom', color: '4c8c7c' }
+            ];
+
+            // Generate HTML for comparison photos
+            grid.innerHTML = photos.map(photo => `
+                <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
+                    <img src="https://placehold.co/180x200/${photo.color}/ffffff?text=${langData[photo.titleKey]}\n${currentCheckpoint.phase}" alt="${langData[photo.titleKey]} ${currentCheckpoint.phase}" class="w-full rounded-lg mb-2">
+                    <span class="text-xs text-gray-700 font-medium">${langData[photo.titleKey]}</span>
+                </div>
+            `).join('');
         }
         
         function submitOpinion() {
