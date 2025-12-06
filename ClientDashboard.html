@@ -72,7 +72,7 @@
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                 <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">AMD Client Dashboard</h1>
                 <div class="flex items-center space-x-4">
-                    <!-- Language Toggle Button (Updated for visibility) -->
+                    <!-- Language Toggle Button -->
                     <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-sky-700 border border-sky-500 hover:bg-sky-100 transition duration-150 font-semibold text-sm shadow">
                         <!-- Text updated by JavaScript -->
                     </button>
@@ -90,7 +90,6 @@
                     <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                         <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_title">Navigation</h3>
                         <nav class="flex flex-col space-y-2">
-                            <!-- NOTE: Treatment Protocol is merged into My Plan -->
                             <button class="tab-button active" onclick="switchTab('my-plan')" data-key="tab_my_plan">
                                 My Plan & Support
                             </button>
@@ -113,7 +112,7 @@
                     <!-- 1. My Plan & Support Tab (Default) -->
                     <div id="tab-my-plan" class="tab-content space-y-8">
                         
-                        <!-- Patient Goals & Pain Tracking (Updated for impact) -->
+                        <!-- Patient Goals & Pain Tracking -->
                         <div class="section-card">
                             <h2 class="text-3xl font-extrabold text-gray-900 mb-4 border-b pb-2 text-sky-600" data-key="sec_goals_title_impact">My Journey: Goals & Motivation</h2>
                             <p class="text-sm text-gray-600 mb-4" data-key="goals_motivation_intro">Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.</p>
@@ -142,32 +141,45 @@
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="sec_interventions_title">Treatment Interventions</h2>
 
-                            <!-- Start Thriving Appliance Section -->
-                            <div class="mb-8 p-4 border rounded-lg bg-yellow-50/50">
-                                <h3 class="font-bold text-gray-700 mb-4" data-key="appliance_title">Start Thriving Appliance (TM)</h3>
-                                
-                                <div class="font-bold text-sm text-gray-800 mb-2 flex justify-between items-center">
-                                    <span data-key="appliance_duration_label">Prescription Progress:</span>
+                            <!-- Start Thriving Appliance Section (Updated with Visuals) -->
+                            <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
+                                <div class="flex justify-between items-start mb-4">
                                     <div>
-                                        <span id="appliance-duration-text" class="text-sm font-normal"></span>
-                                        <span id="appliance-percentage" class="text-sky-700 font-extrabold ml-2"></span>
+                                        <h3 class="text-xl font-bold text-gray-800" data-key="appliance_title">Start Thriving Appliance (TM)</h3>
+                                        <p class="text-sm text-gray-500 mt-1" data-key="appliance_subtitle">Visualizing your appliance adjustment journey.</p>
+                                    </div>
+                                    <div class="text-right">
+                                         <span id="appliance-percentage" class="text-2xl font-extrabold text-yellow-600"></span>
+                                         <p class="text-xs text-gray-500" data-key="completion_label">Complete</p>
                                     </div>
                                 </div>
                                 
-                                <!-- Interactive Timeline/Slider for Prescription Period -->
-                                <div class="mb-4">
-                                    <input type="range" min="0" max="24" value="6" step="1" class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer" id="appliance-timeline-slider" oninput="updateApplianceTimeline(this.value)">
-                                    <div class="flex justify-between text-xs mt-1 text-gray-500">
-                                        <span data-key="app_start">Start</span>
-                                        <span data-key="app_24m">24 Months</span>
+                                <!-- Appliance State Display -->
+                                <div class="flex flex-col md:flex-row gap-6 items-center mb-6">
+                                    <!-- Dynamic Image -->
+                                    <div class="w-full md:w-1/2">
+                                        <img id="appliance-image" src="" alt="Start Thriving Appliance State" class="w-full rounded-lg shadow-md border border-yellow-200">
+                                    </div>
+                                    
+                                    <!-- Current State Info -->
+                                    <div class="w-full md:w-1/2 bg-white p-4 rounded-lg shadow-sm border border-yellow-100">
+                                        <h4 class="font-bold text-gray-700 mb-2 border-b pb-1" data-key="status_at_month_title">Treatment Status at Month <span id="display-month"></span>:</h4>
+                                        <p id="appliance-setting-text" class="text-lg font-medium text-yellow-700 mb-1"></p>
+                                        <p id="appliance-notes-text" class="text-sm text-gray-500"></p>
                                     </div>
                                 </div>
 
-                                <h4 id="adjustment-history-title" class="font-semibold text-sm text-gray-700 mt-6 mb-2"></h4>
-                                <div id="adjustment-list" class="space-y-2 text-sm text-gray-600">
-                                    <!-- Dynamic content based on slider position -->
+                                <!-- Interactive Timeline/Slider -->
+                                <div class="mb-2">
+                                    <input type="range" min="0" max="24" value="6" step="1" class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer" id="appliance-timeline-slider" oninput="updateApplianceTimeline(this.value)">
+                                    <div class="flex justify-between text-xs mt-2 text-gray-500 font-medium">
+                                        <span data-key="app_start">Start (Month 0)</span>
+                                        <span data-key="app_current_marker">Current (Month 6)</span>
+                                        <span data-key="app_24m">Target (Month 24)</span>
+                                    </div>
                                 </div>
-                                <button class="mt-4 py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium" data-key="btn_request_adjustment">Request Appliance Adjustment</button>
+                                
+                                <button class="mt-6 py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium w-full md:w-auto" data-key="btn_request_adjustment">Request Appliance Adjustment</button>
                             </div>
 
                             <!-- Nutrition Section -->
@@ -246,16 +258,6 @@
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_title">Progress Photo Timeline</h2>
                             <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Track your jaw and posture changes over the 18-month growth prescription period.</p>
-                            
-                            <!-- Mock Full Prescription Timeline (Retained for visual context, but not interactive slider) -->
-                            <h3 id="progress-summary" class="font-bold text-gray-700 mb-2" data-key="timeline_summary"></h3>
-                            <div class="w-full h-2 bg-sky-200 rounded-lg mb-8 relative">
-                                <div class="absolute top-0 left-0 h-full bg-sky-500 rounded-lg" style="width: calc(6 / 24 * 100%)"></div>
-                                <div class="flex justify-between text-xs mt-3 text-gray-500">
-                                    <span data-key="app_start">Start</span>
-                                    <span data-key="app_24m">24 Months</span>
-                                </div>
-                            </div>
                             
                             <!-- Comparison Slider and Images (Updated for multiple checkpoints) -->
                             <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_title">Historical Comparison View</h3>
@@ -342,8 +344,8 @@
                 'tab_diagnostics': 'Diagnostic Inputs',
                 'tab_progress': 'Progress Tracker',
                 'tab_chat': 'Secure Group Chat',
-                'sec_goals_title_impact': 'My Journey: Goals & Motivation', // UPDATED KEY
-                'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.', // NEW KEY
+                'sec_goals_title_impact': 'My Journey: Goals & Motivation',
+                'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.',
                 'sec_goals_title': 'My Goals & Pains',
                 'goals_list_title': 'My 3 Symptoms to Eliminate:',
                 'goal1': 'Chronic Daytime Fatigue',
@@ -356,14 +358,24 @@
                 'btn_update_goals': 'Update Pains & Goals',
                 'sec_interventions_title': 'Treatment Interventions',
                 'appliance_title': 'Start Thriving Appliance (TM)',
+                'appliance_subtitle': 'Visualizing your appliance adjustment journey.',
                 'appliance_duration_label': 'Prescription Progress:',
-                'app_start': 'Start',
-                'app_24m': '24 Months',
+                'completion_label': 'Complete',
+                'app_start': 'Start (Month 0)',
+                'app_current_marker': 'Current (Month 6)',
+                'app_24m': 'Target (Month 24)',
+                'status_at_month_title': 'Treatment Status at Month',
                 'appliance_duration_text': `Prescription: ${totalPrescriptionMonths} months | ${monthsCompleted} months complete`,
-                'adjustment_history_title': 'Adjustment History', // Dynamic title set in JS
-                'adj1': 'Latest Adjustment: 2.0 turns (AMC)',
-                'adj2': 'Client Adjustment Request (1.5 turns)',
-                'adj_default': 'No adjustments recorded for this period.',
+                'adjustment_history_title': 'Adjustment History',
+                // Appliance State Descriptions
+                'state_m0_set': 'Initial Fit / 0.0mm Expansion',
+                'state_m0_note': 'Appliance delivered. Focus on comfort and wear-time habit.',
+                'state_m2_set': '1.5 Turns / 0.38mm Expansion',
+                'state_m2_note': 'First adjustment phase. Slight pressure expected.',
+                'state_m5_set': '2.0 Turns / 0.50mm Expansion',
+                'state_m5_note': 'Active expansion phase. Monitor midline spacing.',
+                'state_default': 'Maintenance Phase',
+                'state_default_note': 'Continue prescribed wear. No active adjustment this month.',
                 'btn_request_adjustment': 'Request Appliance Adjustment',
                 'nutrition_title': 'Prescribed Nutrition Focus:',
                 'nut_bonebroth': 'Increase intake of bone broth for collagen support.',
@@ -395,7 +407,7 @@
                 'progress_subtitle': 'Track your jaw and posture changes over the 18-month growth prescription period.',
                 'timeline_summary': `Prescription Progress: ${monthsCompleted} Months Complete (${totalPrescriptionMonths - monthsCompleted} Months Remaining)`,
                 'comparison_title': 'Historical Comparison View',
-                'comp_c0': 'Initial (Month 0)', // 5 checkpoints labels
+                'comp_c0': 'Initial (Month 0)', 
                 'comp_c1': 'Month 3 Check',
                 'comp_c2': 'Month 6 Check',
                 'comp_c3': 'Month 12 Check',
@@ -429,8 +441,8 @@
                 'tab_diagnostics': '診斷輸入',
                 'tab_progress': '進度追踪器',
                 'tab_chat': '安全群組聊天',
-                'sec_goals_title_impact': '我的旅程：目標與動力', // UPDATED KEY
-                'goals_motivation_intro': '專注於這些目標—它們是我們正在通過整體治療共同努力消除的強大症狀。', // NEW KEY
+                'sec_goals_title_impact': '我的旅程：目標與動力',
+                'goals_motivation_intro': '專注於這些目標—它們是我們正在通過整體治療共同努力消除的強大症狀。',
                 'sec_goals_title': '我的目標與疼痛',
                 'goals_list_title': '我的 3 個欲消除症狀:',
                 'goal1': '慢性白天疲勞',
@@ -443,14 +455,24 @@
                 'btn_update_goals': '更新疼痛與目標',
                 'sec_interventions_title': '治療干預措施',
                 'appliance_title': '開始興盛矯治器 (TM)',
+                'appliance_subtitle': '可視化您的矯治器調整旅程。',
                 'appliance_duration_label': '處方進度:',
-                'app_start': '開始',
-                'app_24m': '24 個月',
+                'completion_label': '完成',
+                'app_start': '開始 (第 0 個月)',
+                'app_current_marker': '當前 (第 6 個月)',
+                'app_24m': '目標 (第 24 個月)',
+                'status_at_month_title': '治療狀態：第',
                 'appliance_duration_text': `處方: ${totalPrescriptionMonths} 個月 | 完成 ${monthsCompleted} 個月`,
-                'adjustment_history_title': '調整歷史記錄', // Dynamic title set in JS
-                'adj1': '最新調整: 2.0 圈 (AMC)',
-                'adj2': '客戶調整請求 (1.5 圈)',
-                'adj_default': '此期間沒有記錄的調整。',
+                'adjustment_history_title': '調整歷史記錄', 
+                // Appliance State Descriptions
+                'state_m0_set': '初始佩戴 / 0.0mm 擴展',
+                'state_m0_note': '矯治器已交付。專注於舒適度和佩戴習慣。',
+                'state_m2_set': '1.5 圈 / 0.38mm 擴展',
+                'state_m2_note': '第一階段調整。預計會有輕微壓力。',
+                'state_m5_set': '2.0 圈 / 0.50mm 擴展',
+                'state_m5_note': '活躍擴展階段。監測中線間距。',
+                'state_default': '維護階段',
+                'state_default_note': '繼續按處方佩戴。本月無主動調整。',
                 'btn_request_adjustment': '請求矯治器調整',
                 'nutrition_title': '處方營養重點:',
                 'nut_bonebroth': '增加骨湯攝取以支持膠原蛋白。',
@@ -511,19 +533,17 @@
         };
 
         // --- Appliance Timeline Logic ---
-        const applianceAdjustments = [
-            { month: 0, textKey: 'adj_initial', date: '20/09/2025' },
-            { month: 1, textKey: 'adj_default', date: '20/10/2025' },
-            { month: 2, textKey: 'adj2', date: '01/10/2025' },
-            { month: 5, textKey: 'adj1', date: '15/11/2025' },
-            // Placeholder: Adjustments occur dynamically here up to month 6
-        ];
+        // Mock data state for specific months
+        const applianceStates = {
+            0: { setKey: 'state_m0_set', noteKey: 'state_m0_note', expansion: '0.0mm' },
+            2: { setKey: 'state_m2_set', noteKey: 'state_m2_note', expansion: '0.38mm' },
+            5: { setKey: 'state_m5_set', noteKey: 'state_m5_note', expansion: '0.50mm' }
+            // All other months fallback to 'state_default'
+        };
 
         function updateApplianceTimeline(monthValue) {
             const month = parseInt(monthValue);
             const langData = translations[currentLang];
-            const listContainer = document.getElementById('adjustment-list');
-            const historyTitle = document.getElementById('adjustment-history-title');
             
             // Safety guard: prevent sliding past current completed month
             if (month > monthsCompleted) {
@@ -531,29 +551,41 @@
                 return;
             }
 
-            // Update history title dynamically
-            const monthText = currentLang === 'en' ? `History at Month ${month}` : `第 ${month} 個月的歷史記錄`;
-            historyTitle.textContent = langData.adjustment_history_title + ` (${monthText})`;
-            
-            // Filter and display relevant adjustments up to the selected month
-            const filteredAdjustments = applianceAdjustments.filter(adj => adj.month <= month);
+            // 1. Update Month Display
+            document.getElementById('display-month').textContent = month;
 
-            if (filteredAdjustments.length > 0) {
-                listContainer.innerHTML = filteredAdjustments.map(adj => {
-                    // Mock data: Use adj1/adj2 only for specific months, default otherwise.
-                    let contentKey = adj.textKey === 'adj_default' ? 'adj_default' : adj.textKey;
-                    let content = langData[contentKey];
-
-                    return `
-                        <div class="border p-2 rounded-lg flex justify-between items-center ${adj.month === monthsCompleted ? 'bg-yellow-100 font-medium' : 'bg-yellow-50'}">
-                            <p>${content}</p>
-                            <span class="text-xs text-gray-500">${adj.date}</span>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                 listContainer.innerHTML = `<div class="p-2 text-gray-500">${langData.adj_default}</div>`;
+            // 2. Find State (Look for exact match or nearest past match)
+            let state = applianceStates[month];
+            if (!state) {
+                // Find nearest previous state
+                let keys = Object.keys(applianceStates).map(Number).sort((a, b) => b - a);
+                let nearestKey = keys.find(k => k <= month);
+                state = nearestKey !== undefined ? applianceStates[nearestKey] : applianceStates[0];
+                
+                // If it's not an exact adjustment month, use maintenance text
+                if (nearestKey !== month) {
+                     state = { 
+                         setKey: 'state_default', 
+                         noteKey: 'state_default_note', 
+                         expansion: state.expansion // Keep expansion same as last adjustment
+                     };
+                }
             }
+
+            // 3. Update Text Content
+            document.getElementById('appliance-setting-text').textContent = langData[state.setKey] || langData['state_default'];
+            document.getElementById('appliance-notes-text').textContent = langData[state.noteKey] || langData['state_default_note'];
+
+            // 4. Update Image (Placeholder simulating expansion state)
+            const expansionValue = state.expansion || 'Unknown';
+            // Using placeholder color to simulate change, yellow intensity increases with months
+            const colorIntensity = 200 + (month * 10); 
+            // Clamp color max
+            const safeColor = Math.min(colorIntensity, 255).toString(16);
+            const hexColor = `fcd34d`; // Keeping consistent yellow base for now
+
+            const imgUrl = `https://placehold.co/400x250/${hexColor}/ffffff?text=Appliance+State:+Month+${month}\nExpansion:+${expansionValue}`;
+            document.getElementById('appliance-image').src = imgUrl;
         }
         
         // --- Core Translation Function ---
@@ -575,9 +607,7 @@
             }
 
             // Update specific dynamic texts
-            document.getElementById('appliance-duration-text').textContent = langData.appliance_duration_text;
-            document.getElementById('appliance-percentage').textContent = `(${percentageCompleted}%)`;
-            document.getElementById('progress-summary').textContent = langData.timeline_summary;
+            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
             
             // Update language toggle button text
             document.getElementById('lang-toggle').textContent = langData.toggle_text;
