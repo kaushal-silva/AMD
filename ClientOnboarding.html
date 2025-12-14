@@ -754,17 +754,12 @@
         function nextStep(step) {
             const langData = translations[currentLang];
             
-            // Validation for Step 1
+            // Validation for Step 1 - BYPASS FOR MOCKUP
             if (currentStep === 1) {
-                 const consentChecked = document.getElementById('consent-checkbox').checked;
-                 const signature = document.querySelector('[placeholder="Type your name (Mock Signature)"]').value;
                  const patientName = document.getElementById('patient-name-input').value;
-                 
-                 // --- MOCKUP BYPASS: Removed required field checks ---
                  
                  // Update patient display name and ID for step 2 before transitioning
                  document.getElementById('patient-display-name').textContent = patientName.trim() || 'N/A';
-                 // Mock ID is static, but logic to update name is necessary
             }
             // Validation for Step 2
             else if (currentStep === 2) {
@@ -791,7 +786,6 @@
             
             if (showInput) {
                 input.classList.remove('hidden');
-                // Removed input.required = true;
             } else {
                 // Check if any other input source is still checked
                 const isAnyOtherChecked = Array.from(document.querySelectorAll('input[name="how_found"]:checked'))
@@ -799,7 +793,6 @@
                 
                 if (!isAnyOtherChecked) {
                     input.classList.add('hidden');
-                    // Removed input.required = false;
                     input.value = '';
                 }
             }
