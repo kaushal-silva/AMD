@@ -464,23 +464,23 @@
                 'goal3': 'Waking up with dry mouth',
                 'btn_update_goals': 'Update Pains & Goals',
                 
-                'payments_title': 'Payments & Accounting', // NEW
-                'revenue_summary_title': 'Revenue Summary (YTD)', // NEW
-                'total_revenue': 'Total AMD Revenue', // NEW
-                'appliance_revenue': 'Appliance Revenue', // NEW
-                'consultation_revenue': 'Consultation/Visit Revenue', // NEW
-                'financial_breakdown_title': 'Patient Financial Breakdown', // NEW
-                'col_financial_patient': 'Patient', // NEW
-                'col_visits': 'Clinical Visits', // NEW
-                'col_treatment_stage': 'Treatment Stage', // NEW
-                'col_revenue': 'Revenue to Date', // NEW
-                'metric_jaw_size': 'Jaw Width Increase (Intermolar):', // FROM CLIENT
-                'metric_start_target': 'Start: 40.0mm | Target: 45.0mm', // FROM CLIENT
-                'metric_airway': 'Airway Patency (MCS):', // FROM CLIENT
-                'metric_start_target_airway': 'Start: 285 mm² | Target: >320 mm²', // FROM CLIENT
-                'metric_sleep_score': 'Sleep Symptom Score (MSQ):', // FROM CLIENT
-                'score_change_text': '(↓ -7)', // FROM CLIENT
-                'metric_start_target_sleep': 'Start: 25 | Target: < 5', // FROM CLIENT
+                'payments_title': 'Payments & Accounting', 
+                'revenue_summary_title': 'Revenue Summary (YTD)', 
+                'total_revenue': 'Total AMD Revenue', 
+                'appliance_revenue': 'Appliance Revenue', 
+                'consultation_revenue': 'Consultation/Visit Revenue', 
+                'financial_breakdown_title': 'Patient Financial Breakdown', 
+                'col_financial_patient': 'Patient', 
+                'col_visits': 'Clinical Visits', 
+                'col_treatment_stage': 'Treatment Stage', 
+                'col_revenue': 'Revenue to Date', 
+                'metric_jaw_size': 'Jaw Width Increase (Intermolar):', 
+                'metric_start_target': 'Start: 40.0mm | Target: 45.0mm', 
+                'metric_airway': 'Airway Patency (MCS):', 
+                'metric_start_target_airway': 'Start: 285 mm² | Target: >320 mm²', 
+                'metric_sleep_score': 'Sleep Symptom Score (MSQ):', 
+                'score_change_text': '(↓ -7)', 
+                'metric_start_target_sleep': 'Start: 25 | Target: < 5', 
                 'cbct_history_label': 'View Historical Scan Data:', 
                 'analysis_history_label': 'View Historical Analysis:',
                 'scan_date_0': '2025/12/10 (Initial)',
@@ -502,7 +502,7 @@
                 'nav_overview': '實務概覽',
                 'nav_patients': '患者管理',
                 'nav_intake': '新患者入組 (3)',
-                'nav_payments': '支付與會計', // NEW
+                'nav_payments': '支付與會計', 
                 'overview_summary_title': '實務摘要與指標',
                 'stat_active': '活躍患者',
                 'stat_new': '新患者入組 (30 天)',
@@ -547,7 +547,7 @@
                 'amc_session': '當前指導課程:',
                 'diagnostics_title': 'AMD 診斷輸入',
                 'cbct_title': '錐束CT掃描 (氣道)',
-                'mcs_value_status': 'MCS: 285 毫米² (危急!)',
+                'mcs_value_status': 'MCS: 285 毫米²',
                 'intraoral_title': '3D 口內掃描 (牙齒)',
                 'ceph_title': '頭影流動測量分析',
                 'reject_reason_prompt': '請輸入拒絕原因:',
@@ -599,9 +599,221 @@
             }
         };
         
+        // --- Core Functions (FIXED: Defined globally using function keyword) ---
+
+        function setupDiagnosticHistorySelectors() {
+            const langData = translations[currentLang];
+
+            const cbctSelect = document.getElementById('cbct-history-select');
+            cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+            
+            const intraoralSelect = document.getElementById('intraoral-history-select');
+            intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+
+            const cephSelect = document.getElementById('ceph-history-select');
+            cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+
+            updateDiagnosticContent('cbct', '0');
+            updateDiagnosticContent('intraoral', '0');
+            updateDiagnosticContent('ceph', '0');
+        }
+
+
+        function updateDiagnosticContent(type, id) {
+            const data = diagnosticHistory[type].find(item => item.id === id);
+            if (!data) return;
+            const langData = translations[currentLang];
+
+            if (type === 'cbct') {
+                const display = document.getElementById('cbct-display');
+                const mcsStatusEl = display.querySelector('#mcs-status-display');
+                const noteEl = display.querySelector('#cbct-note-display');
+                
+                mcsStatusEl.textContent = data.mcs + ' ' + (langData[data.statusKey] || data.statusKey);
+                
+                if (data.statusKey === 'mcs_status_critical') {
+                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 alert-red';
+                } else {
+                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500';
+                }
+
+                noteEl.textContent = langData[data.noteKey] || data.note;
+
+            } else if (type === 'intraoral') {
+                const display = document.getElementById('intraoral-display');
+                const statusEl = display.querySelector('[data-key^="schwarz_status"]');
+                const noteEl = display.querySelector('#schwarz-note-display');
+
+                statusEl.textContent = langData[data.statusKey] || data.statusKey;
+                noteEl.textContent = langData[data.noteKey] || data.note;
+
+            } else if (type === 'ceph') {
+                const display = document.getElementById('ceph-display');
+                const statusEl = display.querySelector('[data-key^="sassouni_status"]');
+                const noteEl = display.querySelector('#sassouni-note-display');
+
+                statusEl.textContent = langData[data.statusKey] || data.statusKey;
+                noteEl.textContent = langData[data.noteKey] || data.note;
+            }
+        }
+
+        function updateApplianceDetails(monthValue) {
+            const month = parseInt(monthValue);
+            const langData = translations[currentLang];
+            const adjSetting = document.getElementById('adj-setting-value');
+            const adjDate = document.getElementById('adj-date-value');
+            const adjNoteContentEl = document.getElementById('adj-note-label'); 
+            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); 
+            const dentistNoteContentEl = document.getElementById('dentist-note-content'); 
+            const displayMonth = document.getElementById('display-month');
+            
+            if (month > monthsCompleted) {
+                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
+                return;
+            }
+            
+            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
+            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
+            displayMonth.textContent = month;
+
+            let state = applianceAdjustments
+                .filter(adj => adj.month <= month)
+                .sort((a, b) => b.month - a.month)[0];
+
+            if (state) {
+                adjSetting.textContent = state.expansion;
+                adjDate.textContent = state.date;
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', state.clinicalDate);
+                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
+
+            } else {
+                adjSetting.textContent = langData.state_m0_set;
+                adjDate.textContent = 'N/A';
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
+                dentistNoteContentEl.textContent = langData.note_clinical_m0;
+            }
+        }
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        function switchMainPane(paneId) {
+            currentPane = paneId;
+            
+            document.querySelectorAll('.main-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            document.getElementById(`pane-${paneId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchMainPane('${paneId}')"]`).classList.add('active');
+
+            if (paneId === 'overview') {
+                 currentClient = null;
+            }
+        }
+        
+        function switchClientDetailTab(tabId) {
+            currentClientTab = tabId;
+            
+            document.querySelectorAll('.client-detail-tab').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.getElementById(`client-tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-button').forEach(button => {
+                 button.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchClientDetailTab('${tabId}')"]`).classList.add('active');
+        }
+
+
+        function selectPatient(name) {
+            currentClient = mockPatients[name];
+            currentClient.name = name;
+            
+            document.getElementById('client-detail-name').textContent = `${name}'s Full File (ID: ${currentClient.id})`;
+            
+            // Switch to the Client Detail Pane
+            switchMainPane('client-detail');
+            switchClientDetailTab('client-plan');
+        }
+        
+        function mockSearchPatients() {
+             alert('Simulating search...');
+        }
+        
+        function acceptPatient(id) {
+            alert(translations[currentLang].btn_accept + ` patient ID ${id}. Sending welcome packet.`);
+        }
+
+        function rejectPatient(id) {
+            const reason = prompt(translations[currentLang].reject_reason_prompt || "Reason for rejection:");
+            if (reason) {
+                alert(`Rejecting patient ID ${id}. Reason: ${reason}`);
+            }
+        }
+        
+        function updateComparisonView() {
+            // Placeholder for compatibility
+        }
+
+        function renderPipeline() {
+             // Placeholder for compatibility
+        }
+
+        function updateText() {
+            const langData = translations[currentLang];
+            
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    element.textContent = langData[key];
+                }
+            });
+
+            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
+            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
+
+            // Update main status metrics
+            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
+            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
+            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
+
+            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
+            document.getElementById('app_remaining_time').textContent = remainingText;
+            
+            // Re-initialize dynamic components
+            // setupDiagnosticHistorySelectors(); 
+            
+            if (document.getElementById('appliance-timeline-slider')) {
+                const initialMonth = document.getElementById('appliance-timeline-slider').value;
+                updateApplianceDetails(initialMonth); 
+            }
+
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+        }
+        
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             updateText();
+            // Default pane set in HTML structure
         });
     </script>
 </body>
