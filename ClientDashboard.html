@@ -63,24 +63,8 @@
             margin-top: -7px; 
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
         }
-        /* Pipeline Styling (Kept for reference, but not used in top section anymore) */
-        .pipeline-stage {
-            @apply flex flex-col items-center flex-1 min-w-0 mx-1 relative z-10;
-        }
-        .pipeline-dot {
-            @apply w-4 h-4 rounded-full border-2 border-gray-300 transition-all duration-300;
-        }
-        .pipeline-dot.current {
-            @apply border-sky-500 bg-sky-100 ring-4 ring-sky-300;
-        }
-        .pipeline-dot.complete {
-            @apply bg-teal-500 border-teal-500;
-        }
-        .pipeline-connector {
-            @apply absolute top-1/2 left-0 right-0 h-1 bg-gray-200 z-0;
-        }
-        .pipeline-connector-progress {
-            @apply absolute top-0 left-0 h-full bg-teal-400 transition-all duration-500;
+        .metric-card {
+            @apply bg-white p-4 rounded-lg shadow-sm border border-gray-100;
         }
     </style>
 </head>
@@ -325,6 +309,26 @@
                     <div id="tab-progress" class="tab-content space-y-8 hidden">
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_title">Progress Photo Timeline</h2>
+                            
+                            <!-- Integrated Progress Metrics (NEW) -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div class="metric-card border-l-4 border-yellow-500">
+                                    <p class="text-xs text-gray-500" data-key="metric_jaw_size">Jaw Width Increase (Intermolar):</p>
+                                    <p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-jaw-current">42.5mm</span></p>
+                                    <p class="text-xs text-gray-600" data-key="metric_start_target">Start: 40.0mm | Target: 45.0mm</p>
+                                </div>
+                                <div class="metric-card border-l-4 border-teal-500">
+                                    <p class="text-xs text-gray-500" data-key="metric_airway">Airway Patency (MCS):</p>
+                                    <p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-airway-current">305 mm²</span></p>
+                                    <p class="text-xs text-gray-600" data-key="metric_start_target_airway">Start: 285 mm² | Target: >320 mm²</p>
+                                </div>
+                                <div class="metric-card border-l-4 border-indigo-500">
+                                    <p class="text-xs text-gray-500" data-key="metric_sleep_score">Sleep Symptom Score (MSQ):</p>
+                                    <p class="text-lg font-bold text-green-600 mt-1"><span id="metric-sleep-current">18 <span class="text-sm text-gray-500" data-key="score_change_text">(↓ -7)</span></span></p>
+                                    <p class="text-xs text-gray-600" data-key="metric_start_target_sleep">Start: 25 | Target: < 5</p>
+                                </div>
+                            </div>
+
                             <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Track your jaw and posture changes over the 18-month growth prescription period.</p>
                             
                             <!-- Comparison Slider and Images (Updated for multiple checkpoints) -->
@@ -393,8 +397,8 @@
 
     <!-- JavaScript for Tab Switching and Translations (FIXED) -->
     <script>
-        // --- Global Constants (FIXED: Declared only once) ---
-        const currentLang = 'en'; // Default language
+        // --- Global Constants ---
+        const currentLang = 'en'; 
         const monthsCompleted = 6;
         const totalPrescriptionMonths = 24;
         const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
@@ -423,7 +427,180 @@
             ]
         };
 
-        // --- Translation Data Structure ---
+        // --- Core Functions (FIXED: Defined globally) ---
+
+        function setupDiagnosticHistorySelectors() {
+            const langData = translations[currentLang];
+
+            const cbctSelect = document.getElementById('cbct-history-select');
+            cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+            
+            const intraoralSelect = document.getElementById('intraoral-history-select');
+            intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+
+            const cephSelect = document.getElementById('ceph-history-select');
+            cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+
+            updateDiagnosticContent('cbct', '0');
+            updateDiagnosticContent('intraoral', '0');
+            updateDiagnosticContent('ceph', '0');
+        }
+
+
+        function updateDiagnosticContent(type, id) {
+            const data = diagnosticHistory[type].find(item => item.id === id);
+            if (!data) return;
+            const langData = translations[currentLang];
+
+            if (type === 'cbct') {
+                const display = document.getElementById('cbct-display');
+                const mcsStatusEl = display.querySelector('#mcs-status-display');
+                const noteEl = display.querySelector('#cbct-note-display');
+                
+                mcsStatusEl.textContent = data.mcs + ' ' + (langData[data.statusKey] || data.statusKey);
+                
+                if (data.statusKey === 'mcs_status_critical') {
+                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 alert-red';
+                } else {
+                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500';
+                }
+
+                noteEl.textContent = langData[data.noteKey] || data.note;
+
+            } else if (type === 'intraoral') {
+                const display = document.getElementById('intraoral-display');
+                const statusEl = display.querySelector('[data-key^="schwarz_status"]');
+                const noteEl = display.querySelector('#schwarz-note-display');
+
+                statusEl.textContent = langData[data.statusKey] || data.statusKey;
+                noteEl.textContent = langData[data.noteKey] || data.note;
+
+            } else if (type === 'ceph') {
+                const display = document.getElementById('ceph-display');
+                const statusEl = display.querySelector('[data-key^="sassouni_status"]');
+                const noteEl = display.querySelector('#sassouni-note-display');
+
+                statusEl.textContent = langData[data.statusKey] || data.statusKey;
+                noteEl.textContent = langData[data.noteKey] || data.note;
+            }
+        }
+
+        function updateApplianceDetails(monthValue) {
+            const month = parseInt(monthValue);
+            const langData = translations[currentLang];
+            const adjSetting = document.getElementById('adj-setting-value');
+            const adjDate = document.getElementById('adj-date-value');
+            const adjNoteContentEl = document.getElementById('adj-note-label'); 
+            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); 
+            const dentistNoteContentEl = document.getElementById('dentist-note-content'); 
+            const displayMonth = document.getElementById('display-month');
+            
+            if (month > monthsCompleted) {
+                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
+                return;
+            }
+            
+            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
+            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
+            displayMonth.textContent = month;
+
+            let state = applianceAdjustments
+                .filter(adj => adj.month <= month)
+                .sort((a, b) => b.month - a.month)[0];
+
+            if (state) {
+                adjSetting.textContent = state.expansion;
+                adjDate.textContent = state.date;
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', state.clinicalDate);
+                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
+
+            } else {
+                adjSetting.textContent = langData.state_m0_set;
+                adjDate.textContent = 'N/A';
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
+                dentistNoteContentEl.textContent = langData.note_clinical_m0;
+            }
+        }
+        
+        function toggleLanguage() {
+            if (typeof currentLang === 'undefined') {
+                currentLang = 'en'; 
+            }
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            const activeContent = document.getElementById('tab-' + tabId);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+            }
+            const activeButton = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        function updateComparisonView() {
+            // Placeholder for compatibility
+        }
+
+        function renderPipeline() {
+             // Placeholder for compatibility
+        }
+
+        function updateText() {
+            const langData = translations[currentLang];
+            
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    element.textContent = langData[key];
+                }
+            });
+
+            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
+            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
+
+            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
+            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
+            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
+
+            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
+            document.getElementById('app_remaining_time').textContent = remainingText;
+            
+            setupDiagnosticHistorySelectors();
+            
+            const initialMonth = document.getElementById('appliance-timeline-slider').value;
+            updateApplianceDetails(initialMonth); 
+
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+        }
+        
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateText();
+        });
+        
+        // --- Translation Data Structure (Defined here for clarity) ---
         const translations = {
             'en': {
                 'header_title': 'AMD Client Dashboard',
