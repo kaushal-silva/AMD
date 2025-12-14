@@ -11,11 +11,20 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
         }
-        .bg-gradient-header {
-            background-image: linear-gradient(to right, #06b6d4, #10b981);
+        .step-container {
+            min-height: 500px;
         }
-        .shadow-step {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        .step-indicator {
+            @apply flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm;
+        }
+        .step-indicator.active {
+            @apply bg-sky-500 text-white;
+        }
+        .step-indicator.complete {
+            @apply bg-teal-500 text-white;
+        }
+        .step-indicator.pending {
+            @apply bg-gray-300 text-gray-700;
         }
     </style>
 </head>
@@ -24,149 +33,389 @@
     <!-- Onboarding Page Container -->
     <div class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
 
-        <!-- Language Toggle -->
-        <div class="w-full max-w-5xl flex justify-end mb-6">
-            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-sky-600 border border-sky-600 hover:bg-sky-50 transition duration-150 font-semibold shadow-md">
+        <!-- Header -->
+        <header class="w-full max-w-6xl flex justify-between items-center mb-6">
+            <h1 id="onboard-title" class="text-3xl font-extrabold text-gray-900" data-key="title">Client Onboarding: Start Your Journey</h1>
+            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-sky-600 border border-sky-600 hover:bg-sky-50 transition duration-150 font-semibold shadow-md text-sm">
                 <!-- Text updated by JavaScript -->
             </button>
-        </div>
-
-        <!-- Header -->
-        <header class="text-center mb-10 max-w-4xl">
-            <h1 id="onboard-title" class="text-4xl font-extrabold text-gray-900" data-key="title">Client Onboarding: First Steps</h1>
-            <p id="onboard-subtitle" class="mt-2 text-lg text-gray-500" data-key="subtitle">Help us understand your health by completing one of the steps below.</p>
         </header>
 
-        <!-- Main Content Grid -->
-        <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-            <!-- Card 1: Questionnaire -->
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-step border-t-4 border-sky-500 flex flex-col">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="card1_title">1. Impaired Mouth Syndrome Questionnaire</h2>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="card1_desc">Answer 5 quick questions about your daily symptoms and habits.</p>
-                
-                <!-- Questionnaire Section -->
-                <div id="questionnaire-section" class="space-y-4 mb-6">
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q1">Q1: Do you frequently wake up with a dry mouth or headache?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q2">Q2: Do you often experience neck pain, shoulder tension, or poor posture?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q3">Q3: Do you have difficulty chewing or experience jaw joint (TMJ) discomfort?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q4">Q4: Do you notice teeth grinding or clenching during the day or night?</p>
-                        <div class="flex space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-medium text-gray-700" data-key="q5">Q5: Do you frequently use mouthwash or chewing gum to manage dry mouth/bad breath?</p>
-                        <div class="flex space-space-x-4 mt-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="yes" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">Yes</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="no" class="text-sky-600 focus:ring-sky-500 mr-1"> <span class="text-sm">No</span></label>
-                        </div>
-                    </div>
+        <!-- Progress Stepper -->
+        <div class="w-full max-w-6xl bg-white p-4 rounded-xl shadow-lg mb-8">
+            <div class="flex justify-between items-center">
+                <div class="flex flex-col items-center">
+                    <div id="step-1-icon" class="step-indicator active">1</div>
+                    <p class="text-xs mt-1 text-gray-700" data-key="step_1_name">Basic Info & Symptoms</p>
                 </div>
+                <div class="flex-grow h-px bg-gray-300 mx-2"></div>
+                <div class="flex flex-col items-center">
+                    <div id="step-2-icon" class="step-indicator pending">2</div>
+                    <p class="text-xs mt-1 text-gray-700" data-key="step_2_name">Dentist Selection & Referral</p>
+                </div>
+                <div class="flex-grow h-px bg-gray-300 mx-2"></div>
+                <div class="flex flex-col items-center">
+                    <div id="step-3-icon" class="step-indicator pending">3</div>
+                    <p class="text-xs mt-1 text-gray-700" data-key="step_3_name">Optional Photo Upload</p>
+                </div>
+            </div>
+        </div>
 
-                <button class="py-3 px-6 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="card1_start" onclick="simulateStart('Questionnaire')">
-                    Start Questionnaire
-                </button>
+        <!-- Main Content Area with Steps -->
+        <main class="w-full max-w-4xl bg-white p-8 rounded-xl shadow-lg step-container">
+            
+            <!-- Step 1: Basic Info & Questionnaire -->
+            <div id="step-1" class="current-step">
+                <h2 class="text-2xl font-bold text-sky-600 mb-6" data-key="sec_basic_info_title">1. Personal Information & Initial Assessment</h2>
+                
+                <form id="basic-info-form" class="space-y-4 mb-8">
+                    <!-- Basic Info -->
+                    <h3 class="font-bold text-gray-700" data-key="sec_basic_info_subtitle">Your Contact Details (Absolute Basics)</h3>
+                    <input type="text" placeholder="Full Name / 姓名" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    <input type="email" placeholder="Email / 電子郵箱" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    <input type="tel" placeholder="Phone Number / 電話號碼" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    
+                    <!-- How did you find us? -->
+                    <h3 class="font-bold text-gray-700 pt-4" data-key="sec_how_found_title">How Did You Find Out About Us?</h3>
+                    <select id="how-found-select" onchange="checkReferralSource()" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        <option value="" disabled selected data-key="select_placeholder">Select an option</option>
+                        <option value="Book" data-key="option_book">Book (Link to Dr. Felix's Book)</option>
+                        <option value="Seminar" data-key="option_seminar">Seminar / Workshop</option>
+                        <option value="Social Media" data-key="option_social">Social Media / Internet</option>
+                        <option value="Article" data-key="option_article">News/Health Article</option>
+                        <option value="Dentist Referral" data-key="option_dentist_referral">Dentist Referral</option>
+                        <option value="Other" data-key="option_other">Other</option>
+                    </select>
+                    <input type="text" id="dentist-referral-input" placeholder="Name of Dentist" class="w-full p-3 border border-gray-300 rounded-lg hidden">
+
+                    <!-- Questionnaire -->
+                    <h3 class="font-bold text-gray-700 pt-6" data-key="sec_questionnaire_title">Initial Impaired Mouth Syndrome Screening</h3>
+                    <p class="text-sm text-gray-500 mb-4" data-key="sec_questionnaire_subtitle">Please rate the following symptoms based on your past 30 days (0=Never, 4=Frequent/Severe).</p>
+
+                    <div id="ims-questions" class="space-y-3">
+                        <!-- Q1: Headache/migraine (especially upon waking) -->
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-700" data-key="q1">Q1: Do you frequently wake up with a headache/migraine?</p>
+                            <input type="range" min="0" max="4" value="0" class="w-full mt-2" name="ims_q1">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span data-key="rating_0">0 (Never)</span>
+                                <span data-key="rating_4">4 (Frequent/Severe)</span>
+                            </div>
+                        </div>
+                         <!-- Q2: TMJ clicking/jaw locking -->
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-700" data-key="q2">Q2: Do you experience TMJ clicking or jaw locking?</p>
+                            <input type="range" min="0" max="4" value="0" class="w-full mt-2" name="ims_q2">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span data-key="rating_0">0 (Never)</span>
+                                <span data-key="rating_4">4 (Frequent/Severe)</span>
+                            </div>
+                        </div>
+                        <!-- Q3: Snoring/mouth breathing during sleep -->
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-700" data-key="q3">Q3: Do you snore or breathe through your mouth while sleeping?</p>
+                            <input type="range" min="0" max="4" value="0" class="w-full mt-2" name="ims_q3">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span data-key="rating_0">0 (Never)</span>
+                                <span data-key="rating_4">4 (Frequent/Severe)</span>
+                            </div>
+                        </div>
+                        <!-- Q4: Shoulder/neck stiffness or pain -->
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-700" data-key="q4">Q4: Do you frequently experience shoulder or neck stiffness/pain?</p>
+                            <input type="range" min="0" max="4" value="0" class="w-full mt-2" name="ims_q4">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span data-key="rating_0">0 (Never)</span>
+                                <span data-key="rating_4">4 (Frequent/Severe)</span>
+                            </div>
+                        </div>
+                        <!-- Q5: Fatigue/weakness -->
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-medium text-gray-700" data-key="q5">Q5: Do you frequently feel fatigue or general weakness?</p>
+                            <input type="range" min="0" max="4" value="0" class="w-full mt-2" name="ims_q5">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span data-key="rating_0">0 (Never)</span>
+                                <span data-key="rating_4">4 (Frequent/Severe)</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="flex justify-end">
+                    <button onclick="nextStep(2)" class="py-3 px-8 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="btn_next_step">Next Step</button>
+                </div>
             </div>
 
-            <!-- Card 2: Photo Upload -->
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-step border-t-4 border-teal-500 flex flex-col">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="card2_title">2. Upload Photos / Scans</h2>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="card2_desc">Upload recent photos of your teeth, jaw, or posture, or past scans.</p>
-                
-                <!-- Mock Upload Area -->
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center flex-grow flex flex-col justify-center items-center mb-6">
-                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <p class="mt-2 text-sm text-gray-500">Drag and drop files here or click to browse</p>
-                    <input type="file" multiple class="hidden" id="file-upload" onchange="simulateUpload(this.files.length)">
-                </div>
+            <!-- Step 2: Dentist Selection & Referral -->
+            <div id="step-2" class="hidden">
+                 <h2 class="text-2xl font-bold text-sky-600 mb-6" data-key="sec_dentist_select_title">2. Choose Your Dentist & Download Referral</h2>
+                 
+                 <div class="bg-teal-50 border-l-4 border-teal-500 p-4 mb-6 rounded-lg">
+                     <h3 class="font-bold text-teal-800 mb-2" data-key="referral_box_title">Initial Scan Referral Instructions</h3>
+                     <p class="text-sm text-teal-700 mb-4" data-key="referral_box_desc">You need a CBCT Scan and a Jaw X-ray for your initial IMS diagnosis. Download the referral form below and take it to a scan center.</p>
+                     <button class="py-2 px-4 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm font-medium" data-key="btn_download_referral">Download Scan Referral Form (PDF)</button>
+                 </div>
 
-                <button class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150" data-key="card2_upload" onclick="document.getElementById('file-upload').click()">
-                    Upload Files
-                </button>
+                 <h3 class="font-bold text-gray-700 pt-4 mb-4" data-key="sec_select_dentist_title">Select Your Local AMD Dentist (Choose 2)</h3>
+                 
+                 <p class="text-sm text-gray-500 mb-4" data-key="sec_select_dentist_subtitle">Select two recommended local dentists. We will contact you once one accepts your case to book your first appointment.</p>
+
+                 <!-- Map Mockup -->
+                 <div class="h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-4">
+                     <p class="text-gray-500 text-center" data-key="map_mock">Mockup of Taiwan Map showing Recommended Clinics</p>
+                 </div>
+
+                 <!-- Dentist Search -->
+                 <input type="text" id="dentist-search-input" placeholder="Search by Clinic Name or Area in Taiwan" class="w-full p-3 border border-gray-300 rounded-lg mb-4">
+                 
+                 <!-- Dentist List/Selection -->
+                 <div id="dentist-list" class="space-y-3 mb-6">
+                     <!-- Mock Dentists -->
+                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-sky-50">
+                         <input type="checkbox" name="dentist_select" value="1" class="text-sky-600 focus:ring-sky-500 mr-3">
+                         <span class="flex-grow">Dr. C. Lin, Harmony Clinic (Taipei)</span>
+                         <span class="text-xs text-sky-600 font-medium">IMS Certified</span>
+                     </label>
+                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-sky-50">
+                         <input type="checkbox" name="dentist_select" value="2" class="text-sky-600 focus:ring-sky-500 mr-3">
+                         <span class="flex-grow">Dr. K. Wang, Airway Center (Kaohsiung)</span>
+                         <span class="text-xs text-sky-600 font-medium">IMS Certified</span>
+                     </label>
+                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-sky-50">
+                         <input type="checkbox" name="dentist_select" value="other" class="text-sky-600 focus:ring-sky-500 mr-3" onchange="toggleOtherDentistDetails(this.checked)">
+                         <span class="flex-grow" data-key="option_other_dentist">Other (I will use my own dentist)</span>
+                     </label>
+                 </div>
+                 
+                 <!-- Other Dentist Details -->
+                 <div id="other-dentist-details" class="space-y-3 mb-6 hidden border p-4 rounded-lg bg-gray-50">
+                     <p class="text-sm text-gray-700 font-medium" data-key="other_dentist_note">Please provide your dentist's details and we will send them the necessary IMV file specifications.</p>
+                     <input type="text" placeholder="Dentist Name / 牙醫姓名" class="w-full p-3 border border-gray-300 rounded-lg">
+                     <input type="email" placeholder="Clinic Email / 診所電郵" class="w-full p-3 border border-gray-300 rounded-lg">
+                 </div>
+
+                <div class="flex justify-between">
+                    <button onclick="nextStep(1)" class="py-3 px-8 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150" data-key="btn_previous_step">Previous Step</button>
+                    <button onclick="nextStep(3)" class="py-3 px-8 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="btn_next_step">Next Step</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Optional Photo Upload -->
+            <div id="step-3" class="hidden">
+                 <h2 class="text-2xl font-bold text-sky-600 mb-6" data-key="sec_photo_upload_title">3. Optional: Upload Jaw & Posture Photos</h2>
+                 
+                 <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-lg">
+                     <p class="font-bold text-blue-800 mb-1" data-key="photo_note_title">Note:</p>
+                     <p class="text-sm text-blue-700" data-key="photo_note_desc">More comprehensive photos will be taken at the clinic. This upload is optional, but highly recommended as it helps the specialist accelerate your preliminary diagnosis.</p>
+                 </div>
+
+                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center flex flex-col justify-center items-center mb-6">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <p class="mt-2 text-sm text-gray-500" data-key="upload_prompt">Drag and drop photos here or click to browse (Jaw, Posture - Multiple Angles recommended)</p>
+                    <input type="file" multiple class="hidden" id="file-upload-input" onchange="simulateUpload(this.files.length)">
+                 </div>
+
+                <div class="flex justify-between">
+                    <button onclick="nextStep(2)" class="py-3 px-8 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150" data-key="btn_previous_step">Previous Step</button>
+                    <button onclick="finishOnboarding()" class="py-3 px-8 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150" data-key="btn_finish_onboarding">Go to Client Dashboard</button>
+                </div>
             </div>
 
         </main>
-
-        <!-- Navigation Buttons -->
-        <div class="w-full max-w-5xl flex justify-between mt-10 space-x-4">
-            <button onclick="window.location.href='ClientDashboard.html'" class="py-3 px-6 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-150" data-key="skip_button">
-                Skip & Go to Dashboard
-            </button>
-            <button onclick="window.location.href='ClientDashboard.html'" class="py-3 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150" data-key="next_button">
-                Next Step
-            </button>
-        </div>
     </div>
 
-    <!-- JavaScript for translations and mock actions -->
+    <!-- JavaScript for multi-step logic and translations -->
     <script>
+        let currentStep = 1;
         let currentLang = 'en';
 
         // --- Translation Data Structure (JSON) ---
         const translations = {
             'en': {
-                'title': 'Client Onboarding: First Steps',
-                'subtitle': 'Help us understand your health by completing one of the steps below.',
-                'skip_button': 'Skip & Go to Dashboard',
-                'next_button': 'Next Step',
-                'card1_title': '1. Impaired Mouth Syndrome Questionnaire',
-                'card1_desc': 'Answer 5 quick questions about your daily symptoms and habits.',
-                'card1_start': 'Start Questionnaire',
-                'card2_title': '2. Upload Photos / Scans',
-                'card2_desc': 'Upload recent photos of your teeth, jaw, or posture, or past scans.',
-                'card2_upload': 'Upload Files',
-                'q1': 'Q1: Do you frequently wake up with a dry mouth or headache?',
-                'q2': 'Q2: Do you often experience neck pain, shoulder tension, or poor posture?',
-                'q3': 'Q3: Do you have difficulty chewing or experience jaw joint (TMJ) discomfort?',
-                'q4': 'Q4: Do you notice teeth grinding or clenching during the day or night?',
-                'q5': 'Q5: Do you frequently use mouthwash or chewing gum to manage dry mouth/bad breath?',
-                'yes': 'Yes',
-                'no': 'No',
+                'title': 'Client Onboarding: Start Your Journey',
+                'step_1_name': 'Basic Info & Symptoms',
+                'step_2_name': 'Dentist Selection & Referral',
+                'step_3_name': 'Optional Photo Upload',
+                'sec_basic_info_title': '1. Personal Information & Initial Assessment',
+                'sec_basic_info_subtitle': 'Your Contact Details (Absolute Basics)',
+                'sec_how_found_title': 'How Did You Find Out About Us?',
+                'select_placeholder': 'Select an option',
+                'option_book': 'Book (Link to Dr. Felix\'s Book)',
+                'option_seminar': 'Seminar / Workshop',
+                'option_social': 'Social Media / Internet',
+                'option_article': 'News/Health Article',
+                'option_dentist_referral': 'Dentist Referral',
+                'option_other': 'Other',
+                'sec_questionnaire_title': 'Initial Impaired Mouth Syndrome Screening',
+                'sec_questionnaire_subtitle': 'Please rate the following symptoms based on your past 30 days (0=Never, 4=Frequent/Severe).',
+                'q1': 'Q1: Do you frequently wake up with a headache/migraine?',
+                'q2': 'Q2: Do you experience TMJ clicking or jaw locking?',
+                'q3': 'Q3: Do you snore or breathe through your mouth while sleeping?',
+                'q4': 'Q4: Do you frequently experience shoulder or neck stiffness/pain?',
+                'q5': 'Q5: Do you frequently feel fatigue or general weakness?',
+                'rating_0': '0 (Never)',
+                'rating_4': '4 (Frequent/Severe)',
+                'btn_next_step': 'Next Step',
+                'btn_previous_step': 'Previous Step',
+                'sec_dentist_select_title': '2. Choose Your Dentist & Download Referral',
+                'referral_box_title': 'Initial Scan Referral Instructions',
+                'referral_box_desc': 'You need a CBCT Scan and a Jaw X-ray for your initial IMS diagnosis. Download the referral form below and take it to a scan center.',
+                'btn_download_referral': 'Download Scan Referral Form (PDF)',
+                'sec_select_dentist_title': 'Select Your Local AMD Dentist (Choose 2)',
+                'sec_select_dentist_subtitle': 'Select two recommended local dentists. We will contact you once one accepts your case to book your first appointment.',
+                'map_mock': 'Mockup of Taiwan Map showing Recommended Clinics',
+                'option_other_dentist': 'Other (I will use my own dentist)',
+                'other_dentist_note': 'Please provide your dentist\'s details and we will send them the necessary IMV file specifications.',
+                'sec_photo_upload_title': '3. Optional: Upload Jaw & Posture Photos',
+                'photo_note_title': 'Note:',
+                'photo_note_desc': 'More comprehensive photos will be taken at the clinic. This upload is optional, but highly recommended as it helps the specialist accelerate your preliminary diagnosis.',
+                'upload_prompt': 'Drag and drop photos here or click to browse (Jaw, Posture - Multiple Angles recommended)',
+                'btn_finish_onboarding': 'Go to Client Dashboard',
                 'toggle_text': '中文'
             },
             'zh': {
-                'title': '客戶註冊：第一步',
-                'subtitle': '請完成以下其中一項步驟，幫助我們了解您的健康狀況。',
-                'skip_button': '跳過並前往儀表板',
-                'next_button': '下一步',
-                'card1_title': '1. 口腔功能障礙綜合徵問卷',
-                'card1_desc': '回答 5 個關於您日常症狀和習慣的快速問題。',
-                'card1_start': '開始填寫問卷',
-                'card2_title': '2. 上傳照片/掃描件',
-                'card2_desc': '上傳您牙齒、下巴或姿勢的近期照片，或過往的掃描件。',
-                'card2_upload': '上傳文件',
-                'q1': 'Q1: 您是否經常醒來時口乾或頭痛？',
-                'q2': 'Q2: 您是否經常感到頸部疼痛、肩部緊張或姿勢不良？',
-                'q3': 'Q3: 您咀嚼是否困難或感覺下巴關節（TMJ）不適？',
-                'q4': 'Q4: 您白天或晚上是否會磨牙或緊咬牙齒？',
-                'q5': 'Q5: 您是否經常使用漱口水或口香糖來應對口乾/口臭？',
-                'yes': '是',
-                'no': '否',
+                'title': '客戶註冊：開始您的旅程',
+                'step_1_name': '基本資料與症狀',
+                'step_2_name': '牙醫選擇與轉介',
+                'step_3_name': '可選照片上傳',
+                'sec_basic_info_title': '1. 個人基本資料與初步評估',
+                'sec_basic_info_subtitle': '您的聯絡資訊 (絕對基礎)',
+                'sec_how_found_title': '您是如何知道我們的？',
+                'select_placeholder': '請選擇一個選項',
+                'option_book': '書籍 (Dr. Felix 的書連結)',
+                'option_seminar': '研討會 / 工作坊',
+                'option_social': '社群媒體 / 網路',
+                'option_article': '新聞/健康文章',
+                'option_dentist_referral': '牙醫轉介',
+                'option_other': '其他',
+                'sec_questionnaire_title': '初步口腔功能障礙綜合徵篩查',
+                'sec_questionnaire_subtitle': '請根據您過去 30 天的症狀評分 (0=從未, 4=頻繁/嚴重)。',
+                'q1': 'Q1: 您是否經常醒來時伴有頭痛/偏頭痛？',
+                'q2': 'Q2: 您是否經歷過顳顎關節彈響或下巴卡住？',
+                'q3': 'Q3: 您睡覺時是否打鼾或張口呼吸？',
+                'q4': 'Q4: 您是否經常感到肩頸僵硬/疼痛？',
+                'q5': 'Q5: 您是否經常感到疲勞或全身無力？',
+                'rating_0': '0 (從未)',
+                'rating_4': '4 (頻繁/嚴重)',
+                'btn_next_step': '下一步',
+                'btn_previous_step': '上一步',
+                'sec_dentist_select_title': '2. 選擇您的牙醫並下載轉介單',
+                'referral_box_title': '初步掃描轉介說明',
+                'referral_box_desc': '您需要 CBCT 掃描和下顎 X 光片以進行初步 IMS 診斷。請下載下方的轉介表格並攜帶至掃描中心。',
+                'btn_download_referral': '下載掃描轉介表格 (PDF)',
+                'sec_select_dentist_title': '選擇您的本地 AMD 牙醫 (請選擇 2 位)',
+                'sec_select_dentist_subtitle': '請選擇兩位推薦的本地牙醫。一旦有人接受您的病例，我們將與您聯繫，以便預約您的初診。',
+                'map_mock': '台灣地圖模擬，顯示推薦診所',
+                'option_other_dentist': '其他 (我將使用自己的牙醫)',
+                'other_dentist_note': '請提供您牙醫的詳細資訊，我們將向他們發送所需的 IMV 文件規格。',
+                'sec_photo_upload_title': '3. 可選：上傳下顎與姿勢照片',
+                'photo_note_title': '注意:',
+                'photo_note_desc': '診所將拍攝更全面的照片。此上傳為可選，但強烈建議，因為它有助於專家加快您的初步診斷。',
+                'upload_prompt': '在此處拖放照片或點擊瀏覽 (下顎、姿勢—建議多角度)',
+                'btn_finish_onboarding': '前往客戶儀表板',
                 'toggle_text': 'English'
             }
         };
 
+        // --- Stepper Logic ---
+        function updateStepper(step) {
+            document.querySelectorAll('.step-indicator').forEach(el => {
+                const stepNum = parseInt(el.id.split('-')[1]);
+                el.classList.remove('active', 'pending', 'complete');
+                if (stepNum < step) {
+                    el.classList.add('complete');
+                } else if (stepNum === step) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.add('pending');
+                }
+            });
+
+            document.querySelectorAll('.current-step, .hidden').forEach(el => {
+                if (el.id === `step-${step}`) {
+                    el.classList.remove('hidden');
+                    el.classList.add('current-step');
+                } else if (el.classList.contains('current-step')) {
+                     el.classList.remove('current-step');
+                     el.classList.add('hidden');
+                }
+            });
+
+            currentStep = step;
+        }
+
+        function nextStep(step) {
+            // Optional validation before moving to next step
+            if (step > currentStep) {
+                 if (currentStep === 1) {
+                     // Simple mock validation for required fields
+                     const name = document.querySelector('#basic-info-form input[type="text"]').value;
+                     const email = document.querySelector('#basic-info-form input[type="email"]').value;
+                     if (!name || !email) {
+                         alert(currentLang === 'en' ? 'Please fill in required fields.' : '請填寫必填欄位。');
+                         return;
+                     }
+                     // Check dentist referral input visibility and value
+                     const referralSelect = document.getElementById('how-found-select');
+                     const referralInput = document.getElementById('dentist-referral-input');
+                     if (referralSelect.value === 'Dentist Referral' && !referralInput.value.trim()) {
+                         alert(currentLang === 'en' ? 'Please enter the name of the referring dentist.' : '請輸入轉介牙醫的姓名。');
+                         return;
+                     }
+                 } else if (currentStep === 2) {
+                     const selectedDentists = document.querySelectorAll('input[name="dentist_select"]:checked').length;
+                     const otherChecked = document.querySelector('input[name="dentist_select"][value="other"]').checked;
+                     
+                     if (selectedDentists === 0) {
+                         alert(currentLang === 'en' ? 'Please select at least one dentist.' : '請至少選擇一位牙醫。');
+                         return;
+                     }
+                     if (!otherChecked && selectedDentists > 2) {
+                         alert(currentLang === 'en' ? 'Please select a maximum of two recommended dentists.' : '請最多選擇兩位推薦牙醫。');
+                         return;
+                     }
+                 }
+            }
+            
+            updateStepper(step);
+            window.scrollTo(0, 0); // Scroll to top for new section
+        }
+
+        function checkReferralSource() {
+            const select = document.getElementById('how-found-select');
+            const input = document.getElementById('dentist-referral-input');
+            if (select.value === 'Dentist Referral') {
+                input.classList.remove('hidden');
+                input.required = true;
+            } else {
+                input.classList.add('hidden');
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        function toggleOtherDentistDetails(checked) {
+            const details = document.getElementById('other-dentist-details');
+            if (checked) {
+                details.classList.remove('hidden');
+            } else {
+                details.classList.add('hidden');
+            }
+        }
+        
+        function simulateUpload(count) {
+             const message = currentLang === 'en' ? 
+                 `Successfully selected ${count} photo(s). You can proceed to the dashboard.` :
+                 `成功選擇 ${count} 張照片。您可以前往儀表板。`;
+             alert(message);
+        }
+
+        function finishOnboarding() {
+            // Final mock submission and redirect
+            alert(currentLang === 'en' ? 'Onboarding Complete! Redirecting to dashboard.' : '註冊完成！正在前往儀表板。');
+            window.location.href = 'ClientDashboard.html';
+        }
+
+        // --- Translation Logic ---
         function updateText() {
             const langData = translations[currentLang];
             
@@ -178,19 +427,16 @@
                 }
             });
 
-            // Update Radio Button Labels (which don't have data-key naturally)
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                const labelSpan = radio.nextElementSibling;
-                if (labelSpan && radio.value === 'yes') {
-                    labelSpan.textContent = langData.yes;
-                } else if (labelSpan && radio.value === 'no') {
-                    labelSpan.textContent = langData.no;
-                }
-            });
+            // Update specific input/placeholder translations
+            document.querySelector('input[placeholder="Full Name / 姓名"]').placeholder = currentLang === 'en' ? 'Full Name / 姓名' : '全名 / 姓名';
+            document.querySelector('input[placeholder="Email / 電子郵箱"]').placeholder = currentLang === 'en' ? 'Email / 電子郵箱' : '電子郵箱 / Email';
+            document.querySelector('input[placeholder="Phone Number / 電話號碼"]').placeholder = currentLang === 'en' ? 'Phone Number / 電話號碼' : '電話號碼 / Phone Number';
+            document.getElementById('dentist-referral-input').placeholder = currentLang === 'en' ? 'Name of Dentist' : '牙醫姓名';
+            document.getElementById('dentist-search-input').placeholder = currentLang === 'en' ? 'Search by Clinic Name or Area in Taiwan' : '按診所名稱或台灣地區搜尋';
 
             document.getElementById('lang-toggle').textContent = langData.toggle_text;
             document.documentElement.setAttribute('lang', currentLang);
-            document.title = (currentLang === 'en' ? 'AMD Client Onboarding' : 'AMD 客戶註冊')
+            document.title = langData.title;
         }
 
         function toggleLanguage() {
@@ -198,21 +444,10 @@
             updateText();
         }
 
-        function simulateStart(action) {
-            console.log(`Simulating start of ${action}.`);
-            // In a real app, validation and data submission would happen here.
-            // For now, we proceed to the next step.
-            window.location.href = 'ClientDashboard.html';
-        }
-
-        function simulateUpload(count) {
-            console.log(`Simulating upload of ${count} files.`);
-            // In a real app, file handling would occur here.
-            // For now, we proceed to the next step.
-            window.location.href = 'ClientDashboard.html';
-        }
-
-        document.addEventListener('DOMContentLoaded', updateText);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateText();
+            updateStepper(1);
+        });
     </script>
 </body>
 </html>
