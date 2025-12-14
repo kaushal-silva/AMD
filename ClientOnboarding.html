@@ -293,16 +293,16 @@
                  <!-- Patient Name & ID -->
                  <div class="mb-6 border p-4 rounded-lg bg-gray-100">
                     <p class="text-lg font-semibold text-gray-800" data-key="patient_info_name">Patient Name: <span id="patient-display-name"></span></p>
-                    <p class="text-sm text-gray-500" data-key="patient_info_id">Patient ID: <span id="patient-display-id">AMD-T-00123</span></p>
+                    <p class="text-sm text-gray-500" data-key="patient_info_id">Patient ID: <span id="patient-display-id">AMDTW001</span></p>
                  </div>
 
                  <!-- Referral Preview & Download -->
                  <div class="bg-teal-50 border-l-4 border-teal-500 p-4 mb-6 rounded-lg">
-                     <h3 class="font-bold text-teal-800 mb-2" data-key="referral_box_title">Initial Scan Referral Instructions</h3>
+                     <h3 class="font-bold text-teal-800 mb-2" data-key="referral_box_title_new">Download your referral</h3>
                      
                      <div class="mb-4 space-y-2">
                         <p class="text-sm text-teal-700" data-key="referral_scan_required">Required Scans: CBCT Scan and Jaw X-ray (Cephalometric view). </p>
-                        <p class="text-sm text-teal-700" data-key="referral_raw_file_request">Crucial: We require the raw INV file to be shared directly with your selected clinic.</p>
+                        <p class="text-sm text-teal-700 font-medium" data-key="referral_raw_file_request_new">Crucial: We require the raw INV file for analysis. Please ask your clinic to upload the file to the below personalised secure link. Alternatively you can obtain the INV file and upload manually to the link or on your Client Dashboard.</p>
                      </div>
                      
                      <div class="flex flex-col md:flex-row items-center gap-4">
@@ -313,8 +313,8 @@
                         
                         <div class="flex-grow space-y-2">
                             <p class="text-sm text-gray-700 font-medium" data-key="referral_download_prompt">Download the referral form (PDF) using the QR code above or the button below.</p>
-                            <button class="py-2 px-4 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm font-medium" data-key="btn_download_referral">Download Scan Referral Form</button>
-                            <button class="py-2 px-4 bg-sky-600 text-white rounded-lg hover:bg-sky-700 text-sm font-medium" data-key="btn_secure_upload">Secure Location for Raw INV File</button>
+                            <button class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 text-sm" data-key="btn_download_referral">Download Scan Referral Form</button>
+                            <!-- Removed btn_secure_upload -->
                         </div>
                      </div>
                  </div>
@@ -511,8 +511,10 @@
                 'patient_info_name': 'Patient Name:',
                 'patient_info_id': 'Patient ID:',
                 'referral_box_title': 'Initial Scan Referral Instructions',
+                'referral_box_title_new': 'Download your referral', // NEW TITLE
                 'referral_scan_required': 'Required Scans: CBCT Scan and Jaw X-ray (Cephalometric view). ',
                 'referral_raw_file_request': 'Crucial: We require the raw INV file to be shared directly with your selected clinic.',
+                'referral_raw_file_request_new': 'Crucial: We require the raw INV file for analysis. Please ask your clinic to upload the file to the below personalised secure link. Alternatively you can obtain the INV file and upload manually to the link or on your Client Dashboard.', // NEW TEXT
                 'referral_download_prompt': 'Download the referral form (PDF) using the QR code above or the button below.',
                 'btn_download_referral': 'Download Scan Referral Form',
                 'btn_secure_upload': 'Secure Location for Raw INV File',
@@ -643,8 +645,10 @@
                 'patient_info_name': 'Patient Name:',
                 'patient_info_id': 'Patient ID:',
                 'referral_box_title': '初步掃描轉介說明',
+                'referral_box_title_new': '下載您的轉介單', // NEW TITLE
                 'referral_scan_required': '所需掃描：錐束CT掃描 (CBCT) 和下顎X光片 (頭影測量視圖)。',
                 'referral_raw_file_request': '關鍵：我們要求將原始 INV 文件直接分享給您選定的診所。',
+                'referral_raw_file_request_new': '關鍵：我們需要原始 INV 文件進行分析。請要求您的診所將檔案上傳至下方個人化安全連結，或您可自行取得 INV 文件後手動上傳至該連結或在您的客戶儀表板上傳。', // NEW TEXT
                 'referral_download_prompt': '使用上方的 QR 碼或下方的按鈕下載轉介表格 (PDF)。',
                 'btn_download_referral': '下載掃描轉介表格',
                 'btn_secure_upload': '原始 INV 文件安全位置',
@@ -754,12 +758,27 @@
         function nextStep(step) {
             const langData = translations[currentLang];
             
-            // Validation for Step 1 - BYPASS FOR MOCKUP
+            // Step 1 logic
             if (currentStep === 1) {
-                 const patientName = document.getElementById('patient-name-input').value;
-                 
+                 const patientNameInput = document.getElementById('patient-name-input');
+                 const patientDisplayName = document.getElementById('patient-display-name');
+                 const patientDisplayId = document.getElementById('patient-display-id'); // Get ID element
+
+                 // Safely retrieve patient name (or 'Mr. John Lee' if empty)
+                 const patientName = patientNameInput ? patientNameInput.value.trim() : '';
+
                  // Update patient display name and ID for step 2 before transitioning
-                 document.getElementById('patient-display-name').textContent = patientName.trim() || 'N/A';
+                 if (patientDisplayName) {
+                     patientDisplayName.textContent = patientName || 'Mr. John Lee'; // Use mock name if empty
+                 }
+                 if (patientDisplayId) {
+                     patientDisplayId.textContent = 'AMDTW001'; // Mock ID
+                 }
+                 
+                 // Proceed to the next step immediately after data gathering (for mockup)
+                 updateStepper(step);
+                 window.scrollTo(0, 0);
+                 return; 
             }
             // Validation for Step 2
             else if (currentStep === 2) {
