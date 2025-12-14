@@ -306,6 +306,116 @@
             { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
         ];
 
+        // --- Translation Data Structure (FIXED: Moved to top level) ---
+        const translations = {
+            'en': {
+                'portal_title_h1': 'AMD Portal',
+                'portal_title_h2': 'Airway Mouth Doctor Holistic Health',
+                'main_headline': 'Resolving Impaired Mouth Syndrome (IMS) Holistically.',
+                'main_mission': 'Our platform is the sole gateway in Taiwan to receive treatment and consultation from the patent-holding specialist, Dr. Felix (USA), in collaboration with a network of certified local Taiwanese dentists.',
+                'main_promise': 'We provide a single, coordinated platform to manage your personalized journey toward improved breathing, posture, and holistic health.',
+                
+                'flow_title': 'The Personalized Path to Your Best Health', 
+                
+                // Bold/Desc structure for flow
+                'flow_step_1_bold': 'Enroll and Access',
+                'flow_step_1_desc': 'Sign up on our dedicated platform to officially enroll and gain immediate access to your personalized treatment planning tools.',
+                'flow_step_2_bold': 'Select Your Expert',
+                'flow_step_2_desc': 'Choose a local Taiwanese dentist from our network who will serve as your treatment leader and clinical guide throughout your journey.',
+                'flow_step_3_bold': 'Initiate Diagnostics',
+                'flow_step_3_desc': 'Receive clear referrals and precise details for the initial scans required to establish your comprehensive medical diagnosis.',
+                'flow_step_4_bold': 'Confirm Your Diagnosis',
+                'flow_step_4_desc': 'Attend an in-person consultation with your dentist. Here, your local expert and our Airway Mouth Doctor (Dr. Felix) will thoroughly analyze your condition. They will confirm your IMS diagnosis (Integrated Mouth System) and collaboratively determine the precise treatment protocol you need, or confirm if treatment is not currently required.',
+                'flow_step_5_bold': 'Custom Solution Prescribed',
+                'flow_step_5_desc': 'Upon diagnosis confirmation, you will receive your individually engineered Start Thriving Appliance™ and an accompanying nutritional regimen—the foundational elements for your therapeutic success.',
+                'flow_step_6_bold': 'Full Clinical Support',
+                'flow_step_6_desc': 'Throughout your treatment, you will work closely with your Doctor, specialized Airway Mouth Coordinator, and clinic team to ensure systematic progress toward your measurable health objectives.',
+
+                'client_card_title': 'Client / Patient Access',
+                'client_card_desc': 'Begin your journey, sign in, or view your records and progress.',
+                'client_card_button': 'Start My Treatment Journey',
+                
+                'professionals_dropdown_text': 'Professionals Login',
+                'hp_dropdown_link': 'Health Practitioner (Dentist/Doctor)',
+                'amc_dropdown_link': 'AMC (Admin)', 
+                'consultant_dropdown_link': 'Professional Consultant (Specialist)',
+
+                'clinic_upload_title': 'Independent Clinic: Secure Scan Upload (INV File)',
+                'clinic_upload_button': 'Upload Patient INV File',
+                'upload_modal_title': 'Secure INV File Upload',
+                'upload_note_heading': 'Security Note:',
+                'upload_note_text': 'The file will be stored encrypted under the Patient ID until authorized for access by the patient, who will be notified upon receipt.',
+                'patient_code_label': 'Unique Patient Code (e.g., AMDTW001)',
+                'file_upload_label': 'INV File Upload (.inv, .dicom, etc.)',
+                'clinic_details_optional': 'Clinic Details (Optional)',
+                'btn_cancel': 'Cancel',
+                'btn_submit_upload': 'Submit Secure Upload',
+
+                'toggle_text': '中文',
+                'modal_sign_in_title': 'Sign In to continue',
+                'modal_sign_up_title': 'Create Your Account',
+                'modal_subtitle_client': 'Access your personalized treatment records.',
+                'tab_sign_in': 'Sign In',
+                'tab_sign_up': 'Sign Up',
+                'auth_email_text': 'Continue with Email/Password',
+                'auth_line_text': 'Continue with LINE'
+            },
+            'zh': {
+                // Traditional Chinese translations suitable for Taiwan
+                'portal_title_h1': 'AMD 入口網站',
+                'portal_title_h2': '口腔氣道醫生整體健康',
+                'main_headline': '全面解決整體口腔功能障礙綜合徵 (IMS)。',
+                'main_mission': '我們的平台是台灣唯一能與持有專利技術的專家 **Dr. Felix (美國)**，以及本地認證牙醫網絡合作，提供治療和諮詢的門戶。',
+                'main_promise': '我們提供一個統一協調的平台，管理您的個人化旅程，以實現改善呼吸、姿勢和整體健康。',
+                
+                'flow_title': '個性化最佳健康之路', 
+                
+                // Bold/Desc structure for flow
+                'flow_step_1_bold': '註冊與訪問',
+                'flow_step_1_desc': '在我們的專屬平台上註冊，正式加入並立即訪問您的個性化治療規劃工具。',
+                'flow_step_2_bold': '選擇您的專家',
+                'flow_step_2_desc': '從我們的網絡中選擇一位本地台灣牙醫，作為您的治療負責人和臨床指導，引導您完成整個旅程。',
+                'flow_step_3_bold': '啟動診斷',
+                'flow_step_3_desc': '接收明確的轉介單和精確的細節，以便進行建立您的全面醫療診斷所需的初步掃描。',
+                'flow_step_4_bold': '確認您的診斷',
+                'flow_step_4_desc': '與您的牙醫進行現場諮詢。在此，您的本地專家和我們的口腔氣道醫生（Dr. Felix）將徹底分析您的狀況。他們將確認您的 IMS 診斷（整合口腔系統），並協作確定您所需的精確治療方案，或確認目前是否不需要治療。',
+                'flow_step_5_bold': '處方定制方案',
+                'flow_step_5_desc': '一旦診斷確認，您將收到您個人設計的 Start Thriving Appliance™ 以及配套的營養方案—這是您治療成功的基礎要素。',
+                'flow_step_6_bold': '全面的臨床支持',
+                'flow_step_6_desc': '在整個治療過程中，您將與您的醫生、專業的口腔氣道協調員和診所團隊緊密合作，以確保朝著可衡量的健康目標系統地進展。',
+
+                'client_card_title': '客戶 / 患者訪問',
+                'client_card_desc': '開始您的旅程，登入或查看您的記錄和進度。',
+                'client_card_button': '開始我的治療旅程',
+                
+                'professionals_dropdown_text': '專業人士登入',
+                'hp_dropdown_link': '衛生專業人員 (牙醫/醫師)',
+                'amc_dropdown_link': 'AMC (管理)', 
+                'consultant_dropdown_link': '專業顧問 (專家)',
+
+                'clinic_upload_title': '獨立診所：安全掃描上傳 (INV 文件)',
+                'clinic_upload_button': '上傳患者 INV 文件',
+                'upload_modal_title': '安全 INV 文件上傳',
+                'upload_note_heading': '安全注意事項：',
+                'upload_note_text': '文件將以加密方式儲存在患者 ID 下，直到獲得患者授權訪問（患者將在收到通知）。',
+                'patient_code_label': '唯一患者代碼 (例如：AMDTW001)',
+                'file_upload_label': 'INV 文件上傳 (.inv, .dicom, 等)',
+                'clinic_details_optional': '診所詳細資訊 (可選)',
+                'btn_cancel': '取消',
+                'btn_submit_upload': '提交安全上傳',
+
+                'toggle_text': 'English',
+                'modal_sign_in_title': '登入以繼續',
+                'modal_sign_up_title': '創建您的帳戶',
+                'modal_subtitle_client': '訪問您的個人化治療記錄。',
+                'tab_sign_in': '登入',
+                'tab_sign_up': '註冊',
+                'auth_email_text': '使用電子郵件/密碼繼續',
+                'auth_line_text': '使用 LINE 繼續'
+            }
+        };
+
+
         // --- Core Functions (FIXED: Defined globally) ---
 
         function toggleLanguage() {
@@ -344,7 +454,9 @@
             document.getElementById('clinic-upload-form').onsubmit = function(event) {
                 event.preventDefault();
                 const patientCode = document.getElementById('patient-code').value;
-                const fileName = document.getElementById('inv-file').files[0].name;
+                const fileInput = document.getElementById('inv-file');
+                const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'N/A';
+
 
                 closeModal('upload-modal');
                 
