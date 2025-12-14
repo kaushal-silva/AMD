@@ -51,16 +51,36 @@
         .tab-button:not(.active):hover {
             background-color: #f3f4f6;
         }
-        /* Custom styling for the range input track/thumb */
+        /* Custom styling for the range input thumb */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
+            appearance: none;
             height: 16px;
             width: 16px;
             border-radius: 50%;
-            background: #0ea5e9; /* Sky 500 */
+            background: #0ea5e9;
             cursor: pointer;
             margin-top: -7px; 
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        }
+        /* Pipeline Styling */
+        .pipeline-stage {
+            @apply flex flex-col items-center flex-1 min-w-0 mx-1 relative z-10;
+        }
+        .pipeline-dot {
+            @apply w-4 h-4 rounded-full border-2 border-gray-300 transition-all duration-300;
+        }
+        .pipeline-dot.current {
+            @apply border-sky-500 bg-sky-100 ring-4 ring-sky-300;
+        }
+        .pipeline-dot.complete {
+            @apply bg-teal-500 border-teal-500;
+        }
+        .pipeline-connector {
+            @apply absolute top-1/2 left-0 right-0 h-1 bg-gray-200 z-0;
+        }
+        .pipeline-connector-progress {
+            @apply absolute top-0 left-0 h-full bg-teal-400 transition-all duration-500;
         }
     </style>
 </head>
@@ -72,7 +92,7 @@
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                 <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">AMD Client Dashboard</h1>
                 <div class="flex items-center space-x-4">
-                    <!-- Language Toggle Button (Updated for visibility) -->
+                    <!-- Language Toggle Button -->
                     <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-sky-700 border border-sky-500 hover:bg-sky-100 transition duration-150 font-semibold text-sm shadow">
                         <!-- Text updated by JavaScript -->
                     </button>
@@ -81,8 +101,59 @@
             </div>
         </header>
 
+        <!-- Patient Key Information & Pipeline Overview (Reworked Top Section) -->
+        <section class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Column (2/3): My Journey Status (Pipeline) -->
+                <div class="lg:col-span-2 section-card bg-white/70">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4" data-key="journey_title">My Journey</h2>
+                    
+                    <div id="pipeline-wrapper" class="relative pt-6 pb-2">
+                        <!-- Horizontal Line & Progress -->
+                        <div class="pipeline-connector top-[40%]">
+                            <div id="pipeline-progress-bar" class="pipeline-connector-progress" style="width: 20%;"></div>
+                        </div>
+
+                        <!-- Stages (Injected by JS to mark status) -->
+                        <div id="pipeline-container" class="flex justify-between items-start relative z-10">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-start mt-4 border-t pt-4">
+                        <p class="text-lg font-semibold text-sky-700" data-key="current_stage_label">Current Stage: <span id="current-stage-display"></span></p>
+                        <button id="next-action-button" class="py-1 px-3 bg-teal-500 text-white text-sm rounded-lg hover:bg-teal-600 transition duration-150 shadow" data-key="next_action_button">
+                            Upload Scans
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column (1/3): Key Contacts -->
+                <div class="lg:col-span-1 section-card border-t-4 border-sky-500">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4" data-key="key_contacts_title">Key Contacts & Appointments</h2>
+                    
+                    <div class="space-y-3 text-sm">
+                        <p><strong data-key="patient_name_label">Patient:</strong> <span class="font-semibold">Mr. John Lee</span></p>
+                        <p><strong data-key="patient_id_label">Patient ID:</strong> <span class="font-mono text-gray-600">AMDTW001</span></p>
+                        <hr class="border-gray-100">
+                        <p><strong data-key="dentist_label">Dentist:</strong> Dr. C. Lin (Harmony Clinic)</p>
+                        <p><strong data-key="amc_label">AMC:</strong> Jane Chen</p>
+                    </div>
+                    
+                    <hr class="border-gray-100 my-3">
+                    
+                    <p class="text-xs text-gray-500" data-key="next_appointment_label">Next Appointment:</p>
+                    <p class="text-base font-bold text-sky-600 mb-3">Dec 20, 2025 at 10:00 AM</p>
+                    
+                    <button class="w-full py-2 bg-sky-500 text-white text-sm rounded-lg hover:bg-sky-600 font-medium" data-key="btn_create_appointment">
+                        Create New Appointment
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- Main Content Area with Tabs -->
-        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <main class="max-w-7xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                 
                 <!-- LEFT COLUMN: Navigation Tabs -->
@@ -90,7 +161,6 @@
                     <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                         <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_title">Navigation</h3>
                         <nav class="flex flex-col space-y-2">
-                            <!-- NOTE: Treatment Protocol is merged into My Plan -->
                             <button class="tab-button active" onclick="switchTab('my-plan')" data-key="tab_my_plan">
                                 My Plan & Support
                             </button>
@@ -138,36 +208,56 @@
                             <button class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm font-medium" data-key="btn_update_goals">Update Pains & Goals</button>
                         </div>
 
-                        <!-- Treatment Interventions -->
+                        <!-- Treatment Interventions (Improved UX) -->
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="sec_interventions_title">Treatment Interventions</h2>
 
                             <!-- Start Thriving Appliance Section -->
-                            <div class="mb-8 p-4 border rounded-lg bg-yellow-50/50">
-                                <h3 class="font-bold text-gray-700 mb-4" data-key="appliance_title">Start Thriving Appliance (TM)</h3>
+                            <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
+                                <h3 class="font-bold text-gray-700 mb-2" data-key="appliance_title">Start Thriving Appliance (TM)</h3>
                                 
-                                <div class="font-bold text-sm text-gray-800 mb-2 flex justify-between items-center">
-                                    <span data-key="appliance_duration_label">Prescription Progress:</span>
-                                    <div>
-                                        <span id="appliance-duration-text" class="text-sm font-normal"></span>
-                                        <span id="appliance-percentage" class="text-sky-700 font-extrabold ml-2"></span>
+                                <!-- Progress Bar and Time Left -->
+                                <div class="mb-4">
+                                    <p class="text-sm font-semibold text-gray-800" id="app_duration_text" data-key="app_duration_text">Total Prescription: 24 Months</p>
+                                    <div class="flex items-center space-x-4 mt-2">
+                                        <div class="flex-1">
+                                            <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                                                <div id="appliance-progress-bar-detail" class="h-full bg-sky-500 transition-all duration-500" style="width: 25%;"></div>
+                                            </div>
+                                        </div>
+                                        <span id="appliance-percentage" class="text-base font-extrabold text-sky-700">25%</span>
                                     </div>
+                                    <p class="text-xs text-gray-500 mt-1" id="app_remaining_time" data-key="app_remaining_time">You have <span id="appliance-remaining-months">18</span> months remaining.</p>
                                 </div>
                                 
-                                <!-- Interactive Timeline/Slider for Prescription Period -->
-                                <div class="mb-4">
-                                    <input type="range" min="0" max="24" value="6" step="1" class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer" id="appliance-timeline-slider" oninput="updateApplianceTimeline(this.value)">
+                                <!-- Interactive Timeline -->
+                                <div class="mb-6 border-t pt-4">
+                                    <h4 class="font-bold text-sm text-gray-700 mb-2" data-key="adjustment_timeline_title">View Appliance History (Month: <span id="display-month">6</span>)</h4>
+                                    
+                                    <input type="range" min="0" max="24" value="6" step="1" class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer" id="appliance-timeline-slider" oninput="updateApplianceDetails(this.value)">
                                     <div class="flex justify-between text-xs mt-1 text-gray-500">
                                         <span data-key="app_start">Start</span>
                                         <span data-key="app_24m">24 Months</span>
                                     </div>
                                 </div>
 
-                                <h4 id="adjustment-history-title" class="font-semibold text-sm text-gray-700 mt-6 mb-2"></h4>
-                                <div id="adjustment-list" class="space-y-2 text-sm text-gray-600">
-                                    <!-- Dynamic content based on slider position -->
+
+                                <!-- Dentist Note Section -->
+                                <div class="p-3 bg-teal-100 border border-teal-300 rounded-lg mb-4">
+                                    <p class="font-bold text-teal-800 mb-1" data-key="dentist_note_title">Dentist Clinical Note (12/01/2025):</p>
+                                    <p class="text-sm text-teal-700" id="dentist-note-content">Monitor patient's TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.</p>
                                 </div>
-                                <button class="mt-4 py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium" data-key="btn_request_adjustment">Request Appliance Adjustment</button>
+
+                                <!-- Current Appliance Status Display -->
+                                <h4 class="font-semibold text-sm text-gray-700 mb-2" data-key="adjustment_summary_title">Current Appliance Setting</h4>
+
+                                <div id="adjustment-list" class="space-y-2 text-sm text-gray-600 p-3 bg-yellow-100 rounded-lg">
+                                    <p><strong data-key="adj_setting_label">Setting:</strong> <span id="adj-setting-value">2.0 Turns / 0.50mm Expansion</span></p>
+                                    <p><strong data-key="adj_date_label">Last Adjusted:</strong> <span id="adj-date-value">15/11/2025</span></p>
+                                    <p class="text-xs text-gray-500" data-key="adj_note_label">Note: Active expansion phase. Monitor midline spacing.</p>
+                                </div>
+                                
+                                <button class="mt-4 py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium w-full" data-key="btn_request_adjustment">Request Appliance Adjustment / View History</button>
                             </div>
 
                             <!-- Nutrition Section -->
@@ -247,29 +337,15 @@
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_title">Progress Photo Timeline</h2>
                             <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Track your jaw and posture changes over the 18-month growth prescription period.</p>
                             
-                            <!-- Mock Full Prescription Timeline (Retained for visual context, but not interactive slider) -->
-                            <h3 id="progress-summary" class="font-bold text-gray-700 mb-2" data-key="timeline_summary"></h3>
-                            <div class="w-full h-2 bg-sky-200 rounded-lg mb-8 relative">
-                                <div class="absolute top-0 left-0 h-full bg-sky-500 rounded-lg" style="width: calc(6 / 24 * 100%)"></div>
-                                <div class="flex justify-between text-xs mt-3 text-gray-500">
-                                    <span data-key="app_start">Start</span>
-                                    <span data-key="app_24m">24 Months</span>
-                                </div>
-                            </div>
-                            
                             <!-- Comparison Slider and Images (Updated for multiple checkpoints) -->
-                            <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_title">Historical Comparison View</h3>
+                            <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
                             
                             <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <label for="comparison-slider" id="comparison-label" class="block text-sm font-medium text-gray-700 mb-2"></label>
+                                <label for="comparison-slider" id="comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
                                 <!-- Max set to 4 for 5 checkpoints (0 to 4) -->
                                 <input type="range" min="0" max="4" value="0" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="comparison-slider" oninput="updateComparisonView(this.value)">
                                 <div class="flex justify-between text-xs mt-1 text-gray-500">
-                                    <span data-key="comp_c0">Initial</span>
-                                    <span data-key="comp_c1">Month 3</span>
-                                    <span data-key="comp_c2">Month 6</span>
-                                    <span data-key="comp_c3">Month 12</span>
-                                    <span data-key="comp_c4">Current</span>
+                                    <span data-key="comp_c0">Initial</span><span data-key="comp_c1">Month 3</span><span data-key="comp_c2">Month 6</span><span data-key="comp_c3">Month 12</span><span data-key="comp_c4">Current</span>
                                 </div>
                             </div>
 
@@ -305,7 +381,7 @@
                                 </div>
 
                                 <!-- Client Message -->
-                                <div class="p-3 rounded-xl max-w-[80%] chat-client shadow-sm self-end">
+                                <div class="p-3 rounded-xl max-w-[80%] bg-blue-100 shadow-sm self-end">
                                     <p class="text-xs font-semibold text-blue-800" data-key="msg_client_title">You (Client)</p>
                                     <p class="text-sm text-gray-800 mt-1" data-key="msg_client_text">Understood, Dr. Smith. I've been consistent. Jane, thank you for setting that up!</p>
                                     <p class="text-xs text-gray-500 text-right mt-1">2:01 PM</p>
@@ -332,19 +408,70 @@
         const totalPrescriptionMonths = 24;
         const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
 
-        // --- Translation Data Structure (JSON) ---
+        // --- Appliance Timeline Logic (Mock Data) ---
+        const applianceAdjustments = [
+            { month: 0, setKey: 'state_m0_set', noteKey: 'note_m0', expansion: '0.0mm', date: '2025/09/20', noteContent: 'Appliance delivered. Focus on comfort and wear-time habit.' },
+            { month: 2, setKey: 'state_m2_set', noteKey: 'note_m2', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteContent: 'First active adjustment. Slight pressure expected. Next check in 30 days.' },
+            { month: 6, setKey: 'state_m6_set', noteKey: 'note_m6', expansion: '2.0 Turns / 0.50mm', date: '2026/01/20', noteContent: 'Expansion maintained. TMJ stable. Re-evaluate expansion rate at Month 9.' }
+        ];
+
+        // --- Patient Journey Stages (Simplified for Horizontal Pipeline) ---
+        const stages = [
+            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' }, // Assessment Done
+            { id: 'stage_2_select', labelKey: 'flow_step_2_short' }, // Waiting for Dentist (CURRENT)
+            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' }, // Upload Scans (NEXT STEP)
+            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' }, // Diagnosis Visit
+            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' }  // Active Treatment
+        ];
+
+        // Set the current phase the client is in (0-indexed)
+        const currentPhaseIndex = 1; 
+
+        // --- Core Translation Data Structure ---
         const translations = {
             'en': {
                 'header_title': 'AMD Client Dashboard',
                 'logout_link': '← Log Out / Portal',
+                'journey_title': 'My Journey', // UPDATED
+                'current_stage_label': 'Current Stage:',
+                'key_contacts_title': 'Key Contacts & Appointments',
+                'patient_name_label': 'Patient:',
+                'patient_id_label': 'Patient ID:',
+                'dentist_label': 'Dentist:',
+                'amc_label': 'AMC:',
+                'next_appointment_label': 'Next Appointment:',
+                'btn_create_appointment': 'Create New Appointment',
+                'adj_setting_label': 'Setting:',
+                'adj_date_label': 'Last Adjusted:',
+                'adj_note_label': 'Note:',
+                'adjustment_summary_title': 'Current Appliance Setting',
+                'app_duration_text': 'Total Prescription: 24 Months', 
+                'app_remaining_time': 'You have [N] months remaining.', 
+                'dentist_note_title': 'Dentist Clinical Note (12/01/2025):', // NEW KEY
+                'dentist_note_content': 'Monitor patient\'s TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.', // NEW KEY
+                'adjustment_timeline_title': 'View Appliance History (Month: [M])', // NEW KEY
+                'btn_request_adjustment': 'Request Appliance Adjustment / View History',
+                
+                // Appliance States for History Mock
+                'state_m0_set': 'Initial Fit', 'note_m0': 'Focus on comfort and wear-time habit.',
+                'state_m2_set': 'Active Expansion Phase', 'note_m2': 'First adjustment phase. Slight pressure expected.',
+                'state_m6_set': 'Expansion Maintained', 'note_m6': 'Expansion maintained. TMJ stable. Re-evaluate expansion rate at Month 9.',
+
+                // Journey Stages (Shortened for Pipeline)
+                'flow_step_1_short': 'Assessment Done',
+                'flow_step_2_short': 'Waiting for Dentist', 
+                'flow_step_3_short': 'Upload Scans', 
+                'flow_step_4_short': 'Diagnosis Visit',
+                'flow_step_5_short': 'Active Treatment',
+                
+                'next_action_button': 'View Next Step',
                 'nav_title': 'Navigation',
                 'tab_my_plan': 'My Plan & Support',
                 'tab_diagnostics': 'Diagnostic Inputs',
                 'tab_progress': 'Progress Tracker',
                 'tab_chat': 'Secure Group Chat',
-                'sec_goals_title_impact': 'My Journey: Goals & Motivation', // UPDATED KEY
-                'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.', // NEW KEY
-                'sec_goals_title': 'My Goals & Pains',
+                'sec_goals_title_impact': 'My Journey: Goals & Motivation',
+                'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.',
                 'goals_list_title': 'My 3 Symptoms to Eliminate:',
                 'goal1': 'Chronic Daytime Fatigue',
                 'goal2': 'Frequent Neck/Shoulder Tension',
@@ -360,11 +487,7 @@
                 'app_start': 'Start',
                 'app_24m': '24 Months',
                 'appliance_duration_text': `Prescription: ${totalPrescriptionMonths} months | ${monthsCompleted} months complete`,
-                'adjustment_history_title': 'Adjustment History', // Dynamic title set in JS
-                'adj1': 'Latest Adjustment: 2.0 turns (AMC)',
-                'adj2': 'Client Adjustment Request (1.5 turns)',
-                'adj_default': 'No adjustments recorded for this period.',
-                'btn_request_adjustment': 'Request Appliance Adjustment',
+                'adjustment_history_title': 'Adjustment History',
                 'nutrition_title': 'Prescribed Nutrition Focus:',
                 'nut_bonebroth': 'Increase intake of bone broth for collagen support.',
                 'nut_calcium': 'Ensure adequate calcium and magnesium levels.',
@@ -393,13 +516,9 @@
                 'btn_view_sassouni': 'View Report & Angles',
                 'progress_title': 'Progress Photo Timeline',
                 'progress_subtitle': 'Track your jaw and posture changes over the 18-month growth prescription period.',
-                'timeline_summary': `Prescription Progress: ${monthsCompleted} Months Complete (${totalPrescriptionMonths - monthsCompleted} Months Remaining)`,
-                'comparison_title': 'Historical Comparison View',
-                'comp_c0': 'Initial (Month 0)', // 5 checkpoints labels
-                'comp_c1': 'Month 3 Check',
-                'comp_c2': 'Month 6 Check',
-                'comp_c3': 'Month 12 Check',
-                'comp_c4': 'Current Check',
+                'comparison_view_title': 'Historical Comparison View',
+                'viewing_photos': 'Viewing photos from: Month 6 Check',
+                'comp_c0': 'Initial', 'comp_c1': 'Month 3', 'comp_c2': 'Month 6', 'comp_c3': 'Month 12', 'comp_c4': 'Current',
                 'upload_photo': 'Upload New Progress Photo',
                 'sec_chat_title': 'Secure Group Chat',
                 'chat_subtitle': 'Communicate directly with your Doctor and AMC.',
@@ -410,28 +529,46 @@
                 'msg_client_title': 'You (Client)',
                 'msg_client_text': "Understood, Dr. Smith. I've been consistent. Jane, thank you for setting that up!",
                 'btn_send': 'Send',
-                'toggle_text': '中文',
-                'photo_jaw_front': 'Jaw (Front)',
-                'photo_posture_side': 'Posture (Side)',
-                'photo_jaw_side': 'Jaw (Side)',
-                'photo_jaw_bottom': 'Jaw (Bottom)',
-                'date_c0': 'Initial Baseline (20/09/2025)',
-                'date_c1': 'Month 3 (20/12/2025)',
-                'date_c2': 'Month 6 (20/03/2026)',
-                'date_c3': 'Month 12 (20/09/2026)',
-                'date_c4': 'Current (15/12/2026)' 
+                'toggle_text': '中文'
             },
             'zh': {
                 'header_title': 'AMD 客戶儀表板',
                 'logout_link': '← 登出 / 入口網站',
+                'journey_title': '我的旅程', // UPDATED
+                'current_stage_label': '當前階段:',
+                'key_contacts_title': '關鍵聯絡人與預約', // NEW
+                'patient_name_label': '患者姓名:', // NEW
+                'patient_id_label': '患者 ID:', // NEW
+                'dentist_label': '牙醫:', // NEW
+                'amc_label': 'AMC:', // NEW
+                'next_appointment_label': '下次預約:', // NEW
+                'btn_create_appointment': '創建新預約', // NEW
+                'adj_setting_label': '設置:', // NEW
+                'adj_date_label': '上次調整:', // NEW
+                'adj_note_label': '備註:', // NEW
+                'adjustment_summary_title': '當前矯治器設置', // NEW
+                'app_duration_text': '總處方期: 24 個月', // NEW
+                'app_remaining_time': '您還有 [N] 個月剩餘。', // NEW
+                'dentist_note_title': '牙醫臨床備註 (2025/12/01):', // NEW KEY
+                'dentist_note_content': '在當前擴展率 (0.50mm) 下監測患者的 TMJ 不適。繼續每日進行口腔功能鍛鍊。下次檢查安排在第 8 個月。', // NEW KEY
+                'adjustment_timeline_title': '查看矯治器歷史 (月份: [M])', // NEW KEY
+                'btn_request_adjustment': '請求矯治器調整 / 查看歷史',
+
+                // Journey Stages (Shortened for Pipeline)
+                'flow_step_1_short': '評估完成',
+                'flow_step_2_short': '等待牙醫確認',
+                'flow_step_3_short': '上傳掃描',
+                'flow_step_4_short': '診斷門診',
+                'flow_step_5_short': '積極治療',
+                
+                'next_action_button': '查看下一步',
                 'nav_title': '導航',
                 'tab_my_plan': '我的計劃與支持',
                 'tab_diagnostics': '診斷輸入',
                 'tab_progress': '進度追踪器',
                 'tab_chat': '安全群組聊天',
-                'sec_goals_title_impact': '我的旅程：目標與動力', // UPDATED KEY
-                'goals_motivation_intro': '專注於這些目標—它們是我們正在通過整體治療共同努力消除的強大症狀。', // NEW KEY
-                'sec_goals_title': '我的目標與疼痛',
+                'sec_goals_title_impact': '我的旅程：目標與動力',
+                'goals_motivation_intro': '專注於這些目標—它們是我們正在通過整體治療共同努力消除的強大症狀。',
                 'goals_list_title': '我的 3 個欲消除症狀:',
                 'goal1': '慢性白天疲勞',
                 'goal2': '頻繁頸部/肩部緊張',
@@ -447,10 +584,9 @@
                 'app_start': '開始',
                 'app_24m': '24 個月',
                 'appliance_duration_text': `處方: ${totalPrescriptionMonths} 個月 | 完成 ${monthsCompleted} 個月`,
-                'adjustment_history_title': '調整歷史記錄', // Dynamic title set in JS
+                'adjustment_history_title': '調整歷史記錄',
                 'adj1': '最新調整: 2.0 圈 (AMC)',
                 'adj2': '客戶調整請求 (1.5 圈)',
-                'adj_default': '此期間沒有記錄的調整。',
                 'btn_request_adjustment': '請求矯治器調整',
                 'nutrition_title': '處方營養重點:',
                 'nut_bonebroth': '增加骨湯攝取以支持膠原蛋白。',
@@ -480,13 +616,9 @@
                 'btn_view_sassouni': '查看報告與角度',
                 'progress_title': '進度照片追踪器',
                 'progress_subtitle': '追踪您在 18 個月生長處方期內的下巴和姿勢變化。',
-                'timeline_summary': `處方進度: 完成 ${monthsCompleted} 個月 (剩餘 ${totalPrescriptionMonths - monthsCompleted} 個月)`,
-                'comparison_title': '歷史比較視圖',
-                'comp_c0': '初始 (第 0 個月)',
-                'comp_c1': '第 3 個月檢查',
-                'comp_c2': '第 6 個月檢查',
-                'comp_c3': '第 12 個月檢查',
-                'comp_c4': '當前檢查',
+                'comparison_view_title': '歷史比較視圖',
+                'viewing_photos': '查看照片來自: 第 6 個月檢查',
+                'comp_c0': '初始', 'comp_c1': '第 3 個月', 'comp_c2': '第 6 個月', 'comp_c3': '第 12 個月', 'comp_c4': '當前',
                 'upload_photo': '上傳新進度照片',
                 'sec_chat_title': '安全群組聊天',
                 'chat_subtitle': '與您的醫生和 AMC 直接溝通。',
@@ -497,70 +629,43 @@
                 'msg_client_title': '您 (客戶)',
                 'msg_client_text': '明白了，Smith 醫生。我一直很堅持。Jane，謝謝您的安排！',
                 'btn_send': '發送',
-                'toggle_text': 'English',
-                'photo_jaw_front': '下巴 (正面)',
-                'photo_posture_side': '姿勢 (側面)',
-                'photo_jaw_side': '下巴 (側面)',
-                'photo_jaw_bottom': '下巴 (底部)',
-                'date_c0': '初始基線 (2025/09/20)',
-                'date_c1': '第 3 個月 (2025/12/20)',
-                'date_c2': '第 6 個月 (2026/03/20)',
-                'date_c3': '第 12 個月 (2026/09/20)',
-                'date_c4': '當前 (2026/12/15)' 
+                'toggle_text': 'English'
             }
         };
 
-        // --- Appliance Timeline Logic ---
+        // --- Appliance Timeline Logic (Mock Data) ---
         const applianceAdjustments = [
-            { month: 0, textKey: 'adj_initial', date: '20/09/2025' },
-            { month: 1, textKey: 'adj_default', date: '20/10/2025' },
-            { month: 2, textKey: 'adj2', date: '01/10/2025' },
-            { month: 5, textKey: 'adj1', date: '15/11/2025' },
-            // Placeholder: Adjustments occur dynamically here up to month 6
+            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0' },
+            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2' },
+            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/01/20', noteKey: 'note_m6' }
+        ];
+        // Mock Dentist Note for the static box (Assumed Month 6 status)
+        const mockDentistNote = {
+            date: '2025/12/01',
+            contentKey: 'dentist_note_content'
+        };
+
+
+        // --- Patient Journey Stages (Simplified for Horizontal Pipeline) ---
+        const stages = [
+            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' },
+            { id: 'stage_2_select', labelKey: 'flow_step_2_short' },
+            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' },
+            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' },
+            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' }
         ];
 
-        function updateApplianceTimeline(monthValue) {
-            const month = parseInt(monthValue);
-            const langData = translations[currentLang];
-            const listContainer = document.getElementById('adjustment-list');
-            const historyTitle = document.getElementById('adjustment-history-title');
-            
-            // Safety guard: prevent sliding past current completed month
-            if (month > monthsCompleted) {
-                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
-                return;
-            }
+        // Set the current phase the client is in (0-indexed)
+        const currentPhaseIndex = 1; 
+        const monthsCompleted = 6;
+        const totalPrescriptionMonths = 24;
+        const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
 
-            // Update history title dynamically
-            const monthText = currentLang === 'en' ? `History at Month ${month}` : `第 ${month} 個月的歷史記錄`;
-            historyTitle.textContent = langData.adjustment_history_title + ` (${monthText})`;
-            
-            // Filter and display relevant adjustments up to the selected month
-            const filteredAdjustments = applianceAdjustments.filter(adj => adj.month <= month);
-
-            if (filteredAdjustments.length > 0) {
-                listContainer.innerHTML = filteredAdjustments.map(adj => {
-                    // Mock data: Use adj1/adj2 only for specific months, default otherwise.
-                    let contentKey = adj.textKey === 'adj_default' ? 'adj_default' : adj.textKey;
-                    let content = langData[contentKey];
-
-                    return `
-                        <div class="border p-2 rounded-lg flex justify-between items-center ${adj.month === monthsCompleted ? 'bg-yellow-100 font-medium' : 'bg-yellow-50'}">
-                            <p>${content}</p>
-                            <span class="text-xs text-gray-500">${adj.date}</span>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                 listContainer.innerHTML = `<div class="p-2 text-gray-500">${langData.adj_default}</div>`;
-            }
-        }
-        
         // --- Core Translation Function ---
         function updateText() {
             const langData = translations[currentLang];
             
-            // Update elements with data-key attribute
+            // 1. Update elements with data-key attribute
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.getAttribute('data-key');
                 if (langData[key]) {
@@ -568,103 +673,144 @@
                 }
             });
 
-            // Update complex elements (like input placeholders)
-            const chatInput = document.getElementById('chat-input');
-            if (chatInput) {
-                chatInput.placeholder = currentLang === 'en' ? 'Type your message...' : '輸入您的訊息...';
-            }
+            // 2. Update specific dynamic texts
+            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
+            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
 
-            // Update specific dynamic texts
-            document.getElementById('appliance-duration-text').textContent = langData.appliance_duration_text;
-            document.getElementById('appliance-percentage').textContent = `(${percentageCompleted}%)`;
-            document.getElementById('progress-summary').textContent = langData.timeline_summary;
+            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
+            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
+            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
+
+            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
+            document.getElementById('app_remaining_time').textContent = remainingText;
             
-            // Update language toggle button text
+            // 3. Update Dentist Note Title
+            document.querySelector('[data-key="dentist_note_title"]').textContent = langData.dentist_note_title;
+            document.getElementById('dentist-note-content').textContent = langData.dentist_note_content;
+            
+            // 4. Update Journey Pipeline
+            renderPipeline();
+
+            // 5. Update HTML lang attribute and toggle
             document.getElementById('lang-toggle').textContent = langData.toggle_text;
-
-            // Update HTML lang attribute
             document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
             
-            // Update document title
-            document.title = currentLang === 'en' ? 'AMD Client Dashboard | Tabbed View' : 'AMD 客戶儀表板 | 分頁視圖';
-            
-            // Re-run comparison view update to refresh image labels
-            updateComparisonView(document.getElementById('comparison-slider')?.value || 0);
-            
-            // Re-run appliance timeline update to refresh its labels
-            updateApplianceTimeline(document.getElementById('appliance-timeline-slider').value);
+            // 6. Update Appliance Section (Mock current status based on slider)
+            const initialMonth = document.getElementById('appliance-timeline-slider').value;
+            updateApplianceDetails(initialMonth); 
         }
 
-        // Function to handle the language toggle
+        // --- Journey Pipeline Renderer ---
+        function renderPipeline() {
+            const container = document.getElementById('pipeline-container');
+            const currentStageDisplay = document.getElementById('current-stage-display');
+            const nextActionButton = document.getElementById('next-action-button');
+            const langData = translations[currentLang];
+            
+            // Calculate progress percentage for the bar
+            const stageCount = stages.length;
+            const progressPercent = (currentPhaseIndex / (stageCount - 1)) * 100;
+            document.getElementById('pipeline-progress-bar').style.width = `${progressPercent}%`;
+
+            // Determine the current stage text and next actionable step
+            const currentStage = stages[currentPhaseIndex];
+            const nextStage = stages[currentPhaseIndex + 1];
+
+            currentStageDisplay.textContent = langData[currentStage.labelKey];
+
+            if (nextStage) {
+                 nextActionButton.textContent = langData[nextStage.labelKey];
+                 nextActionButton.onclick = () => { switchTab('diagnostics'); alert(langData.next_action_button + ': ' + langData[nextStage.labelKey]); };
+            } else {
+                 nextActionButton.textContent = langData.flow_step_5_short;
+                 nextActionButton.onclick = () => { switchTab('my-plan'); alert(langData.flow_step_5_short); };
+            }
+            
+
+            container.innerHTML = stages.map((stage, index) => {
+                let statusClass = index < currentPhaseIndex ? 'complete' : (index === currentPhaseIndex ? 'current' : 'pending');
+                
+                const style = index > 0 && index < stageCount - 1 ? 'w-full' : 'w-auto';
+
+                return `
+                    <div class="pipeline-stage z-10 ${style}">
+                        <div class="pipeline-dot ${statusClass}"></div>
+                        <p class="text-xs mt-2 text-center ${index === currentPhaseIndex ? 'font-bold text-sky-700' : 'text-gray-500'}">
+                           ${langData[stage.labelKey]}
+                        </p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- Appliance Detail Update (Improved UX with Slider) ---
+        function updateApplianceDetails(monthValue) {
+            const month = parseInt(monthValue);
+            const langData = translations[currentLang];
+            const adjSetting = document.getElementById('adj-setting-value');
+            const adjDate = document.getElementById('adj-date-value');
+            const adjNote = document.querySelector('#adjustment-list p.text-xs');
+            const displayMonth = document.getElementById('display-month');
+            
+            // 1. Safety check: prevent sliding past current completed month
+            if (month > monthsCompleted) {
+                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
+                return;
+            }
+            
+            // 2. Update Display Month Title
+            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
+            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
+            displayMonth.textContent = month;
+
+            // 3. Find historical state
+            let state = applianceAdjustments
+                .filter(adj => adj.month <= month)
+                .sort((a, b) => b.month - a.month)[0];
+
+            if (state) {
+                adjSetting.textContent = state.expansion;
+                adjDate.textContent = state.date;
+                adjNote.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
+            } else {
+                 // Fallback for Month 0/Initial
+                adjSetting.textContent = 'N/A';
+                adjDate.textContent = langData.app_start;
+                adjNote.textContent = langData.adj_note_label + ': ' + langData.state_m0_set;
+            }
+        }
+        
+        // --- Language Toggle ---
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             updateText();
         }
 
         function switchTab(tabId) {
-            // 1. Hide all content tabs
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
-
-            // 2. Deactivate all buttons
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.classList.remove('active');
             });
-
-            // 3. Show the requested content tab
             const activeContent = document.getElementById('tab-' + tabId);
             if (activeContent) {
                 activeContent.classList.remove('hidden');
             }
-
-            // 4. Activate the clicked button
             const activeButton = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
             if (activeButton) {
                 activeButton.classList.add('active');
             }
         }
 
-        // Function to update the images and label in the Progress Tracker tab based on slider value
-        function updateComparisonView(sliderValue) {
-            const langData = translations[currentLang];
-            const grid = document.getElementById('photo-comparison-grid');
-            const label = document.getElementById('comparison-label');
-            
-            // Mapping for 5 checkpoints (0 to 4)
-            const checkpointData = [
-                { titleKey: 'comp_c0', dateKey: 'date_c0', phase: '(Initial)' },
-                { titleKey: 'comp_c1', dateKey: 'date_c1', phase: '(Month 3)' },
-                { titleKey: 'comp_c2', dateKey: 'date_c2', phase: '(Month 6)' },
-                { titleKey: 'comp_c3', dateKey: 'date_c3', phase: '(Month 12)' },
-                { titleKey: 'comp_c4', dateKey: 'date_c4', phase: '(Current)' }
-            ];
-            
-            const currentCheckpoint = checkpointData[sliderValue];
-
-            label.textContent = langData.comparison_title + `: ${langData[currentCheckpoint.dateKey]}`;
-
-            // Image Placeholders - using unique colors for visual differentiation of photo types
-            const photos = [
-                { titleKey: 'photo_jaw_front', color: '4c7c8c' },
-                { titleKey: 'photo_posture_side', color: '8c4c7c' },
-                { titleKey: 'photo_jaw_side', color: '7c8c4c' },
-                { titleKey: 'photo_jaw_bottom', color: '4c8c7c' }
-            ];
-
-            // Generate HTML for comparison photos
-            grid.innerHTML = photos.map(photo => `
-                <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
-                    <img src="https://placehold.co/180x200/${photo.color}/ffffff?text=${langData[photo.titleKey]}\n${currentCheckpoint.phase}" alt="${langData[photo.titleKey]} ${currentCheckpoint.phase}" class="w-full rounded-lg mb-2">
-                    <span class="text-xs text-gray-700 font-medium">${langData[photo.titleKey]}</span>
-                </div>
-            `).join('');
-        }
-
+        // Placeholder for compatibility (not needed for current scope)
+        const updateComparisonView = () => {};
+        
         // Initialize the page on load
         document.addEventListener('DOMContentLoaded', () => {
-            switchTab('my-plan'); // Set default tab
-            updateText(); // Load translations and initialize sliders/percentages
+            switchTab('my-plan'); 
+            updateText();
         });
     </script>
 </body>
