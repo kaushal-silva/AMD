@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Professional Consultant Dashboard</title>
+    <title>AMD Professional Consultant Dashboard | Case Review</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -12,7 +12,7 @@
             background-color: #f8fafc;
         }
         .bg-gray-gradient {
-            background-image: linear-gradient(to right, #6b7280, #4b5563); /* Gray 500 to 700 */
+            background-image: linear-gradient(to right, #4b5563, #374151); /* Gray 600 to 700 */
         }
         .section-card {
             background-color: white;
@@ -20,13 +20,7 @@
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
         }
-        .data-point {
-            padding: 0.75rem;
-            background-color: #f9fafb;
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        .tab-button {
+        .nav-button {
             padding: 0.75rem 1rem;
             text-align: left;
             font-weight: 600;
@@ -34,40 +28,33 @@
             border-radius: 0.5rem;
             transition: all 0.15s ease;
         }
-        .tab-button.active {
-            background-color: #e5e7eb; 
+        .nav-button.active {
+            background-color: #f3f4f6;
             color: #1f2937;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            border-right: 3px solid #4b5563;
+            border-left: 3px solid #374151;
         }
-        .tab-button:not(.active):hover {
-            background-color: #f3f4f6;
-        }
-        /* Custom styling for the range input track/thumb */
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: #4b5563; /* Gray 600 */
-            cursor: pointer;
-            margin-top: -7px; 
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        .nav-button:not(.active):hover {
+            background-color: #e5e7eb;
         }
         .alert-red {
             background-color: #fef2f2;
             border-left: 4px solid #ef4444;
             color: #b91c1c;
         }
-        /* Custom modal animation */
-        .modal-fade-enter {
-            opacity: 0;
-            transform: scale(0.95);
+        .chat-specialist {
+            background-color: #fef3c7; /* Amber 100 */
+            align-self: flex-end;
         }
-        .modal-fade-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        .chat-dentist {
+            background-color: #e6fffa; /* Teal 100 */
+            align-self: flex-start;
+        }
+        .priority-high {
+             @apply bg-red-100 text-red-700 font-semibold;
+        }
+        .priority-normal {
+             @apply bg-yellow-100 text-yellow-700 font-semibold;
         }
     </style>
 </head>
@@ -95,157 +82,250 @@
             <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-lg shadow-md" role="alert">
                 <p class="font-bold text-lg mb-2" data-key="pdpa_banner_title">PDPA Compliance & Pseudonymization Enforced</p>
                 <p class="text-sm" data-key="pdpa_banner_text_1">
-                    All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity.
+                    All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity. INV files require secure handling.
                 </p>
                 <p class="text-sm mt-1 font-semibold" data-key="pdpa_banner_text_2">
-                    Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).
+                    Access confirms: (1) Patient Consent, (2) Executed DPA, (3) Data is Pseudonymized.
                 </p>
             </div>
 
-            <!-- Case Search and List -->
-            <div class="section-card mb-8">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-gray-700" data-key="search_title">Shared Case Files</h2>
+            <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                 
-                <div class="flex flex-col md:flex-row gap-4 items-center mb-4">
-                    <input type="text" id="case-search" data-key="search_placeholder" placeholder="Search by Client ID or Practitioner Name..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
-                    <button onclick="searchCases()" class="py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
-                        Search Cases
-                    </button>
-                </div>
-
-                <!-- Mock Results List (Only shared data is visible) -->
-                <div id="case-list" class="mt-4 space-y-2">
-                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase('4892')">
-                        <div>
-                            <p class="font-semibold text-gray-800" data-key="case_1_id">Client ID: 4892 (Pseudonymized)</p>
-                            <p class="text-sm text-gray-500" data-key="case_1_info">Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20</p>
-                        </div>
-                        <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase('9011')">
-                        <div>
-                            <p class="font-semibold text-gray-800" data-key="case_2_id">Client ID: 9011 (Pseudonymized)</p>
-                            <p class="text-sm text-gray-500" data-key="case_2_info">Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15</p>
-                        </div>
-                        <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
+                <!-- LEFT COLUMN: Case Queue and Navigation (1/4) -->
+                <div class="lg:col-span-1 mb-8 lg:mb-0">
+                    <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_consultant_title">Review Navigation</h3>
+                        <nav class="flex flex-col space-y-2">
+                            <button class="nav-button active" onclick="switchConsultantPane('queue')" data-key="nav_case_queue">
+                                Case Review Queue (3)
+                            </button>
+                            <button class="nav-button" onclick="switchConsultantPane('accounting')" data-key="nav_accounting">
+                                Accounting Summary
+                            </button>
+                            <button class="nav-button" onclick="switchConsultantPane('chat')" data-key="nav_secure_chat">
+                                Secure Chat (Dentists)
+                            </button>
+                        </nav>
                     </div>
                 </div>
-            </div>
-
-            <!-- Case Details View (Hidden initially) -->
-            <div id="case-details-view" class="hidden">
-                <div class="flex justify-between items-center mb-6 border-b pb-4 section-card">
-                    <h2 id="case-details-title" class="text-3xl font-bold text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display"></span></h2>
-                    <button class="py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
-                        Submit Professional Opinion
-                    </button>
-                </div>
-
-                <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+                
+                <!-- RIGHT COLUMNS: Dynamic Content Area (3/4) -->
+                <div id="content-area" class="lg:col-span-3 space-y-8">
                     
-                    <!-- LEFT COLUMN: Navigation Tabs -->
-                    <div class="lg:col-span-1 mb-8 lg:mb-0">
-                        <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_case_title">Case File Navigation</h3>
-                            <nav class="flex flex-col space-y-2">
-                                <button class="tab-button active" onclick="switchCaseTab('case-diagnostics')" data-key="case_tab_diagnostics">Diagnostic Inputs</button>
-                                <button class="tab-button" onclick="switchCaseTab('case-progress')" data-key="case_tab_progress">Progress Tracker</button>
-                                <button class="tab-button" onclick="switchCaseTab('case-history')" data-key="case_tab_history">Consultation History</button>
-                            </nav>
+                    <!-- 1. Case Review Queue (Default Pane) -->
+                    <div id="pane-queue" class="consultant-pane">
+                        <h2 class="text-3xl font-bold text-gray-700 mb-6" data-key="queue_title">Cases Awaiting Analysis</h2>
+                        <div class="section-card">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-key="col_id">ID / Dentist</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-key="col_priority">Priority / Comp.</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-key="col_status">Status</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-key="col_wait_time">Wait Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                                    <!-- Jane Chen -->
+                                    <tr onclick="viewCase('4892')" class="hover:bg-gray-100 cursor-pointer">
+                                        <td class="px-3 py-4 font-medium">4892 | Dr. A. Smith</td>
+                                        <td class="px-3 py-4"><span class="text-xs p-1 rounded priority-high">High (8/10)</span></td>
+                                        <td class="px-3 py-4 text-xs font-semibold text-sky-700" data-key="status_scans_received">Scans Received / Photos Ready</td>
+                                        <td class="px-3 py-4 text-xs text-red-500">5 days</td>
+                                    </tr>
+                                    <!-- David Lee -->
+                                    <tr onclick="viewCase('9011')" class="hover:bg-gray-100 cursor-pointer">
+                                        <td class="px-3 py-4 font-medium">9011 | Dr. B. Wu</td>
+                                        <td class="px-3 py-4"><span class="text-xs p-1 rounded priority-normal">Normal (5/10)</span></td>
+                                        <td class="px-3 py-4 text-xs font-semibold text-yellow-700" data-key="status_waiting_ceph">Pending Ceph Drawing</td>
+                                        <td class="px-3 py-4 text-xs text-gray-500">1 day</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pipeline Stats -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                             <div class="section-card"><p class="text-sm text-gray-500" data-key="stat_pending_analysis">Pending Analysis (Full Data)</p><p class="text-3xl font-bold mt-1 text-red-500">3</p></div>
+                             <div class="section-card"><p class="text-sm text-gray-500" data-key="stat_pending_scans">Awaiting Scans/Photos in Pipeline</p><p class="text-3xl font-bold mt-1 text-amber-500">12</p></div>
+                             <div class="section-card"><p class="text-sm text-gray-500" data-key="stat_ai_confidence">Average AI Complexity Score</p><p class="text-3xl font-bold mt-1 text-green-700">6.2/10</p></div>
                         </div>
                     </div>
 
-                    <!-- RIGHT COLUMN: Case Tab Content -->
-                    <div class="lg:col-span-3 space-y-8">
+                    <!-- 2. Accounting Summary Pane (NEW) -->
+                    <div id="pane-accounting" class="consultant-pane hidden">
+                        <h2 class="text-3xl font-bold text-gray-700 mb-6" data-key="accounting_title">Financial & Activity Summary</h2>
+                        <div class="section-card">
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="accounting_stats_title">Consultant Metrics (YTD)</h3>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="p-3 border rounded-lg bg-indigo-50"><p class="text-sm text-gray-500" data-key="total_consults">Total Consultations Provided</p><p class="text-3xl font-bold text-indigo-700 mt-1">78</p></div>
+                                <div class="p-3 border rounded-lg bg-green-50"><p class="text-sm text-gray-500" data-key="clients_active_treatment">Clients in Active Treatment</p><p class="text-3xl font-bold text-green-700 mt-1">55</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 3. Secure Chat Pane (NEW) -->
+                    <div id="pane-chat" class="consultant-pane hidden">
+                        <h2 class="text-3xl font-bold text-gray-700 mb-6" data-key="chat_title">Secure Communication with Dentists</h2>
+                        <div class="section-card">
+                            <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4 rounded-lg">
+                                <p class="font-semibold text-red-700 text-sm" data-key="chat_pdpa_warning">PDPA WARNING: Please do not use any confidential personal health information in this chat as per the Data Processing Agreement (DPA) you have agreed to.</p>
+                            </div>
+
+                            <p class="text-sm text-gray-500 mb-4" data-key="chat_subtitle">Secure communication channel for case collaboration.</p>
+                            
+                            <!-- Chat Box -->
+                            <div class="h-80 overflow-y-auto p-4 border rounded-lg bg-gray-50 flex flex-col space-y-3">
+                                
+                                <div class="p-3 rounded-xl max-w-[80%] chat-dentist shadow-sm self-start">
+                                    <p class="text-xs font-semibold text-teal-800" data-key="msg_dentist_title">Dr. A. Smith (Orthodontics)</p>
+                                    <p class="text-sm text-gray-800 mt-1" data-key="msg_dentist_text">I have urgent questions about the expansion rate for ID 4892's maxillary appliance based on their Month 6 progress photos.</p>
+                                    <p class="text-xs text-gray-500 text-right mt-1">10:00 AM</p>
+                                </div>
+                                <div class="p-3 rounded-xl max-w-[80%] chat-specialist shadow-sm self-end">
+                                    <p class="text-xs font-semibold text-amber-700" data-key="msg_specialist_title">You (Dr. Felix)</p>
+                                    <p class="text-sm text-gray-800 mt-1" data-key="msg_specialist_text">Understood. Please review the "Analysis/Design Input" tab for my written recommendation on case 4892. Do not increase the rate further this month.</p>
+                                    <p class="text-xs text-gray-500 text-right mt-1">10:15 AM</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex space-x-2">
+                                <input type="text" placeholder="Send a secure message to the collaborating Dentist..." class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium" data-key="btn_send">Send</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Case Detail View (Full File: Hidden Pane, Mirrors Client Dash Tabs) -->
+                    <div id="pane-client-detail" class="consultant-pane hidden">
+                        <button onclick="switchConsultantPane('queue')" class="text-gray-600 font-medium text-sm mb-4 flex items-center hover:text-gray-800">
+                             &larr; <span data-key="btn_back_to_queue">Back to Review Queue</span>
+                        </button>
                         
-                        <!-- 1. Diagnostic Inputs Tab (Default) -->
-                        <div id="tab-case-diagnostics" class="case-tab-content space-y-8">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="diagnostics_title">Shared Diagnostic Inputs</h2>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div class="border p-4 rounded-lg bg-gray-50">
-                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
-                                        <div id="mcs-status-display" class="font-semibold text-lg p-2 rounded-md mb-2" data-key="mcs_value_status">MCS: 285 mm² (Critical!)</div>
-                                        <p class="text-xs text-gray-500" data-key="cbct_note">Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.</p>
-                                    </div>
-                                    <div class="border p-4 rounded-lg bg-gray-50">
-                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
-                                        <p id="schwarz-note-display" class="text-xs text-gray-500" data-key="schwarz_note">Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.</p>
-                                    </div>
-                                    <div class="border p-4 rounded-lg bg-gray-50">
-                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">Ceph Flow Metric Analysis</h3>
-                                        <p id="sassouni-note-display" class="text-xs text-gray-500" data-key="sassouni_note">Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.</p>
-                                    </div>
+                        <h2 id="client-detail-name" class="text-3xl font-bold text-gray-900 mb-6">Client ID: 4892 - Full File</h2>
+                        
+                        <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+                            <!-- LEFT NAV BAR FOR CASE FILE -->
+                            <div class="lg:col-span-1 mb-8 lg:mb-0">
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_client_title">Case File Review</h3>
+                                    <nav class="flex flex-col space-y-2">
+                                        <button class="nav-button active" onclick="switchCaseDetailTab('analysis-design')" data-key="case_tab_analysis">Analysis/Design Input</button>
+                                        <button class="nav-button" onclick="switchCaseDetailTab('progress-media')" data-key="case_tab_progress">Progress Media & Scans</button>
+                                        <button class="nav-button" onclick="switchCaseDetailTab('notes-chat')" data-key="case_tab_notes">Notes & Chat History</button>
+                                    </nav>
+                                    <button class="mt-6 py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150 w-full" onclick="openSubmitModal()" data-key="btn_submit_opinion_detail">
+                                        Submit Final Opinion
+                                    </button>
                                 </div>
                             </div>
                             
-                            <!-- Appliance Setting at Current Stage -->
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="appliance_setting_title">Appliance Setting Details</h2>
-                                <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
-                                    <h3 class="text-xl font-bold text-gray-800" data-key="appliance_name">Start Thriving Appliance (TM)</h3>
-                                    <div id="appliance-setting-display" class="text-lg font-medium text-yellow-700 mb-1" data-key="appliance_setting">Current Setting: 2.0 Turns / 0.50mm Expansion</div>
-                                    <p id="appliance-status-display" class="text-sm text-gray-500" data-key="appliance_status">Active expansion phase (Month 6 of 24).</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 2. Progress Tracker Tab -->
-                        <div id="tab-case-progress" class="case-tab-content space-y-8 hidden">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_tracker_title">Progress Photo Timeline</h2>
-                                <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Review historical jaw and posture progress photos.</p>
+                            <!-- RIGHT CONTENT FOR CASE FILE -->
+                            <div id="client-detail-content" class="lg:col-span-3 space-y-8">
                                 
-                                <!-- Comparison Slider and Images -->
-                                <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
+                                <!-- 1. Analysis/Design Input (Default) -->
+                                <div id="case-tab-analysis-design" class="case-detail-tab">
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-2xl text-indigo-600 mb-4 border-b pb-2" data-key="analysis_title">Design & Interventional Analysis</h3>
+                                        
+                                        <!-- Schwarz Analysis (From 3D Intra-Oral Scan) -->
+                                        <div class="mb-6">
+                                            <h4 class="font-bold text-gray-700 mb-2" data-key="schwarz_analysis_title">Schwarz Analysis (Maxillary Expansion)</h4>
+                                            <textarea rows="4" class="w-full p-2 border rounded-lg bg-gray-50 text-gray-800" placeholder="Enter Schwarz measurement notes and required expansion here..." data-key="schwarz_notes_placeholder"></textarea>
+                                        </div>
+
+                                        <!-- Ceph Flow Metric Analysis (X-ray drawing) -->
+                                        <div class="mb-6 border-t pt-4">
+                                            <h4 class="font-bold text-gray-700 mb-2" data-key="ceph_analysis_title">Ceph Flow Metric Analysis (X-ray Drawing)</h4>
+                                            <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg mb-3">
+                                                <p class="text-sm text-gray-700" id="ceph-drawing-status" data-key="ceph_drawing_status_pending">Status: Pending Request to 3rd Party Specialist</p>
+                                                <button class="py-1 px-3 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600" onclick="requestCephDrawing()" data-key="btn_request_ceph">Request Ceph Drawing</button>
+                                            </div>
+                                            <p class="text-sm text-gray-500" id="ceph-drawing-note" data-key="ceph_drawing_note">Sassouni Plus Ceph Drawing is required to finalize appliance design angles. Current FMA: 23°.</p>
+                                        </div>
+
+                                        <!-- Final Recommendation/Device Design -->
+                                        <div class="mb-6 border-t pt-4">
+                                            <h4 class="font-bold text-gray-700 mb-2" data-key="final_design_title">Final Appliance Design Summary</h4>
+                                            <textarea rows="6" class="w-full p-2 border rounded-lg bg-yellow-50 text-gray-800" placeholder="Enter final Start Thriving Appliance (TM) specifications here (e.g., target expansion, vertical lift, construction bite details)..." data-key="final_design_placeholder"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
                                 
-                                <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                    <label for="c-comparison-slider" id="c-comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
-                                    <input type="range" min="0" max="4" value="2" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="c-comparison-slider" oninput="updateConsultantComparisonView(this.value)">
-                                    <div class="flex justify-between text-xs mt-1 text-gray-500">
-                                        <span data-key="c0">Initial</span><span data-key="c1">Month 3</span><span data-key="c2">Month 6</span><span data-key="c3">Month 12</span><span data-key="c4">Current</span>
+                                <!-- 2. Progress Media & Scans -->
+                                <div id="case-tab-progress-media" class="case-detail-tab hidden">
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-2xl text-sky-600 mb-4 border-b pb-2" data-key="media_title">Patient Scans & Progress Photos</h3>
+
+                                        <!-- INV File Access -->
+                                        <div class="mb-6 p-4 border rounded-lg bg-teal-50">
+                                            <p class="font-bold text-teal-800 mb-2" data-key="inv_file_access">INV File Access (Pseudonymized)</p>
+                                            <p class="text-sm text-gray-700 mb-3" data-key="inv_file_note">Original INV/DICOM file is required for 3D analysis. File is encrypted.</p>
+                                            <button class="py-2 px-4 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm font-medium" data-key="btn_download_inv" onclick="downloadInvFile('4892')">Download INV File (Client ID 4892)</button>
+                                        </div>
+
+                                        <!-- Photo Gallery -->
+                                        <h4 class="font-bold text-gray-700 mb-3" data-key="photo_gallery_title">Jaw & Posture Photos (Current)</h4>
+                                        <div id="photo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            <!-- Photos dynamically mirrored from client dashboard -->
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/4c7c8c/ffffff?text=Jaw\n(Front)" alt="Jaw Front" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium" data-key="photo_jaw_front">Jaw (Front)</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/8c4c7c/ffffff?text=Posture\n(Side)" alt="Posture Side" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium" data-key="photo_posture_side">Posture (Side)</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/7c8c4c/ffffff?text=Jaw\n(Side)" alt="Jaw Side" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium" data-key="photo_jaw_side">Jaw (Side)</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/4c8c7c/ffffff?text=Jaw\n(Bottom)" alt="Jaw Bottom" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium" data-key="photo_jaw_bottom">Jaw (Bottom)</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div id="photo-comparison-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <!-- Photos dynamically populated by JS -->
+                                <!-- 3. Notes & Chat History -->
+                                <div id="case-tab-notes-chat" class="case-detail-tab hidden">
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-2xl text-red-600 mb-4 border-b pb-2" data-key="notes_chat_title">Notes & Secure Chat History</h3>
+
+                                        <!-- Dentist Notes (Historical) -->
+                                        <div class="mb-6 p-4 border rounded-lg bg-yellow-50">
+                                            <h4 class="font-bold text-amber-700 mb-2" data-key="dentist_notes_title">Dentist Internal Notes</h4>
+                                            <p class="text-sm text-gray-700" data-key="dentist_note_content">03/15/2026: Patient is compliant, but reports clicking when yawning. Check TMJ space on next scan.</p>
+                                        </div>
+
+                                        <!-- Secure Chat Mock -->
+                                        <div class="p-3 bg-teal-100 border border-teal-300 rounded-lg">
+                                            <h4 class="font-bold text-teal-800 mb-2" data-key="secure_chat_log_title">Secure Chat Log with Dr. A. Smith</h4>
+                                            <div class="h-40 overflow-y-auto space-y-2">
+                                                <div class="p-2 rounded-lg max-w-[90%] chat-dentist text-sm">... chat history ...</div>
+                                                <div class="p-2 rounded-lg max-w-[90%] chat-specialist text-sm self-end">... chat history ...</div>
+                                            </div>
+                                            <p class="text-xs text-red-500 mt-2" data-key="chat_pdpa_warning">PDPA WARNING: Do not use PHI. Consult DPA agreement.</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- 3. Consultation History Tab -->
-                        <div id="tab-case-history" class="case-tab-content space-y-8 hidden">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History & Practitioner Notes</h2>
-                                <p class="text-sm text-gray-500 mb-4" data-key="history_intro">Record of communication and previous external opinions regarding this case.</p>
-                                <div class="space-y-3">
-                                    <!-- History data point updated by JS -->
-                                    <div id="history-entry-1" class="data-point">
-                                        <p class="font-bold text-gray-800" data-key="history_entry_1_title">Request sent by Dr. Smith</p>
-                                        <p id="history-details-1" class="text-sm text-gray-600" data-key="history_entry_1_details">Requested opinion on MCS findings and initial expansion rate. (2025/11/22)</p>
-                                    </div>
-                                    <div id="history-entry-2" class="data-point bg-green-50 border-green-500">
-                                        <p class="font-bold text-green-800" data-key="history_entry_2_title">Your Opinion (Mock)</p>
-                                        <p id="history-details-2" class="text-sm text-gray-600" data-key="history_entry_2_details">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
-
-                <button class="mt-6 w-full py-3 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion">
-                    Submit Professional Opinion
-                </button>
             </div>
         </main>
     </div>
-    
-    <!-- Opinion Submission Modal -->
+
+    <!-- Opinion Submission Modal (From previous step) -->
     <div id="opinion-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
         <!-- Modal Content -->
         <div id="opinion-modal-content" class="bg-white w-full max-w-xl p-8 rounded-xl shadow-2xl relative modal-fade-enter">
+            <button onclick="closeModal('opinion-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
             <h3 id="opinion_modal_title" class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="opinion_modal_title">Submit Professional Opinion for Client ID <span id="opinion-client-id"></span></h3>
             
             <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your detailed recommendation regarding the current diagnostics and treatment progress.</p>
@@ -264,306 +344,243 @@
     <script>
         let currentLang = 'en';
 
-        // --- Translation Data Structure (JSON) ---
+        // --- Mock Case Data for dynamic switching ---
+        const mockCaseData = {
+            '4892': {
+                id: '4892', name: 'Jane Chen', dentist: 'Dr. A. Smith', priority: 'High', complexity: '8/10', wait: '5 days', statusKey: 'status_scans_received',
+                inv_file: 'Jane_4892_Initial_CBCT_INV.zip', ceph_status: 'pending',
+                schwarz_notes_content: "Maxillary expansion goal: 5mm. Initial crossbite observed, needing full correction before vertical growth phase. Midline shift requires careful monitoring."
+            },
+            '9011': {
+                id: '9011', name: 'David Lee', dentist: 'Dr. B. Wu', priority: 'Normal', complexity: '5/10', wait: '1 day', statusKey: 'status_waiting_ceph',
+                inv_file: 'David_9011_Initial_CBCT_INV.zip', ceph_status: 'complete',
+                schwarz_notes_content: "Mild crowding detected. No posterior crossbite. Expansion focuses mainly on anterior growth. Ceph drawing received and approved."
+            }
+        };
+
+        // --- Translation Data Structure ---
         const translations = {
             'en': {
                 'header_title': 'Professional Consultant Dashboard',
                 'logout_link': '← Log Out / Portal',
-                'pdpa_banner_title': 'PDPA Compliance & Pseudonymization Enforced',
-                'pdpa_banner_text_1': 'All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity.',
-                'pdpa_banner_text_2': 'Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).',
-                'search_title': 'Shared Case Files',
-                'search_placeholder': 'Search by Client ID or Practitioner Name...',
-                'btn_search': 'Search Cases',
-                'case_1_id': 'Client ID: 4892 (Pseudonymized)',
-                'case_1_info': 'Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20',
-                'case_2_id': 'Client ID: 9011 (Pseudonymized)',
-                'case_2_info': 'Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15',
-                'btn_view_case': 'Review Case →',
+                'nav_consultant_title': 'Review Navigation',
+                'nav_case_queue': 'Case Review Queue (3)',
+                'nav_accounting': 'Accounting Summary',
+                'nav_secure_chat': 'Secure Chat (Dentists)',
+                'queue_title': 'Cases Awaiting Analysis',
+                'col_id': 'ID / Dentist',
+                'col_priority': 'Priority / Comp.',
+                'col_status': 'Status',
+                'col_wait_time': 'Wait Time',
+                'status_scans_received': 'Scans Received / Photos Ready',
+                'status_waiting_ceph': 'Pending Ceph Drawing',
+                'stat_pending_analysis': 'Pending Analysis (Full Data)',
+                'stat_pending_scans': 'Awaiting Scans/Photos in Pipeline',
+                'stat_ai_confidence': 'Average AI Complexity Score',
+                'accounting_title': 'Financial & Activity Summary',
+                'accounting_stats_title': 'Consultant Metrics (YTD)',
+                'total_consults': 'Total Consultations Provided',
+                'clients_active_treatment': 'Clients in Active Treatment',
+                'chat_title': 'Secure Communication with Dentists',
+                'chat_pdpa_warning': 'PDPA WARNING: Please do not use any confidential personal health information in this chat as per the Data Processing Agreement (DPA) you have agreed to.',
+                'chat_subtitle': 'Secure communication channel for case collaboration.',
+                'msg_dentist_title': 'Dr. A. Smith (Orthodontics)',
+                'msg_dentist_text': 'I have urgent questions about the expansion rate for ID 4892\'s maxillary appliance based on their Month 6 progress photos.',
+                'msg_specialist_title': 'You (Dr. Felix)',
+                'msg_specialist_text': 'Understood. Please review the "Analysis/Design Input" tab for my written recommendation on case 4892. Do not increase the rate further this month.',
+                'btn_send': 'Send',
+                'btn_back_to_queue': 'Back to Review Queue',
                 'case_details_title': 'Case Review: Client ID',
                 'btn_submit_opinion_header': 'Submit Professional Opinion',
-                'nav_case_title': 'Case File Navigation',
-                'case_tab_diagnostics': 'Diagnostic Inputs',
-                'case_tab_progress': 'Progress Tracker',
-                'case_tab_history': 'Consultation History',
-                'diagnostics_title': 'Shared Diagnostic Inputs',
-                'cbct_title': 'CB CT Scan (Airway)',
-                'mcs_value_status_4892': 'MCS: 285 mm² (Critical!)',
-                'mcs_value_status_9011': 'MCS: 350 mm² (Stable)',
-                'cbct_note': 'Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.',
-                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
-                'schwarz_note': 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
-                'ceph_title': 'Ceph Flow Metric Analysis',
-                'sassouni_note': 'Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.',
-                'appliance_setting_title': 'Appliance Setting Details',
-                'appliance_name': 'Start Thriving Appliance (TM)',
-                'appliance_setting': 'Current Setting: 2.0 Turns / 0.50mm Expansion',
-                'appliance_status': 'Active expansion phase (Month 6 of 24).',
-                'progress_tracker_title': 'Progress Photo Timeline',
-                'progress_subtitle': 'Review historical jaw and posture progress photos.',
-                'comparison_view_title': 'Historical Comparison View',
-                'viewing_photos': 'Viewing photos from: Month 6 Check',
-                'c0': 'Initial', 'c1': 'Month 3', 'c2': 'Month 6', 'c3': 'Month 12', 'c4': 'Current',
+                'nav_client_title': 'Case File Review',
+                'case_tab_analysis': 'Analysis/Design Input',
+                'case_tab_progress': 'Progress Media & Scans',
+                'case_tab_notes': 'Notes & Chat History',
+                'btn_submit_opinion_detail': 'Submit Final Opinion',
+                'analysis_title': 'Design & Interventional Analysis',
+                'schwarz_analysis_title': 'Schwarz Analysis (Maxillary Expansion)',
+                'schwarz_notes_placeholder': 'Enter Schwarz measurement notes and required expansion here...',
+                'ceph_analysis_title': 'Ceph Flow Metric Analysis (X-ray Drawing)',
+                'ceph_drawing_status_pending': 'Status: Pending Request to 3rd Party Specialist',
+                'btn_request_ceph': 'Request Ceph Drawing',
+                'ceph_drawing_note': 'Sassouni Plus Ceph Drawing is required to finalize appliance design angles. Current FMA: 23°.',
+                'final_design_title': 'Final Appliance Design Summary',
+                'final_design_placeholder': 'Enter final Start Thriving Appliance (TM) specifications here (e.g., target expansion, vertical lift, construction bite details)...',
+                'media_title': 'Patient Scans & Progress Photos',
+                'inv_file_access': 'INV File Access (Pseudonymized)',
+                'inv_file_note': 'Original INV/DICOM file is required for 3D analysis. File is encrypted.',
+                'btn_download_inv': 'Download INV File (Client ID [ID])',
+                'photo_gallery_title': 'Jaw & Posture Photos (Current)',
                 'photo_jaw_front': 'Jaw (Front)',
                 'photo_posture_side': 'Posture (Side)',
                 'photo_jaw_side': 'Jaw (Side)',
                 'photo_jaw_bottom': 'Jaw (Bottom)',
-                'consultation_history_title': 'Consultation History & Practitioner Notes',
-                'history_intro': 'Record of communication and previous external opinions regarding this case.',
-                'history_entry_1_title': 'Request sent by Dr. Smith',
-                'history_entry_1_details': 'Requested opinion on MCS findings and initial expansion rate. (2025/11/22)',
-                'history_entry_2_title': 'Your Opinion (Mock)',
-                'history_entry_2_details': 'Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)',
-                'btn_submit_opinion': 'Submit Professional Opinion',
-                'btn_submit_final': 'Submit Final Opinion',
+                'notes_chat_title': 'Notes & Secure Chat History',
+                'dentist_notes_title': 'Dentist Internal Notes',
+                'dentist_note_content': '03/15/2026: Patient is compliant, but reports clicking when yawning. Check TMJ space on next scan.',
+                'secure_chat_log_title': 'Secure Chat Log with Dr. A. Smith',
                 'btn_cancel': 'Cancel',
+                'btn_submit_final': 'Submit Final Opinion',
                 'opinion_modal_title': 'Submit Professional Opinion for Client ID',
                 'opinion_modal_prompt': 'Provide your detailed recommendation regarding the current diagnostics and treatment progress.',
                 'opinion_textarea_placeholder': 'Type your professional opinion here (e.g., \'Recommend increasing expansion rate to 2.5 turns by month 8...\')',
-                'toggle_text': '中文'
+                'toggle_text': '中文',
+                'total_revenue': 'Total AMD Revenue', 
+                'appliance_revenue': 'Appliance Revenue', 
+                'consultation_revenue': 'Consultation/Visit Revenue', 
+                'financial_breakdown_title': 'Patient Financial Breakdown', 
+                'col_financial_patient': 'Patient', 
+                'col_visits': 'Clinical Visits', 
+                'col_treatment_stage': 'Treatment Stage', 
+                'col_revenue': 'Revenue to Date',
             },
             'zh': {
                 'header_title': '專業顧問儀表板',
                 'logout_link': '← 登出 / 入口網站',
-                'pdpa_banner_title': 'PDPA 合規與假名化強制執行',
-                'pdpa_banner_text_1': '所有顯示的病例均已**假名化**（例如：僅客戶 ID）以保護患者身份。',
-                'pdpa_banner_text_2': '訪問要求: (1) 患者書面同意, (2) 已執行數據處理協議 (DPA)。',
-                'search_title': '共享病例檔案',
-                'search_placeholder': '按客戶 ID 或執業醫師姓名搜尋...',
-                'btn_search': '搜尋病例',
-                'case_1_id': '客戶 ID: 4892 (已假名化)',
-                'case_1_info': '共享者: Smith 醫生 (牙齒矯正) | 請求日期: 2025/11/20',
-                'case_2_id': '客戶 ID: 9011 (已假名化)',
-                'case_2_info': '共享者: Wu 醫生 (兒科) | 請求日期: 2025/11/15',
-                'btn_view_case': '審閱病例 →',
+                'nav_consultant_title': '審閱導航',
+                'nav_case_queue': '病例審閱隊列 (3)',
+                'nav_accounting': '會計摘要',
+                'nav_secure_chat': '安全聊天 (牙醫)',
+                'queue_title': '待分析病例',
+                'col_id': 'ID / 牙醫',
+                'col_priority': '優先級 / 複雜度',
+                'col_status': '狀態',
+                'col_wait_time': '等待時間',
+                'status_scans_received': '已收到掃描 / 照片準備就緒',
+                'status_waiting_ceph': '待進行頭影描圖',
+                'stat_pending_analysis': '待分析 (完整資料)',
+                'stat_pending_scans': '等待掃描/照片的管線中客戶',
+                'stat_ai_confidence': 'AI 平均複雜度評分',
+                'accounting_title': '財務與活動摘要',
+                'accounting_stats_title': '顧問指標 (年度至今)',
+                'total_consults': '提供諮詢總數',
+                'clients_active_treatment': '活躍治療中客戶',
+                'chat_title': '與牙醫的安全溝通',
+                'chat_pdpa_warning': 'PDPA 警告：根據您同意的數據處理協議 (DPA)，請勿在此聊天中使用任何機密個人健康資訊。',
+                'chat_subtitle': '用於病例協作的安全溝通渠道。',
+                'msg_dentist_title': 'Smith 醫生 (牙齒矯正)',
+                'msg_dentist_text': '我對 ID 4892 上頜矯治器的擴展率有緊急問題，請根據他們的第 6 個月進度照片提供指導。',
+                'msg_specialist_title': '您 (Dr. Felix)',
+                'msg_specialist_text': '明白了。請查看「分析/設計輸入」分頁，以獲取我對病例 4892 的書面建議。本月請勿進一步增加擴展率。',
+                'btn_send': '發送',
+                'btn_back_to_queue': '返回審閱隊列',
                 'case_details_title': '病例審閱: 客戶 ID',
                 'btn_submit_opinion_header': '提交專業意見',
-                'nav_case_title': '病例檔案導航',
-                'case_tab_diagnostics': '診斷輸入',
-                'case_tab_progress': '進度追踪器',
-                'case_tab_history': '會診歷史記錄',
-                'diagnostics_title': '共享診斷輸入',
-                'cbct_title': '錐束CT掃描 (氣道)',
-                'mcs_value_status_4892': 'MCS: 285 毫米² (危急!)',
-                'mcs_value_status_9011': 'MCS: 350 毫米² (穩定)',
-                'cbct_note': '醫生備註: 鼻咽部有明顯受限。需立即干預。',
-                'intraoral_title': '3D 口內掃描 (牙齒)',
-                'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的反頜。',
-                'ceph_title': '頭影流動測量分析',
-                'sassouni_note': 'Sassouni Plus 報告: 指導矯治器生長角度。當前 FMA: 23°。',
-                'appliance_setting_title': '矯治器設置詳情',
-                'appliance_name': '開始興盛矯治器 (TM)',
-                'appliance_setting': '當前設置: 2.0 圈 / 0.50mm 擴展',
-                'appliance_status': '活躍擴展階段 (24 個月中的第 6 個月)。',
-                'progress_tracker_title': '進度照片追踪器',
-                'progress_subtitle': '審閱歷史下巴和姿勢進度照片。',
-                'comparison_view_title': '歷史比較視圖',
-                'viewing_photos': '查看照片來自: 第 6 個月檢查',
-                'c0': '初始', 'c1': '第 3 個月', 'c2': '第 6 個月', 'c3': '第 12 個月', 'c4': '當前',
+                'nav_client_title': '病例檔案審閱',
+                'case_tab_analysis': '分析/設計輸入',
+                'case_tab_progress': '進度媒體與掃描',
+                'case_tab_notes': '備註與聊天歷史',
+                'btn_submit_opinion_detail': '提交最終意見',
+                'analysis_title': '設計與干預分析',
+                'schwarz_analysis_title': 'Schwarz 分析 (上頜擴展)',
+                'schwarz_notes_placeholder': '在此處輸入 Schwarz 測量備註和所需的擴展量...',
+                'ceph_analysis_title': '頭影流動測量分析 (X 光描圖)',
+                'ceph_drawing_status_pending': '狀態: 待請求第三方專家描圖',
+                'btn_request_ceph': '請求頭影描圖',
+                'ceph_drawing_note': 'Sassouni Plus 頭影描圖是確定矯治器設計角度所必需的。當前 FMA: 23°。',
+                'final_design_title': '最終矯治器設計摘要',
+                'final_design_placeholder': '在此處輸入最終 Start Thriving Appliance (TM) 規格（例如：目標擴展、垂直抬升、咬合設計詳情）...',
+                'media_title': '患者掃描與進度照片',
+                'inv_file_access': 'INV 文件訪問 (已假名化)',
+                'inv_file_note': '原始 INV/DICOM 文件對於 3D 分析至關重要。文件已加密。',
+                'btn_download_inv': '下載 INV 文件 (客戶 ID [ID])',
+                'photo_gallery_title': '下巴與姿勢照片 (當前)',
                 'photo_jaw_front': '下巴 (正面)',
                 'photo_posture_side': '姿勢 (側面)',
                 'photo_jaw_side': '下巴 (側面)',
                 'photo_jaw_bottom': '下巴 (底部)',
-                'consultation_history_title': '會診歷史記錄與執業醫師備註',
-                'history_intro': '關於此病例的溝通記錄和先前外部意見。',
-                'history_entry_1_title': 'Smith 醫生發送的請求',
-                'history_entry_1_details': '請求對 MCS 發現和初始擴展率的意見。 (2025/11/22)',
-                'history_entry_2_title': '您的意見 (模擬)',
-                'history_entry_2_details': '建議: 維持當前擴展率 3 個月，在第 9 個月重新評估 CBCT。 (2025/11/25)',
-                'btn_submit_opinion': '提交專業意見',
-                'btn_submit_final': '提交最終意見',
+                'notes_chat_title': '備註與安全聊天歷史',
+                'dentist_notes_title': '牙醫內部備註',
+                'dentist_note_content': '2026/03/15: 患者配合良好，但報告打哈欠時有顳顎關節彈響。下次掃描檢查 TMJ 空間。',
+                'secure_chat_log_title': '與 Dr. A. Smith 的安全聊天記錄',
                 'btn_cancel': '取消',
+                'btn_submit_final': '提交最終意見',
                 'opinion_modal_title': '提交專業意見給客戶 ID',
                 'opinion_modal_prompt': '請提供您關於當前診斷和治療進度的詳細建議。',
                 'opinion_textarea_placeholder': '在此處輸入您的專業意見 (例如：「建議在第 8 個月將擴展率增加到 2.5 圈...」)',
-                'toggle_text': 'English'
-            }
-        };
-
-        // --- Mock Client Data for dynamic switching ---
-        const mockCaseData = {
-            '4892': {
-                mcs_status_key: 'mcs_value_status_4892', // Critical
-                appliance_setting: '2.0 Turns / 0.50mm Expansion',
-                appliance_status: 'Active expansion phase (Month 6 of 24).',
-                schwarz_note: 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
-                history_details: 'Requested opinion on MCS findings and initial expansion rate. (2025/11/22)',
-                // Progress Slider default to M6
-                slider_value: 2,
-            },
-            '9011': {
-                mcs_status_key: 'mcs_value_status_9011', // Stable
-                appliance_setting: '1.0 Turns / 0.25mm Expansion',
-                appliance_status: 'Early maintenance phase (Month 12 of 18).',
-                schwarz_note: 'Schwarz Analysis: Mild crowding, no crossbite. Monitoring intercanine width.',
-                history_details: 'Requested opinion on growth trajectory and mid-treatment photos. (2025/11/15)',
-                // Progress Slider default to M12
-                slider_value: 3,
+                'toggle_text': 'English',
+                'total_revenue': '總 AMD 營收', 
+                'appliance_revenue': '矯治器營收', 
+                'consultation_revenue': '諮詢/門診營收', 
+                'financial_breakdown_title': '患者財務明細', 
+                'col_financial_patient': '患者', 
+                'col_visits': '門診次數', 
+                'col_treatment_stage': '治療階段', 
+                'col_revenue': '累計營收',
             }
         };
 
 
-        // --- Core Translation Function ---
-        function updateText() {
-            const langData = translations[currentLang];
-            
-            // Get the ID span before the loop potentially wipes it
-            const clientIdDisplay = document.getElementById('client-id-display'); 
-            const opinionClientId = document.getElementById('opinion-client-id');
-
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                if (langData[key]) {
-                    element.textContent = langData[key];
-                }
+        // --- Core Functions ---
+        
+        function switchConsultantPane(paneId) {
+            document.querySelectorAll('.consultant-pane').forEach(pane => {
+                pane.classList.add('hidden');
             });
+            document.getElementById(`pane-${paneId}`).classList.remove('hidden');
 
-            // Manual update of the Case Details Title to preserve the nested span
-            const caseTitleContainer = document.getElementById('case-details-title');
-            if (caseTitleContainer && clientIdDisplay) {
-                caseTitleContainer.textContent = langData.case_details_title + ': ';
-                caseTitleContainer.appendChild(clientIdDisplay); 
-            }
-            
-            // Manual update for the Opinion Modal Title
-             const opinionModalTitle = document.getElementById('opinion_modal_title');
-             if (opinionModalTitle && opinionClientId) {
-                 opinionModalTitle.textContent = langData.opinion_modal_title + ' ';
-                 opinionModalTitle.appendChild(opinionClientId);
-             }
-
-
-            // Handle complex title update
-            const currentId = clientIdDisplay ? clientIdDisplay.textContent : null;
-            if (currentId) {
-                updateCaseContent(currentId);
-            }
-            
-            // Update specific placeholders and elements
-            document.getElementById('case-search').placeholder = langData.search_placeholder;
-            document.getElementById('header-title').textContent = langData.header_title;
-            document.getElementById('lang-toggle').textContent = langData.toggle_text;
-            
-            // Update HTML lang attribute and title
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = langData.header_title;
-            
-            // Update textarea placeholder manually
-            document.getElementById('opinion-textarea').placeholder = langData.opinion_textarea_placeholder;
-
-
-            // Re-run comparison view update to refresh image labels
-            updateConsultantComparisonView(document.getElementById('c-comparison-slider')?.value || 0);
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchConsultantPane('${paneId}')"]`).classList.add('active');
         }
 
-        // --- Language Toggle ---
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
+        function switchCaseDetailTab(tabId) {
+            document.querySelectorAll('.case-detail-tab').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.getElementById(`case-tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchCaseDetailTab('${tabId}')"]`).classList.add('active');
         }
 
-        // --- Dynamic Content Update ---
-
-        function updateCaseContent(clientId) {
-            const data = mockCaseData[clientId];
+        function viewCase(caseId) {
+            const data = mockCaseData[caseId];
             const langData = translations[currentLang];
             
             if (!data) return;
 
-            // 1. Diagnostics Tab Update
-            const mcsElement = document.getElementById('mcs-status-display');
-            mcsElement.textContent = langData[data.mcs_status_key];
+            // 1. Update Case Details Header
+            document.getElementById('client-id-display').textContent = data.id;
+            document.getElementById('client-detail-name').textContent = `Client ID: ${data.id} - ${langData.case_details_title}`;
+            document.getElementById('opinion-client-id').textContent = data.id;
+
+            // 2. Load Content for Analysis Tab
+            document.querySelector('[data-key="schwarz_notes_placeholder"]').value = data.schwarz_notes_content;
             
-            // Apply styling based on criticality
-            mcsElement.classList.remove('alert-red', 'bg-green-50');
-            mcsElement.style.borderLeft = '';
-            if (clientId === '4892') {
-                mcsElement.classList.add('alert-red');
+            // 3. Update Media Tab
+            document.querySelector('[data-key="btn_download_inv"]').textContent = langData.btn_download_inv.replace('[ID]', data.id);
+            
+            // 4. Update Ceph Status
+            const cephStatusEl = document.getElementById('ceph-drawing-status');
+            const cephButtonEl = document.getElementById('btn_request_ceph');
+
+            if (data.ceph_status === 'complete') {
+                 cephStatusEl.textContent = "Status: Complete. Sassouni Plus Drawing Ready.";
+                 cephButtonEl.textContent = "View Final Drawing";
+                 cephButtonEl.classList.remove('bg-red-500');
+                 cephButtonEl.classList.add('bg-green-500');
             } else {
-                 mcsElement.classList.add('bg-green-50');
-                 mcsElement.style.borderLeft = '4px solid #10b981';
+                 cephStatusEl.textContent = langData.ceph_drawing_status_pending;
+                 cephButtonEl.textContent = langData.btn_request_ceph;
+                 cephButtonEl.classList.remove('bg-green-500');
+                 cephButtonEl.classList.add('bg-red-500');
             }
-            
-            document.getElementById('schwarz-note-display').textContent = data.schwarz_note;
-            document.getElementById('sassouni-note-display').textContent = data.sassouni_note;
 
-
-            // 2. Appliance Setting Update
-            document.getElementById('appliance-setting-display').textContent = data.appliance_setting;
-            document.getElementById('appliance-status-display').textContent = data.appliance_status;
-            
-            // 3. History Tab Update
-            document.getElementById('history-details-1').textContent = data.history_details;
-            
-            // 4. Progress Tracker Default Slider Value
-            const progressSlider = document.getElementById('c-comparison-slider');
-            progressSlider.value = data.slider_value;
-            updateConsultantComparisonView(data.slider_value);
-        }
-
-        // --- Dashboard Functionality ---
-        function searchCases() {
-            const searchTerm = document.getElementById('case-search').value.toLowerCase();
-            const list = document.getElementById('case-list');
-            
-            // Mock search logic
-            Array.from(list.children).forEach(item => {
-                if (item.textContent.toLowerCase().includes(searchTerm) || searchTerm === '') {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            // Show and switch panes
+            switchConsultantPane('client-detail');
+            switchCaseDetailTab('analysis-design');
         }
         
-        function switchCaseTab(tabId) {
-            // 1. Hide all content tabs
-            document.querySelectorAll('.case-tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-
-            // 2. Deactivate all buttons
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-            });
-
-            // 3. Show the requested content tab
-            const activeContent = document.getElementById('tab-' + tabId);
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
-            }
-
-            // 4. Activate the clicked button
-            const activeButton = document.querySelector(`[onclick="switchCaseTab('${tabId}')"]`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
+        function requestCephDrawing() {
+            const currentId = document.getElementById('client-id-display').textContent;
+            alert(`Requesting Ceph drawing for Client ID ${currentId} from external specialist. They will upload the file once complete.`);
         }
 
-
-        function viewCase(caseId) {
-            const detailsView = document.getElementById('case-details-view');
-            const clientIdDisplay = document.getElementById('client-id-display');
-            const opinionClientId = document.getElementById('opinion-client-id');
-            
-            // Set client ID
-            clientIdDisplay.textContent = caseId;
-            opinionClientId.textContent = caseId;
-
-            // Update all content fields based on the selected case
-            updateCaseContent(caseId);
-
-            detailsView.classList.remove('hidden');
-            
-            // Ensure first tab is active
-            switchCaseTab('case-diagnostics'); 
-
-            updateText(); // Ensure labels are translated after ID is updated
-            
-            // Scroll to details view for better UX
-            detailsView.scrollIntoView({ behavior: 'smooth' });
-        }
-
+        // --- Modal Logic (Restored) ---
         function openSubmitModal() {
             const modal = document.getElementById('opinion-modal');
             const modalContent = document.getElementById('opinion-modal-content');
@@ -582,24 +599,18 @@
             const clientId = document.getElementById('client-id-display').textContent;
             
             if (opinionText.length < 10) {
-                 const message = currentLang === 'en' ? 
-                    'Please provide a detailed opinion (at least 10 characters).' :
-                    '請提供詳細意見 (至少 10 個字符)。';
-                alert(message);
+                 alert(translations[currentLang].opinion_textarea_placeholder);
                 return;
             }
 
             closeModal('opinion-modal');
             const message = currentLang === 'en' ? 
-                `Opinion submitted for pseudonymized Client ID ${clientId}. Practitioner notified. Opinion: "${opinionText.substring(0, 50)}..."` :
-                `已為假名化客戶 ID ${clientId} 提交意見。已通知執業醫師。意見: "${opinionText.substring(0, 50)}..."`;
+                `Final Opinion submitted for Patient ID ${clientId}. Dentist (${mockCaseData[clientId].dentist}) has been notified.` :
+                `Final Opinion submitted for Patient ID ${clientId}. Dentist (${mockCaseData[clientId].dentist}) has been notified.`;
             
-            // Mock practitioner notification
-            console.log("MOCK EXPERT OPINION SENT:", opinionText);
-
             alert(message);
         }
-
+        
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             const modalContent = document.getElementById(modalId + '-content');
@@ -614,44 +625,44 @@
                 modal.classList.add('hidden');
             }, 200);
         }
-        
-        // Function to update the images and label in the Progress Tracker tab based on slider value
-        function updateConsultantComparisonView(sliderValue) {
+
+        // --- Utility Functions ---
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        function searchCases() {
+            const searchTerm = document.getElementById('case-search').value.toLowerCase();
+            const list = document.getElementById('case-list');
+            
+            Array.from(list.children).forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'table-row';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function updateText() {
             const langData = translations[currentLang];
-            const grid = document.getElementById('photo-comparison-grid');
-            const label = document.getElementById('c-comparison-label');
             
-            // Mapping for 5 checkpoints (0 to 4)
-            const checkpointData = [
-                { titleKey: 'c0', phase: '(Initial)' },
-                { titleKey: 'c1', phase: '(Month 3)' },
-                { titleKey: 'c2', phase: '(Month 6)' },
-                { titleKey: 'c3', phase: '(Month 12)' },
-                { titleKey: 'c4', phase: '(Current)' }
-            ];
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    element.textContent = langData[key];
+                }
+            });
             
-            const currentCheckpoint = checkpointData[sliderValue];
-
-            label.textContent = langData.viewing_photos + `: ${langData[currentCheckpoint.titleKey]}`;
-
-            // Image Placeholders - using unique colors for visual differentiation of photo types
-            const photos = [
-                { titleKey: 'photo_jaw_front', color: '4c7c8c' },
-                { titleKey: 'photo_posture_side', color: '8c4c7c' },
-                { titleKey: 'photo_jaw_side', color: '7c8c4c' },
-                { titleKey: 'photo_jaw_bottom', color: '4c8c7c' }
-            ];
-
-            // Generate HTML for comparison photos
-            grid.innerHTML = photos.map(photo => `
-                <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
-                    <img src="https://placehold.co/180x200/${photo.color}/ffffff?text=${langData[photo.titleKey]}\n${currentCheckpoint.phase}" alt="${langData[photo.titleKey]} ${currentCheckpoint.phase}" class="w-full rounded-lg mb-2">
-                    <span class="text-xs text-gray-700 font-medium">${langData[photo.titleKey]}</span>
-                </div>
-            `).join('');
+            // Update dynamic text areas
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
         }
         
-        // Initialize translation on load
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', updateText);
     </script>
 </body>
