@@ -27,7 +27,9 @@
             @apply flex items-center justify-center w-10 h-10 bg-sky-500 text-white rounded-full font-bold text-lg shadow-lg flex-shrink-0 absolute top-0 left-0;
         }
         .flow-step-line {
-            @apply w-px bg-sky-300 h-full absolute left-5 top-10; /* Changed height to full */
+            /* Adjusted height to use a fixed pixel value so it correctly connects all 6 steps regardless of varying content height */
+            height: calc(100% - 10px); 
+            @apply w-px bg-sky-300 absolute left-5 top-5; /* Adjusted top for alignment */
         }
         .flow-container {
             @apply relative;
@@ -69,7 +71,7 @@
                     <div id="professionals-dropdown-menu" class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="professionals-dropdown-btn">
                         <div class="py-1" role="none">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Health Professional', 'PractitionerDashboard.html', event)" data-key="hp_dropdown_link">Health Practitioner</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('AMC', 'AMCDashboard.html', event)" data-key="amc_dropdown_link">AMC Coordinator</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('AMC', 'AMCDashboard.html', event)" data-key="amc_dropdown_link">AMC (Admin)</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Consultant', 'ProfessionalConsultantDashboard.html', event)" data-key="consultant_dropdown_link">Professional Consultant</a>
                         </div>
                     </div>
@@ -110,7 +112,8 @@
                     </div>
 
                     <div class="flow-container pl-4 pb-4">
-                        <!-- Vertical Line (Stretches full height of content) -->
+                        <!-- Vertical Line (Stretches from after the first icon to before the last step) -->
+                        <!-- Height is calculated in CSS style block for absolute positioning -->
                         <div class="flow-step-line"></div> 
 
                         <!-- Step 1 -->
@@ -158,7 +161,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 6 (Final Step - no line needed below) -->
+                        <!-- Step 6 (Final Step - line should end before here) -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">6</div>
                             <div class="flow-step-content" data-key="flow_step_6">
@@ -267,7 +270,7 @@
                 
                 'professionals_dropdown_text': 'Professionals Login',
                 'hp_dropdown_link': 'Health Practitioner (Dentist/Doctor)',
-                'amc_dropdown_link': 'AMC Coordinator (Admin)',
+                'amc_dropdown_link': 'AMC (Admin)', // UPDATED
                 'consultant_dropdown_link': 'Professional Consultant (Specialist)',
 
                 'toggle_text': '中文',
@@ -309,7 +312,7 @@
                 
                 'professionals_dropdown_text': '專業人士登入',
                 'hp_dropdown_link': '衛生專業人員 (牙醫/醫師)',
-                'amc_dropdown_link': 'AMC 協調員 (管理)',
+                'amc_dropdown_link': 'AMC (管理)', // UPDATED
                 'consultant_dropdown_link': '專業顧問 (專家)',
 
                 'toggle_text': 'English',
