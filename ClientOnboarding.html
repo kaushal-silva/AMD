@@ -108,15 +108,15 @@
                         
                         <!-- Basic Inputs -->
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_date_completion">Date of Completion (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1" required></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_name">Name:</label><input type="text" id="patient-name-input" class="w-full p-2 border rounded-lg mt-1" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_date_completion">Date of Completion (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1"></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_name">Name:</label><input type="text" id="patient-name-input" class="w-full p-2 border rounded-lg mt-1"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_dob">Date of birth (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1" required></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_phone">Phone:</label><input type="tel" class="w-full p-2 border rounded-lg mt-1" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_dob">Date of birth (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1"></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_phone">Phone:</label><input type="tel" class="w-full p-2 border rounded-lg mt-1"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_email">Email:</label><input type="email" class="w-full p-2 border rounded-lg mt-1" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_email">Email:</label><input type="email" class="w-full p-2 border rounded-lg mt-1"></div>
                             <div><label class="block text-sm font-medium text-gray-700" data-key="field_occupation">Occupation:</label><input type="text" class="w-full p-2 border rounded-lg mt-1"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -216,13 +216,13 @@
                         <p class="text-sm text-red-600 mb-4" data-key="sec_consent_statement">Essentia Lifestyle Management collects and obtains your personal data for the purpose of providing relevant services. According to applicable laws, the processing and use of your personal data are regulated by the Personal Data Protection Act and related regulations. You acknowledge that you have understood and agree to the statements above. This consent form grants our clinic the right to collect, process, and use your personal data.</p>
                         
                         <label class="flex items-center text-red-700 font-medium mb-3">
-                            <input type="checkbox" id="consent-checkbox" required class="text-red-600 mr-2">
+                            <input type="checkbox" id="consent-checkbox" class="text-red-600 mr-2">
                             <span data-key="field_consent_checkbox">I have read, understood, and agree to the statements above.</span>
                         </label>
                         
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_signature">Signature required:</label><input type="text" class="w-full p-2 border rounded-lg mt-1" placeholder="Type your name (Mock Signature)" required></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_date_signature">Date of Signature (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_signature">Signature required:</label><input type="text" class="w-full p-2 border rounded-lg mt-1" placeholder="Type your name (Mock Signature)"></div>
+                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_date_signature">Date of Signature (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1"></div>
                         </div>
                         <p class="text-xs text-gray-500 mt-2" data-key="note_guardian_signature">If the signer is under 18, a legal guardian must sign.</p>
                         <input type="text" placeholder="Legal Guardian Signature (If applicable)" class="w-full p-2 border rounded-lg mt-2">
@@ -760,17 +760,10 @@
                  const signature = document.querySelector('[placeholder="Type your name (Mock Signature)"]').value;
                  const patientName = document.getElementById('patient-name-input').value;
                  
-                 if (!consentChecked || !signature.trim()) {
-                     alert(langData.sec_consent_title + ' ' + (currentLang === 'en' ? 'requires signature and consent checkbox.' : '需要簽名和同意勾選。'));
-                     return;
-                 }
-                 if (!patientName.trim()) {
-                      alert(langData.field_name + ' ' + (currentLang === 'en' ? 'is required.' : '是必填欄位。'));
-                      return;
-                 }
+                 // --- MOCKUP BYPASS: Removed required field checks ---
                  
                  // Update patient display name and ID for step 2 before transitioning
-                 document.getElementById('patient-display-name').textContent = patientName.trim();
+                 document.getElementById('patient-display-name').textContent = patientName.trim() || 'N/A';
                  // Mock ID is static, but logic to update name is necessary
             }
             // Validation for Step 2
@@ -798,7 +791,7 @@
             
             if (showInput) {
                 input.classList.remove('hidden');
-                input.required = true;
+                // Removed input.required = true;
             } else {
                 // Check if any other input source is still checked
                 const isAnyOtherChecked = Array.from(document.querySelectorAll('input[name="how_found"]:checked'))
@@ -806,7 +799,7 @@
                 
                 if (!isAnyOtherChecked) {
                     input.classList.add('hidden');
-                    input.required = false;
+                    // Removed input.required = false;
                     input.value = '';
                 }
             }
