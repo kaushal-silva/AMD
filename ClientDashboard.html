@@ -137,7 +137,7 @@
             <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                 
                 <!-- LEFT COLUMN: Navigation Tabs -->
-                <div class="lg:col-span-1 mb-8 lg:mb-0">
+                <div class:lg:col-span-1 mb-8 lg:mb-0>
                     <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                         <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_title">Navigation</h3>
                         <nav class="flex flex-col space-y-2">
@@ -664,3 +664,177 @@
                 'toggle_text': 'English'
             }
         };
+
+
+        // --- Core Functions (FIXED: Defined globally) ---
+
+        function setupDiagnosticHistorySelectors() {
+            const langData = translations[currentLang];
+
+            const cbctSelect = document.getElementById('cbct-history-select');
+            cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+            
+            const intraoralSelect = document.getElementById('intraoral-history-select');
+            intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+
+            const cephSelect = document.getElementById('ceph-history-select');
+            cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
+                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+            ).join('');
+
+            updateDiagnosticContent('cbct', '0');
+            updateDiagnosticContent('intraoral', '0');
+            updateDiagnosticContent('ceph', '0');
+        }
+
+
+        function updateDiagnosticContent(type, id) {
+            const data = diagnosticHistory[type].find(item => item.id === id);
+            if (!data) return;
+            const langData = translations[currentLang];
+
+            if (type === 'cbct') {
+                const display = document.getElementById('cbct-display');
+                const mcsStatusEl = display.querySelector('#mcs-status-display');
+                const noteEl = display.querySelector('#cbct-note-display');
+                
+                mcsStatusEl.textContent = data.mcs + ' ' + (langData[data.statusKey] || data.statusKey);
+                
+                if (data.statusKey === 'mcs_status_critical') {
+                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 alert-red';
+                } else {
+                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500';
+                }
+
+                noteEl.textContent = langData[data.noteKey] || data.note;
+
+            } else if (type === 'intraoral') {
+                const display = document.getElementById('intraoral-display');
+                const statusEl = display.querySelector('[data-key^="schwarz_status"]');
+                const noteEl = display.querySelector('#schwarz-note-display');
+
+                statusEl.textContent = langData[data.statusKey] || data.statusKey;
+                noteEl.textContent = langData[data.noteKey] || data.note;
+
+            } else if (type === 'ceph') {
+                const display = document.getElementById('ceph-display');
+                const statusEl = display.querySelector('[data-key^="sassouni_status"]');
+                const noteEl = display.querySelector('#sassouni-note-display');
+
+                statusEl.textContent = langData[data.statusKey] || data.statusKey;
+                noteEl.textContent = langData[data.noteKey] || data.note;
+            }
+        }
+
+        function updateApplianceDetails(monthValue) {
+            const month = parseInt(monthValue);
+            const langData = translations[currentLang];
+            const adjSetting = document.getElementById('adj-setting-value');
+            const adjDate = document.getElementById('adj-date-value');
+            const adjNoteContentEl = document.getElementById('adj-note-label'); 
+            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); 
+            const dentistNoteContentEl = document.getElementById('dentist-note-content'); 
+            const displayMonth = document.getElementById('display-month');
+            
+            if (month > monthsCompleted) {
+                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
+                return;
+            }
+            
+            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
+            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
+            displayMonth.textContent = month;
+
+            let state = applianceAdjustments
+                .filter(adj => adj.month <= month)
+                .sort((a, b) => b.month - a.month)[0];
+
+            if (state) {
+                adjSetting.textContent = state.expansion;
+                adjDate.textContent = state.date;
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', state.clinicalDate);
+                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
+
+            } else {
+                adjSetting.textContent = langData.state_m0_set;
+                adjDate.textContent = 'N/A';
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
+                dentistNoteContentEl.textContent = langData.note_clinical_m0;
+            }
+        }
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            const activeContent = document.getElementById('tab-' + tabId);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+            }
+            const activeButton = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        function updateComparisonView() {
+            // Placeholder for compatibility
+        }
+
+        function renderPipeline() {
+             // Placeholder for compatibility
+        }
+
+        function updateText() {
+            const langData = translations[currentLang];
+            
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    element.textContent = langData[key];
+                }
+            });
+
+            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
+            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
+
+            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
+            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
+            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
+
+            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
+            document.getElementById('app_remaining_time').textContent = remainingText;
+            
+            setupDiagnosticHistorySelectors();
+            
+            const initialMonth = document.getElementById('appliance-timeline-slider').value;
+            updateApplianceDetails(initialMonth); 
+
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+        }
+        
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateText();
+        });
+    </script>
+</body>
+</html>
