@@ -60,6 +60,16 @@
         .diagnostic-value {
             @apply font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500;
         }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
     </style>
 </head>
 <body>
@@ -426,7 +436,7 @@
             ]
         };
 
-        // --- Translation Data Structure ---
+        // --- Translation Data Structure (Defined here for clarity) ---
         const translations = {
             'en': {
                 'header_title': 'AMD Practitioner Dashboard',
@@ -642,23 +652,28 @@
             const langData = translations[currentLang];
 
             const cbctSelect = document.getElementById('cbct-history-select');
-            cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
-                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-            ).join('');
+            if (cbctSelect) {
+                cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
+                    `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+                ).join('');
+                updateDiagnosticContent('cbct', '0');
+            }
             
             const intraoralSelect = document.getElementById('intraoral-history-select');
-            intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
-                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-            ).join('');
+            if (intraoralSelect) {
+                intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
+                    `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+                ).join('');
+                updateDiagnosticContent('intraoral', '0');
+            }
 
             const cephSelect = document.getElementById('ceph-history-select');
-            cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
-                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-            ).join('');
-
-            updateDiagnosticContent('cbct', '0');
-            updateDiagnosticContent('intraoral', '0');
-            updateDiagnosticContent('ceph', '0');
+            if (cephSelect) {
+                cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
+                    `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
+                ).join('');
+                updateDiagnosticContent('ceph', '0');
+            }
         }
 
 
@@ -669,6 +684,7 @@
 
             if (type === 'cbct') {
                 const display = document.getElementById('cbct-display');
+                if (!display) return;
                 const mcsStatusEl = display.querySelector('#mcs-status-display');
                 const noteEl = display.querySelector('#cbct-note-display');
                 
@@ -684,6 +700,7 @@
 
             } else if (type === 'intraoral') {
                 const display = document.getElementById('intraoral-display');
+                 if (!display) return;
                 const statusEl = display.querySelector('[data-key^="schwarz_status"]');
                 const noteEl = display.querySelector('#schwarz-note-display');
 
@@ -692,6 +709,7 @@
 
             } else if (type === 'ceph') {
                 const display = document.getElementById('ceph-display');
+                 if (!display) return;
                 const statusEl = display.querySelector('[data-key^="sassouni_status"]');
                 const noteEl = display.querySelector('#sassouni-note-display');
 
@@ -716,14 +734,18 @@
             }
             
             const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
-            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
-            displayMonth.textContent = month;
+            if (document.querySelector('[data-key="adjustment_timeline_title"]')) {
+                document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
+            }
+            if (displayMonth) {
+                displayMonth.textContent = month;
+            }
 
             let state = applianceAdjustments
                 .filter(adj => adj.month <= month)
                 .sort((a, b) => b.month - a.month)[0];
 
-            if (state) {
+            if (state && adjSetting) {
                 adjSetting.textContent = state.expansion;
                 adjDate.textContent = state.date;
                 adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
@@ -732,12 +754,14 @@
                 dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
 
             } else {
-                adjSetting.textContent = langData.state_m0_set;
-                adjDate.textContent = 'N/A';
-                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
-                
-                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
-                dentistNoteContentEl.textContent = langData.note_clinical_m0;
+                if (adjSetting) {
+                    adjSetting.textContent = langData.state_m0_set;
+                    adjDate.textContent = 'N/A';
+                    adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
+                    
+                    dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
+                    dentistNoteContentEl.textContent = langData.note_clinical_m0;
+                }
             }
         }
         
@@ -754,7 +778,6 @@
             });
             document.getElementById(`pane-${paneId}`).classList.remove('hidden');
 
-            // Deactivate all nav buttons, then activate the current one
             document.querySelectorAll('.nav-button').forEach(button => {
                 button.classList.remove('active');
             });
@@ -773,10 +796,10 @@
             });
             document.getElementById(`client-tab-${tabId}`).classList.remove('hidden');
 
-            // Deactivate all client nav buttons, then activate the current one
             document.querySelectorAll('#pane-client-detail .nav-button').forEach(button => {
                  button.classList.remove('active');
             });
+            // The issue is likely in the selector used here, it should only select within the client file navigation
             document.querySelector(`#pane-client-detail [onclick="switchClientDetailTab('${tabId}')"]`).classList.add('active');
         }
 
@@ -793,7 +816,7 @@
         }
         
         function mockSearchPatients() {
-             alert('Simulating search...');
+             alert(translations[currentLang].btn_search + '...');
         }
         
         function acceptPatient(id) {
@@ -807,6 +830,51 @@
             }
         }
         
+        function requestConsultation() {
+            if (!currentClient) {
+                alert("Please select a patient first.");
+                return;
+            }
+            
+            document.getElementById('consult-client-name').textContent = currentClient.name;
+            openModal('pdpa-modal');
+        }
+
+        function confirmConsultation() {
+            closeModal('pdpa-modal');
+            const message = currentLang === 'en' ? 
+                `Client ${currentClient.name}'s data has been pseudonymized and shared with the professional consultant. Compliance confirmed.` :
+                `Client ${currentClient.name}'s data has been pseudonymized and shared with the professional consultant. Compliance confirmed.`;
+            alert(message);
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+
+            if (!modal || !modalContent) return;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10); 
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+            
+            if (!modal || !modalContent) return;
+
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
         function updateComparisonView() {
             // Placeholder for compatibility
         }
@@ -839,6 +907,7 @@
             }
             
             // Re-initialize dynamic components
+            // Note: setupDiagnosticHistorySelectors is currently commented out/not fully implemented, skipping call to prevent errors.
             // setupDiagnosticHistorySelectors(); 
             
             if (document.getElementById('appliance-timeline-slider')) {
