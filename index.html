@@ -97,8 +97,18 @@
                 
                 <!-- LEFT COLUMN: Patient Journey Flowchart (UPDATED CONTENT) -->
                 <section class="section-card bg-white p-8 rounded-xl shadow-lg">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-2 text-sky-600" data-key="flow_title">The Personalized Path to Your Best Health</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="flow_title">The Personalized Path to Your Best Health</h3>
                     
+                    <!-- Flowchart Image (NEW) -->
+                    <div class="mb-8 text-center">
+                        <img 
+                            src="images/index/PatientFlowChart.png" 
+                            alt="6-Step Patient Journey Flowchart: Enroll, Select Expert, Diagnostics, Confirm Diagnosis, Prescribe Solution, Full Support" 
+                            class="w-full h-auto max-w-lg mx-auto rounded-lg shadow-md"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x200/c7f2f2/06b6d4?text=Patient+Flowchart';"
+                        >
+                    </div>
+
                     <div class="flow-container pl-4 pb-4">
                         <!-- Vertical Line (Stretches full height of content) -->
                         <div class="flow-step-line"></div> 
@@ -106,7 +116,7 @@
                         <!-- Step 1 -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">1</div>
-                            <div class="flow-step-content">
+                            <div class="flow-step-content" data-key="flow_step_1">
                                 <p class="font-extrabold text-gray-800" data-key="flow_step_1_bold">Enroll and Access</p>
                                 <p class="text-sm text-gray-700 mt-1" data-key="flow_step_1_desc">Sign up on our dedicated platform to officially enroll and gain immediate access to your personalized treatment planning tools.</p>
                             </div>
@@ -115,7 +125,7 @@
                         <!-- Step 2 -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">2</div>
-                            <div class="flow-step-content">
+                            <div class="flow-step-content" data-key="flow_step_2">
                                 <p class="font-extrabold text-gray-800" data-key="flow_step_2_bold">Select Your Expert</p>
                                 <p class="text-sm text-gray-700 mt-1" data-key="flow_step_2_desc">Choose a local Taiwanese dentist from our network who will serve as your treatment leader and clinical guide throughout your journey.</p>
                             </div>
@@ -124,7 +134,7 @@
                         <!-- Step 3 -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">3</div>
-                            <div class="flow-step-content">
+                            <div class="flow-step-content" data-key="flow_step_3">
                                 <p class="font-extrabold text-gray-800" data-key="flow_step_3_bold">Initiate Diagnostics</p>
                                 <p class="text-sm text-gray-700 mt-1" data-key="flow_step_3_desc">Receive clear referrals and precise details for the initial scans required to establish your comprehensive medical diagnosis.</p>
                             </div>
@@ -133,7 +143,7 @@
                         <!-- Step 4 -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">4</div>
-                            <div class="flow-step-content">
+                            <div class="flow-step-content" data-key="flow_step_4">
                                 <p class="font-extrabold text-gray-800" data-key="flow_step_4_bold">Confirm Your Diagnosis</p>
                                 <p class="text-sm text-gray-700 mt-1" data-key="flow_step_4_desc">Attend an in-person consultation with your dentist. Here, your local expert and our Airway Mouth Doctor (Dr. Felix) will confirm your IMS diagnosis (Integrated Mouth System) and collaboratively determine the precise treatment protocol you need, or confirm if treatment is not currently required.</p>
                             </div>
@@ -142,7 +152,7 @@
                         <!-- Step 5 -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">5</div>
-                            <div class="flow-step-content">
+                            <div class="flow-step-content" data-key="flow_step_5">
                                 <p class="font-extrabold text-gray-800" data-key="flow_step_5_bold">Custom Solution Prescribed</p>
                                 <p class="text-sm text-gray-700 mt-1" data-key="flow_step_5_desc">Upon diagnosis confirmation, you will receive your individually engineered Start Thriving Appliance™ and an accompanying nutritional regimen—the foundational elements for your therapeutic success.</p>
                             </div>
@@ -151,7 +161,7 @@
                         <!-- Step 6 (Final Step - no line needed below) -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon">6</div>
-                            <div class="flow-step-content">
+                            <div class="flow-step-content" data-key="flow_step_6">
                                 <p class="font-extrabold text-gray-800" data-key="flow_step_6_bold">Full Clinical Support</p>
                                 <p class="text-sm text-gray-700 mt-1" data-key="flow_step_6_desc">Throughout your treatment, you will work closely with your Doctor, specialized Airway Mouth Coordinator, and clinic team to ensure systematic progress toward your measurable health objectives.</p>
                             </div>
