@@ -57,6 +57,9 @@
         .revenue-metric {
             @apply text-xl font-bold text-green-700;
         }
+        .diagnostic-value {
+            @apply font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500;
+        }
     </style>
 </head>
 <body>
@@ -294,23 +297,57 @@
                             <div id="client-detail-content" class="lg:col-span-3 space-y-8">
                                 <!-- Default Client Plan Mock -->
                                 <div id="client-tab-client-plan" class="client-detail-tab">
-                                    <div class="section-card"><h3 class="font-bold text-xl text-sky-600">Goals & Pains</h3><p class="text-sm mt-2">Client wants to eliminate: Daytime Fatigue, Neck Tension, Dry Mouth. (Data mirrored from ClientDashboard)</p></div>
-                                    <div class="section-card"><h3 class="font-bold text-xl text-yellow-600">Appliance & Nutrition</h3><p class="text-sm mt-2">Appliance Setting: 2.0 Turns (M6). Nutrition: Bone Broth, Vitamin D3. (Data mirrored from ClientDashboard)</p></div>
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-xl text-sky-600" data-key="goals_pains_title">Goals & Pains</h3>
+                                        <p class="text-sm mt-2">Client wants to eliminate: Daytime Fatigue, Neck Tension, Dry Mouth.</p>
+                                    </div>
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-xl text-yellow-600" data-key="appliance_name">Appliance & Nutrition</h3>
+                                        <p class="text-sm mt-2">Appliance Setting: 2.0 Turns (M6). Nutrition: Bone Broth, Vitamin D3.</p>
+                                    </div>
                                 </div>
                                 
                                 <!-- Client Diagnostics Mock -->
                                 <div id="client-tab-client-diagnostics" class="client-detail-tab hidden">
-                                    <div class="section-card"><h3 class="font-bold text-xl text-indigo-600">CBCT & Analysis</h3><p class="text-sm mt-2">CBCT MCS: 285 mm² (Critical). Schwarz Analysis Ready. (Data mirrored from ClientDashboard)</p></div>
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-xl text-indigo-600" data-key="sec_diagnostics_title_new">Scans & Analysis</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                            <div class="metric-card"><p class="font-bold text-indigo-700" data-key="cbct_title">CB CT Scan (Airway)</p><p class="diagnostic-value">MCS: 285 mm² (Critical!)</p></div>
+                                            <div class="metric-card"><p class="font-bold text-indigo-700" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</p><p class="diagnostic-value bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800">Schwarz Analysis Ready</p></div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Client Progress Mock -->
                                 <div id="client-tab-client-progress" class="client-detail-tab hidden">
-                                    <div class="section-card"><h3 class="font-bold text-xl text-sky-600">Photo Timeline</h3><p class="text-sm mt-2">Historical photo viewing and metrics (Jaw Width, Airway Patency). (Data mirrored from ClientDashboard)</p></div>
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-xl text-sky-600" data-key="progress_title">Progress Photo Timeline</h3>
+                                        <p class="text-sm mt-2" data-key="comparison_view_title">Historical Comparison View</p>
+                                        
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/4c7c8c/ffffff?text=Jaw\n(Front)" alt="Jaw Front" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium">Jaw (Front)</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/8c4c7c/ffffff?text=Posture\n(Side)" alt="Posture Side" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium">Posture (Side)</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/7c8c4c/ffffff?text=Jaw\n(Side)" alt="Jaw Side" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium">Jaw (Side)</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <img src="https://placehold.co/120x150/4c8c7c/ffffff?text=Jaw\n(Bottom)" alt="Jaw Bottom" class="w-full rounded-lg mb-1 mx-auto">
+                                                <span class="text-xs text-gray-700 font-medium">Jaw (Bottom)</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <!-- Client Chat Mock -->
                                 <div id="client-tab-client-chat" class="client-detail-tab hidden">
-                                    <div class="section-card"><h3 class="font-bold text-xl text-blue-600">Secure Client Chat History</h3><p class="text-sm mt-2">History of communication between Client, AMC, and Dentist. (Data mirrored from ClientDashboard)</p></div>
+                                    <div class="section-card"><h3 class="font-bold text-xl text-blue-600">Secure Client Chat History</h3><p class="text-sm mt-2">History of communication between Client, AMC, and Dentist.</p></div>
                                 </div>
                             </div>
                         </div>
@@ -717,6 +754,7 @@
             });
             document.getElementById(`pane-${paneId}`).classList.remove('hidden');
 
+            // Deactivate all nav buttons, then activate the current one
             document.querySelectorAll('.nav-button').forEach(button => {
                 button.classList.remove('active');
             });
@@ -735,10 +773,11 @@
             });
             document.getElementById(`client-tab-${tabId}`).classList.remove('hidden');
 
-            document.querySelectorAll('.nav-button').forEach(button => {
+            // Deactivate all client nav buttons, then activate the current one
+            document.querySelectorAll('#pane-client-detail .nav-button').forEach(button => {
                  button.classList.remove('active');
             });
-            document.querySelector(`[onclick="switchClientDetailTab('${tabId}')"]`).classList.add('active');
+            document.querySelector(`#pane-client-detail [onclick="switchClientDetailTab('${tabId}')"]`).classList.add('active');
         }
 
 
@@ -790,12 +829,14 @@
             const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
 
             // Update main status metrics
-            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
-            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
-            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
-
-            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
-            document.getElementById('app_remaining_time').textContent = remainingText;
+            const applianceProgressBar = document.getElementById('appliance-progress-bar-detail');
+            if (applianceProgressBar) {
+                 applianceProgressBar.style.width = `${percentageCompleted}%`;
+                 document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
+                 document.getElementById('appliance-remaining-months').textContent = remainingMonths;
+                 document.getElementById('app_duration_text').textContent = langData.app_duration_text;
+                 document.getElementById('app_remaining_time').textContent = remainingText;
+            }
             
             // Re-initialize dynamic components
             // setupDiagnosticHistorySelectors(); 
@@ -813,7 +854,6 @@
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             updateText();
-            // Default pane set in HTML structure
         });
     </script>
 </body>
