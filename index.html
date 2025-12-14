@@ -17,13 +17,14 @@
             /* A soothing blue-green gradient theme for health and airway */
             background-image: linear-gradient(to right bottom, #10b981, #06b6d4);
         }
-        .card-shadow {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .flow-step {
+            @apply flex items-center mb-6;
         }
-        .card-shadow:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+        .flow-step-icon {
+            @apply flex items-center justify-center w-10 h-10 bg-sky-500 text-white rounded-full font-bold text-lg shadow-lg flex-shrink-0;
+        }
+        .flow-step-line {
+            @apply w-px bg-sky-300 h-12 ml-5;
         }
         /* Custom modal animation */
         .modal-fade-enter {
@@ -39,100 +40,118 @@
 </head>
 <body>
 
-    <!-- Main Application Container (relative for language toggle positioning) -->
-    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative">
+    <!-- Main Application Container -->
+    <div class="min-h-screen flex flex-col p-4 relative">
 
-        <!-- Language Toggle Button -->
-        <div class="absolute top-4 right-4 z-10">
-            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-teal-600 border border-teal-600 hover:bg-teal-50 transition duration-150 font-semibold shadow-md">
-                <!-- Text updated by JavaScript -->
-            </button>
-        </div>
-
-        <!-- Header and Mission Statement (pt-16 ensures content is not hidden behind the toggle) -->
-        <header class="text-center mb-12 max-w-4xl pt-16">
-            <h1 class="text-5xl font-extrabold text-gray-900 sm:text-6xl tracking-tight">
-                <span class="bg-gradient-amd bg-clip-text text-transparent" data-key="portal_title_h1">AMD Portal</span>
+        <!-- Header: Language Toggle and Professional Login Dropdown -->
+        <header class="w-full max-w-7xl mx-auto flex justify-between items-center py-4 px-2 sticky top-0 bg-f8fafc z-20">
+            <h1 class="text-2xl font-extrabold text-gray-900">
+                <span class="bg-gradient-amd bg-clip-text text-transparent">AMD</span>
             </h1>
-            <h2 class="text-3xl font-medium text-gray-700 mt-2 sm:mt-4" data-key="portal_title_h2">
-                Airway Mouth Doctor Holistic Health
-            </h2>
-            <p class="mt-6 text-lg text-gray-500 max-w-3xl mx-auto" id="mission-statement">
-                <!-- Mission statement parts are now split and keyed for translation -->
-                <span data-key="mission_statement_start">Your single platform to manage, track, and service the needs of the </span>
-                <span class="font-semibold text-teal-600" data-key="mission_statement_emphasis">Holistic Mouth Solutions</span>
-                <span data-key="mission_statement_end"> approach, addressing Impaired Mouth Syndrome.</span>
-            </p>
+
+            <div class="flex items-center space-x-4">
+                <!-- Language Toggle Button -->
+                <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-teal-600 border border-teal-600 hover:bg-teal-50 transition duration-150 font-semibold shadow-md text-sm">
+                    <!-- Text updated by JavaScript -->
+                </button>
+
+                <!-- Professional Login Dropdown -->
+                <div class="relative" onmouseleave="closeDropdown()">
+                    <button id="professionals-dropdown-btn" onclick="toggleDropdown()" class="py-2 px-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150 text-sm shadow">
+                        <span data-key="professionals_dropdown_text">Professionals Login</span>
+                    </button>
+                    <div id="professionals-dropdown-menu" class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="professionals-dropdown-btn">
+                        <div class="py-1" role="none">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Health Professional', 'PractitionerDashboard.html', event)" data-key="hp_dropdown_link">Health Practitioner</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('AMC', 'AMCDashboard.html', event)" data-key="amc_dropdown_link">AMC Coordinator</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Consultant', 'ProfessionalConsultantDashboard.html', event)" data-key="consultant_dropdown_link">Professional Consultant</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <!-- Login / Entry Cards Container -->
-        <main class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+        <!-- Main Content Area -->
+        <main class="w-full max-w-7xl mx-auto flex-grow pt-4">
 
-            <!-- Card 1: Health Professionals -->
-            <div id="hp-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-teal-500 flex flex-col items-center text-center cursor-pointer" onclick="handleLogin('Health Professional')">
-                <div class="text-5xl text-teal-500 mb-4" role="img" aria-label="Stethoscope icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-stethoscope"><path d="M18 15v-3"/><path d="M18 21v-3"/><path d="M18 6V3"/><path d="M18 12V9"/><path d="M12 6V3"/><path d="M12 21v-3"/><path d="M6 6V3"/><path d="M6 21v-3"/><path d="M18 3h-2a4 4 0 0 0-4 4v7a4 4 0 0 0 4 4h2"/><path d="M12 3h-2a4 4 0 0 0-4 4v7a4 4 0 0 0 4 4h2"/><path d="M6 3H4a4 4 0 0 0-4 4v7a4 4 0 0 0 4 4h2"/></svg>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2" data-key="hp_card_title">Health Professional</h3>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="hp_card_desc">
-                    Dentists, Doctors, and Certified Consultants. Manage patient treatments, access diagnostic tools, and collaborate with the AMD network.
+            <!-- Informative Section -->
+            <section class="text-center mb-16 max-w-4xl mx-auto">
+                <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl tracking-tight" data-key="main_headline">
+                    Resolving <span class="text-sky-600">Impaired Mouth Syndrome (IMS)</span> Holistically.
+                </h2>
+                <p class="mt-4 text-lg text-gray-700" data-key="main_mission">
+                    Our platform is the sole gateway in Taiwan to receive treatment and consultation from the patent-holding specialist, **Dr. Felix (USA)**, in collaboration with a network of certified local Taiwanese dentists.
                 </p>
-                <button class="w-full py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150" data-key="hp_card_button">
-                    Log In / Register
-                </button>
-            </div>
+                <p class="mt-2 text-lg text-gray-500" data-key="main_promise">
+                    We provide a single, coordinated platform to manage your personalized journey toward improved breathing, posture, and holistic health.
+                </p>
+            </section>
 
-            <!-- Card 2: Client / Patient -->
-            <div id="client-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-sky-500 flex flex-col items-center text-center cursor-pointer" onclick="handleLogin('Client')">
-                <div class="text-5xl text-sky-500 mb-4" role="img" aria-label="Person in box icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2" data-key="client_card_title">Client / Patient</h3>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="client_card_desc">
-                    Access your treatment plan, schedule appointments, review progress, and communicate securely with your AMD team.
-                </p>
-                <button class="w-full py-3 px-6 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="client_card_button">
-                    Log In / View Records
-                </button>
-            </div>
+            <div class="lg:grid lg:grid-cols-2 gap-12 items-start">
+                
+                <!-- LEFT COLUMN: Patient Journey Flowchart -->
+                <section class="section-card bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-2 text-sky-600" data-key="flow_title">Patient Journey Flowchart</h3>
+                    
+                    <div class="relative pl-4">
+                        <div class="flow-step">
+                            <div class="flow-step-icon">1</div>
+                            <p class="ml-4 text-gray-700 font-medium" data-key="flow_step_1">Patient signs up for the treatment on this platform</p>
+                        </div>
+                        <div class="flow-step-line absolute left-5 top-12 bottom-0"></div>
 
-            <!-- Card 3: Airway Mouth Coordinator (AMC) -->
-            <div id="amc-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-indigo-500 flex flex-col items-center text-center cursor-pointer" onclick="handleLogin('AMC')">
-                <div class="text-5xl text-indigo-500 mb-4" role="img" aria-label="Gear icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 1-2 2H4a2 2 0 0 0-2 2v.44a2 2 0 0 1-2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2-2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 1 2-2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 1 2-2v-.44a2 2 0 0 0-2-2h-.44a2 2 0 0 1-2-2v-.44a2 2 0 0 0-2-2h-.44a2 2 0 0 1-2-2v-.44a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2" data-key="amc_card_title">AMC Coordinator</h3>
-                <p class="text-gray-500 mb-6 flex-grow" data-key="amc_card_desc">
-                    Airway Mouth Coordinators support your patient journey ensuring you get the best results.
-                </p>
-                <button class="w-full py-3 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150" data-key="amc_card_button">
-                    Log In / Admin Access
-                </button>
+                        <div class="flow-step">
+                            <div class="flow-step-icon">2</div>
+                            <p class="ml-4 text-gray-700 font-medium" data-key="flow_step_2">Patient chooses local Taiwanese dentist to lead their treatment</p>
+                        </div>
+                        <div class="flow-step-line absolute left-5 top-[8.5rem] bottom-0"></div>
+                        
+                        <div class="flow-step">
+                            <div class="flow-step-icon">3</div>
+                            <p class="ml-4 text-gray-700 font-medium" data-key="flow_step_3">Patient receives referrals and details of initial scans needed for diagnosis</p>
+                        </div>
+                        <div class="flow-step-line absolute left-5 top-[13.5rem] bottom-0"></div>
+                        
+                        <div class="flow-step">
+                            <div class="flow-step-icon">4</div>
+                            <p class="ml-4 text-gray-700 font-medium" data-key="flow_step_4">Patient visits dentist with scans to understand IMS diagnosis and agree to treatment</p>
+                        </div>
+                         <div class="flow-step-line absolute left-5 top-[19rem] bottom-0"></div>
+                         
+                        <div class="flow-step">
+                            <div class="flow-step-icon">5</div>
+                            <p class="ml-4 text-gray-700 font-medium" data-key="flow_step_5">Unique Start Thriving Appliance (TM) and nutrition plan is prescribed</p>
+                        </div>
+                        <div class="flow-step-line absolute left-5 top-[24rem] bottom-0"></div>
+
+                        <div class="flow-step">
+                            <div class="flow-step-icon">6</div>
+                            <p class="ml-4 text-gray-700 font-medium" data-key="flow_step_6">Patient works with Doctor, Airway Mouth Coordinator and clinic to complete their treatment</p>
+                        </div>
+                        
+                    </div>
+                </section>
+
+                <!-- RIGHT COLUMN: Client Login (Big and Central) -->
+                <section class="flex flex-col items-center justify-center p-8 lg:p-0">
+                    <div id="client-login-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-sky-500 flex flex-col items-center text-center w-full max-w-sm">
+                        <div class="text-6xl text-sky-500 mb-4" role="img" aria-label="Person icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-2" data-key="client_card_title">Client / Patient Access</h3>
+                        <p class="text-gray-500 mb-6" data-key="client_card_desc">
+                            Begin your journey, sign in, or view your records and progress.
+                        </p>
+                        <button class="w-full py-3 px-6 bg-sky-600 text-white font-extrabold text-lg rounded-lg hover:bg-sky-700 transition duration-150" onclick="openLoginModal('Client')">
+                            <span data-key="client_card_button">Start My Treatment Journey</span>
+                        </button>
+                    </div>
+                </section>
             </div>
         </main>
-        
-        <!-- New Section: Specialist Login (Less Conspicuous) -->
-        <section class="w-full max-w-6xl mx-auto mt-6">
-            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col md:flex-row items-center justify-between shadow-sm">
-                <div class="text-lg font-semibold text-gray-600 mb-2 md:mb-0" data-key="consultant_card_title">
-                    Professional Consultant Access
-                </div>
-                <p class="text-sm text-gray-500 mb-4 md:mb-0 md:mr-6" data-key="consultant_card_desc">
-                    For DPA-compliant, pseudonymized case review only.
-                </p>
-                <button class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition duration-150 text-sm w-full md:w-auto" onclick="handleLogin('Consultant')">
-                    Log In
-                </button>
-            </div>
-        </section>
-
-        <!-- Message Box for Login Simulation (Replaces alert()) -->
-        <div id="message-box" class="fixed bottom-4 right-4 bg-white border-l-4 border-teal-500 text-gray-800 p-4 rounded-lg shadow-xl hidden transition-opacity duration-300" role="alert">
-            <p id="message-text" class="font-semibold"></p>
-        </div>
     </div>
 
-    <!-- Login Modal Structure -->
+    <!-- Login Modal Structure (Shared for Client/Patient only) -->
     <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
         <!-- Modal Content -->
         <div id="modal-content-container" class="bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl relative modal-fade-enter">
@@ -167,39 +186,48 @@
         </div>
     </div>
 
+    <!-- Message Box for Login Simulation -->
+    <div id="message-box" class="fixed bottom-4 right-4 bg-white border-l-4 border-teal-500 text-gray-800 p-4 rounded-lg shadow-xl hidden transition-opacity duration-300" role="alert">
+        <p id="message-text" class="font-semibold"></p>
+    </div>
+
     <!-- JavaScript for translations and simulated login action -->
     <script>
         // Global variables for modal state
         let currentLang = 'en';
-        let currentUserType = ''; // 'Health Professional', 'Client', 'AMC', or 'Consultant'
-        let currentMode = 'signin'; // 'signin' or 'signup'
+        let currentUserType = '';
+        let currentMode = 'signin';
         
         // --- Translation Data Structure (JSON) ---
         const translations = {
             'en': {
                 'portal_title_h1': 'AMD Portal',
                 'portal_title_h2': 'Airway Mouth Doctor Holistic Health',
-                'mission_statement_start': 'Your single platform to manage, track, and service the needs of the ',
-                'mission_statement_emphasis': 'Holistic Mouth Solutions',
-                'mission_statement_end': ' approach, addressing Impaired Mouth Syndrome.',
-                'hp_card_title': 'Health Professional',
-                'hp_card_desc': 'Dentists, Doctors, and Certified Consultants. Manage patient treatments, access diagnostic tools, and collaborate with the AMD network.',
-                'hp_card_button': 'Log In / Register',
-                'client_card_title': 'Client / Patient',
-                'client_card_desc': 'Access your treatment plan, schedule appointments, review progress, and communicate securely with your AMD team.',
-                'client_card_button': 'Log In / View Records',
-                'amc_card_title': 'AMC Coordinator',
-                'amc_card_desc': 'Airway Mouth Coordinators support your patient journey ensuring you get the best results.',
-                'amc_card_button': 'Log In / Admin Access',
-                'consultant_card_title': 'Professional Consultant Access', // NEW
-                'consultant_card_desc': 'For DPA-compliant, pseudonymized case review only.', // NEW
+                'main_headline': 'Resolving Impaired Mouth Syndrome (IMS) Holistically.',
+                'main_mission': 'Our platform is the sole gateway in Taiwan to receive treatment and consultation from the patent-holding specialist, Dr. Felix (USA), in collaboration with a network of certified local Taiwanese dentists.',
+                'main_promise': 'We provide a single, coordinated platform to manage your personalized journey toward improved breathing, posture, and holistic health.',
+                
+                'flow_title': 'Patient Journey Flowchart',
+                'flow_step_1': 'Patient signs up for the treatment on this platform',
+                'flow_step_2': 'Patient chooses local Taiwanese dentist to lead their treatment',
+                'flow_step_3': 'Patient receives referrals and details of initial scans needed for diagnosis',
+                'flow_step_4': 'Patient visits dentist with scans to understand IMS diagnosis and agree to treatment',
+                'flow_step_5': 'Unique Start Thriving Appliance (TM) and nutrition plan is prescribed',
+                'flow_step_6': 'Patient works with Doctor, Airway Mouth Coordinator and clinic to complete their treatment',
+
+                'client_card_title': 'Client / Patient Access',
+                'client_card_desc': 'Begin your journey, sign in, or view your records and progress.',
+                'client_card_button': 'Start My Treatment Journey',
+                
+                'professionals_dropdown_text': 'Professionals Login',
+                'hp_dropdown_link': 'Health Practitioner (Dentist/Doctor)',
+                'amc_dropdown_link': 'AMC Coordinator (Admin)',
+                'consultant_dropdown_link': 'Professional Consultant (Specialist)',
+
                 'toggle_text': '中文',
                 'modal_sign_in_title': 'Sign In to continue',
                 'modal_sign_up_title': 'Create Your Account',
-                'modal_subtitle_hp': 'Access your professional AMD dashboard.',
                 'modal_subtitle_client': 'Access your personalized treatment records.',
-                'modal_subtitle_amc': 'Access administrative and coordination tools.',
-                'modal_subtitle_consultant': 'Access shared, pseudonymized case files.', // NEW
                 'tab_sign_in': 'Sign In',
                 'tab_sign_up': 'Sign Up',
                 'auth_email_text': 'Continue with Email/Password',
@@ -209,27 +237,31 @@
                 // Traditional Chinese translations suitable for Taiwan
                 'portal_title_h1': 'AMD 入口網站',
                 'portal_title_h2': '口腔氣道醫生整體健康',
-                'mission_statement_start': '您的單一平台，用於管理、追蹤和服務 ',
-                'mission_statement_emphasis': '整體口腔解決方案',
-                'mission_statement_end': ' 方法的需求，解決口腔功能障礙綜合徵。',
-                'hp_card_title': '衛生專業人員',
-                'hp_card_desc': '牙醫、醫生和認證顧問。管理患者治療、訪問診斷工具並與 AMD 網絡協作。',
-                'hp_card_button': '登錄 / 註冊',
-                'client_card_title': '客戶 / 患者',
-                'client_card_desc': '訪問您的治療計劃、安排預約、查看進度並與您的 AMD 團隊安全溝通。',
-                'client_card_button': '登錄 / 查看記錄',
-                'amc_card_title': 'AMC 協調員',
-                'amc_card_desc': '口腔氣道協調員支持您的患者旅程，確保您獲得最佳結果。',
-                'amc_card_button': '登錄 / 管理員訪問',
-                'consultant_card_title': '專業顧問訪問', // NEW
-                'consultant_card_desc': '僅供遵守 DPA 規定、假名化後的病例審查。', // NEW
+                'main_headline': '全面解決整體口腔功能障礙綜合徵 (IMS)。',
+                'main_mission': '我們的平台是台灣唯一能與持有專利技術的專家 **Dr. Felix (美國)**，以及本地認證牙醫網絡合作，提供治療和諮詢的門戶。',
+                'main_promise': '我們提供一個統一協調的平台，管理您的個人化旅程，以實現改善呼吸、姿勢和整體健康。',
+                
+                'flow_title': '患者就診流程圖',
+                'flow_step_1': '患者在本平台上註冊治療',
+                'flow_step_2': '患者選擇本地台灣牙醫主導其治療旅程',
+                'flow_step_3': '患者收到初步掃描的轉介和詳細資訊，以診斷口腔功能障礙綜合徵',
+                'flow_step_4': '患者帶著掃描件拜訪選定的本地牙醫，了解 IMS 診斷和預後，並同意在美國專家的指導下進行治療',
+                'flow_step_5': '處方獨特的興盛矯治器 (TM) 和營養計劃',
+                'flow_step_6': '患者與醫生、口腔氣道協調員和診所合作，完成治療',
+
+                'client_card_title': '客戶 / 患者訪問',
+                'client_card_desc': '開始您的旅程，登入或查看您的記錄和進度。',
+                'client_card_button': '開始我的治療旅程',
+                
+                'professionals_dropdown_text': '專業人士登入',
+                'hp_dropdown_link': '衛生專業人員 (牙醫/醫師)',
+                'amc_dropdown_link': 'AMC 協調員 (管理)',
+                'consultant_dropdown_link': '專業顧問 (專家)',
+
                 'toggle_text': 'English',
                 'modal_sign_in_title': '登入以繼續',
                 'modal_sign_up_title': '創建您的帳戶',
-                'modal_subtitle_hp': '進入您的專業 AMD 儀表板。',
                 'modal_subtitle_client': '訪問您的個人化治療記錄。',
-                'modal_subtitle_amc': '訪問管理和協調工具。',
-                'modal_subtitle_consultant': '訪問共享的、假名化處理後的病例文件。', // NEW
                 'tab_sign_in': '登入',
                 'tab_sign_up': '註冊',
                 'auth_email_text': '使用電子郵件/密碼繼續',
@@ -271,16 +303,40 @@
             updateText();
         }
 
-        // --- Modal Control Functions ---
-        function handleLogin(userType) {
+        // --- Dropdown Logic ---
+        function toggleDropdown() {
+            const menu = document.getElementById('professionals-dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function closeDropdown() {
+             const menu = document.getElementById('professionals-dropdown-menu');
+             // Small delay to allow button click to register before closing
+             setTimeout(() => {
+                 if (!menu.matches(':hover')) {
+                     menu.classList.add('hidden');
+                 }
+             }, 300);
+        }
+
+        // --- Direct Login (For Professionals) ---
+        function directLogin(userType, targetUrl, event) {
+            event.preventDefault(); // Prevent default link action
+            closeDropdown();
+            
+            // Since there is no Sign Up for these roles yet, simulate Sign In
+            simulateRedirect(userType, 'signin', targetUrl);
+        }
+
+        // --- Modal Control Functions (Client Only) ---
+        function openLoginModal(userType) {
             currentUserType = userType;
-            currentMode = 'signin'; // Default to Sign In
+            currentMode = 'signin';
             
             const modal = document.getElementById('login-modal');
             const modalContent = document.getElementById('modal-content-container');
             
             modal.classList.remove('hidden');
-            // Apply entrance transition classes
             setTimeout(() => {
                 modalContent.classList.remove('modal-fade-enter');
                 modalContent.classList.add('modal-fade-enter-active');
@@ -293,13 +349,12 @@
             const modal = document.getElementById('login-modal');
             const modalContent = document.getElementById('modal-content-container');
             
-            // Apply exit transition classes
             modalContent.classList.remove('modal-fade-enter-active');
             modalContent.classList.add('modal-fade-enter');
             
             setTimeout(() => {
                 modal.classList.add('hidden');
-            }, 200); // Match CSS transition time
+            }, 200); 
         }
         
         function setMode(mode) {
@@ -311,36 +366,21 @@
             const langData = translations[currentLang];
             const isSignIn = currentMode === 'signin';
             
-            // 1. Update Title and Subtitle
+            // Only client uses this modal, so subtitle key is fixed
             document.getElementById('modal-title').textContent = isSignIn ? langData.modal_sign_in_title : langData.modal_sign_up_title;
-            
-            let subtitleKey;
-            if (currentUserType === 'Health Professional') subtitleKey = 'modal_subtitle_hp';
-            else if (currentUserType === 'Client') subtitleKey = 'modal_subtitle_client';
-            else if (currentUserType === 'AMC') subtitleKey = 'modal_subtitle_amc';
-            else if (currentUserType === 'Consultant') subtitleKey = 'modal_subtitle_consultant'; // NEW
-            document.getElementById('modal-subtitle').textContent = langData[subtitleKey];
+            document.getElementById('modal-subtitle').textContent = langData.modal_subtitle_client;
 
-            // 2. Update Tabs (Consultant/HP/AMC are usually only Sign In, but client needs both)
+            // Tabs
             const tabSignIn = document.getElementById('tab-signin');
             const tabSignUp = document.getElementById('tab-signup');
             
             tabSignIn.textContent = langData.tab_sign_in;
             tabSignUp.textContent = langData.tab_sign_up;
 
-            // Style active tab
             const activeClasses = 'bg-white text-gray-900 shadow';
             const inactiveClasses = 'bg-gray-100 text-gray-500 hover:bg-white';
-            
-            // Hide Sign Up tab for Consultant, HP, and AMC for simplicity
-            if (currentUserType === 'Client') {
-                tabSignUp.style.display = 'inline-block';
-            } else {
-                 tabSignUp.style.display = 'none';
-            }
 
-
-            if (isSignIn || currentUserType !== 'Client') {
+            if (isSignIn) {
                 tabSignIn.className = tabSignIn.className.replace(inactiveClasses, activeClasses);
                 tabSignUp.className = tabSignUp.className.replace(activeClasses, inactiveClasses);
             } else {
@@ -348,52 +388,32 @@
                 tabSignUp.className = tabSignUp.className.replace(inactiveClasses, activeClasses);
             }
             
-            // 3. Update Auth Buttons
+            // Auth Buttons
             document.getElementById('auth-email-text').textContent = isSignIn ? langData.auth_email_text : langData.auth_email_text.replace('Continue', 'Sign Up');
             document.getElementById('auth-line-text').textContent = isSignIn ? langData.auth_line_text : langData.auth_line_text.replace('Continue', 'Sign Up');
         }
 
+        // --- Simulate Login/Redirect ---
         function simulateLogin(authMethod) {
             closeModal();
             const isSignUp = currentMode === 'signup';
-            let targetUrl = '';
+            let targetUrl = isSignUp ? 'ClientOnboarding.html' : 'ClientDashboard.html'; // Client logic
             
-            // Determine the target URL based on user type and action (Sign In vs Sign Up)
-            if (!isSignUp) {
-                // Sign In (All types go to their respective dashboards)
-                if (currentUserType === 'Health Professional') {
-                    targetUrl = 'PractitionerDashboard.html';
-                } else if (currentUserType === 'Client') {
-                    targetUrl = 'ClientDashboard.html';
-                } else if (currentUserType === 'AMC') {
-                    targetUrl = 'AMCDashboard.html';
-                } else if (currentUserType === 'Consultant') {
-                    targetUrl = 'ProfessionalConsultantDashboard.html'; // NEW
-                }
-            } else {
-                // Sign Up (Client goes to onboarding, others go to dashboard for mock)
-                if (currentUserType === 'Client') {
-                    targetUrl = 'ClientOnboarding.html'; // Specific requirement
-                } else if (currentUserType === 'Health Professional') {
-                    targetUrl = 'PractitionerDashboard.html';
-                } else if (currentUserType === 'AMC') {
-                    targetUrl = 'AMCDashboard.html';
-                }
-            }
+            simulateRedirect('Client', currentMode, targetUrl, authMethod);
+        }
 
-            // Optional: Show message before redirect (for user clarity in this mock environment)
-            const actionText = isSignUp ? (currentLang === 'en' ? 'Sign Up' : '註冊') : (currentLang === 'en' ? 'Log In' : '登入');
-            const userTypeText = currentLang === 'en' ? currentUserType : (currentUserType === 'Health Professional' ? '衛生專業人員' : currentUserType === 'Client' ? '客戶/患者' : currentUserType === 'AMC' ? 'AMC 協調員' : '專業顧問');
-            const methodText = authMethod === 'email' ? (currentLang === 'en' ? 'Email/Password' : '電子郵件/密碼') : 'LINE';
+        function simulateRedirect(userType, mode, targetUrl, authMethod = 'N/A') {
+            const actionText = mode === 'signup' ? (currentLang === 'en' ? 'Sign Up' : '註冊') : (currentLang === 'en' ? 'Log In' : '登入');
+            const userTypeText = translations[currentLang][userType.toLowerCase() + '_dropdown_link'] || userType;
+            const methodText = authMethod !== 'N/A' ? (authMethod === 'email' ? (currentLang === 'en' ? 'Email/Password' : '電子郵件/密碼') : 'LINE') : '';
             
             const message = `${userTypeText} ${actionText} via ${methodText}. Redirecting to ${targetUrl}...`;
-            showMessage(message, currentUserType);
+            
+            showMessage(message, userType);
 
-            // ACTUAL REDIRECTION
             setTimeout(() => {
                  window.location.href = targetUrl;
-            }, 500); // Small delay to allow message to show briefly
-           
+            }, 500); 
         }
 
         // Function to display the simulation message box
@@ -403,16 +423,15 @@
             
             messageText.textContent = text;
             
-            let borderColorClass = 'border-teal-500'; // Default to HP color
+            let borderColorClass = 'border-teal-500'; 
             if (userType === 'Client') borderColorClass = 'border-sky-500';
             else if (userType === 'AMC') borderColorClass = 'border-indigo-500';
-            else if (userType === 'Consultant') borderColorClass = 'border-gray-500'; // NEW color
+            else if (userType === 'Consultant' || userType === 'Health Professional') borderColorClass = 'border-teal-500';
             
             messageBox.className = `fixed bottom-4 right-4 bg-white border-l-4 ${borderColorClass} text-gray-800 p-4 rounded-lg shadow-xl transition-opacity duration-300`;
             messageBox.classList.remove('hidden');
             messageBox.style.opacity = '1';
 
-            // Automatically hide the message box after 4 seconds
             setTimeout(() => {
                 messageBox.style.opacity = '0';
                 setTimeout(() => {
