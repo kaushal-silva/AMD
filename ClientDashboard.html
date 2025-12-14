@@ -105,7 +105,7 @@
         <section class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- Left Column (2/3): My Journey: Goals & Motivation (TAKE OVER LEFT SPACE) -->
+                <!-- Left Column (2/3): My Journey: Goals & Motivation -->
                 <div class="lg:col-span-2 section-card bg-white/70">
                     <h2 class="text-xl font-bold text-gray-800 mb-4" data-key="journey_title">My Journey</h2>
                     
@@ -161,7 +161,7 @@
                                 My Plan & Support
                             </button>
                             <button class="tab-button" onclick="switchTab('diagnostics')" data-key="tab_diagnostics">
-                                Diagnostic Inputs
+                                Scans, Analysis & Reports
                             </button>
                             <button class="tab-button" onclick="switchTab('progress')" data-key="tab_progress">
                                 Progress Tracker
@@ -179,8 +179,6 @@
                     <!-- 1. My Plan & Support Tab (Default) -->
                     <div id="tab-my-plan" class="tab-content space-y-8">
                         
-                        <!-- Removed My Journey: Goals & Motivation section to avoid duplication -->
-
                         <!-- Treatment Interventions (Improved UX) -->
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="sec_interventions_title">Treatment Interventions</h2>
@@ -223,7 +221,7 @@
                                 </div>
 
                                 <!-- Current Appliance Status Display (DYNAMIC) -->
-                                <h4 class="font-semibold text-sm text-gray-700 mb-2" data-key="adjustment_summary_title">Current Appliance Setting</h4>
+                                <h4 class="semibold text-sm text-gray-700 mb-2" data-key="adjustment_summary_title">Current Appliance Setting</h4>
 
                                 <div id="adjustment-list" class="space-y-2 text-sm text-gray-600 p-3 bg-yellow-100 rounded-lg">
                                     <p><strong data-key="adj_setting_label">Setting:</strong> <span id="adj-setting-value">2.0 Turns / 0.50mm Expansion</span></p>
@@ -261,45 +259,63 @@
                         </div>
                     </div>
 
-                    <!-- 2. Diagnostic Inputs Tab -->
+                    <!-- 2. Diagnostic Inputs Tab (UPDATED) -->
                     <div id="tab-diagnostics" class="tab-content space-y-8 hidden">
                         <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="sec_diagnostics_title">AMD Diagnostic Inputs</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="sec_diagnostics_title_new">Scans, Analysis & Reports</h2>
+                            
+                            <!-- CB CT Scan History -->
+                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="font-bold text-indigo-700" data-key="cbct_title">1. CB CT Scan (Airway)</h3>
+                                    <button class="text-xs text-indigo-500 hover:underline" data-key="btn_upload_new_scan">Upload New Scan</button>
+                                </div>
+                                <label for="cbct-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="cbct_history_label">View Historical Scan Data:</label>
+                                <select id="cbct-history-select" onchange="updateDiagnosticContent('cbct', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
+                                    <option value="0" data-key="scan_date_0">2025/12/10 (Initial)</option>
+                                    <option value="1" data-key="scan_date_1">2026/03/10 (Month 3 Follow-up)</option>
+                                </select>
                                 
-                                <!-- 1. CB CT Scan -->
-                                <div class="border p-4 rounded-lg bg-gray-50">
-                                    <h3 class="font-bold text-indigo-700 mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
-                                    <p class="text-xs text-gray-600 mb-2" data-key="cbct_desc">Used to measure Minimal Cross Section (MCS).</p>
-                                    
-                                    <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red">
+                                <div id="cbct-display">
+                                    <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red" id="mcs-status-display">
                                         <span data-key="mcs_value">MCS: 285 mm²</span> <span data-key="mcs_status">(Critical!)</span>
                                     </div>
-                                    
-                                    <p class="text-xs text-gray-500" data-key="cbct_note">Doctor Note (10/12/2025): Significant restriction noted in velopharynx. Immediate intervention required.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_cbct">View Full Scan / Upload New</button>
+                                    <p class="text-xs text-gray-500" id="cbct-note-display" data-key="cbct_note">Doctor Note (10/12/2025): Significant restriction noted in velopharynx. Immediate intervention required.</p>
+                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_full_scan">View Full Scan / IMS Report</button>
                                 </div>
-
-                                <!-- 2. 3D Intra-Oral Scan -->
-                                <div class="border p-4 rounded-lg bg-gray-50">
-                                    <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
-                                    <p class="text-xs text-gray-600 mb-2" data-key="intraoral_desc">Used for Schwarz Analysis measurements.</p>
+                            </div>
+                            
+                            <!-- 3D Intra-Oral Scan History -->
+                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
+                                <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">2. 3D Intra-Oral Scan (Teeth)</h3>
+                                <label for="intraoral-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="analysis_history_label">View Historical Analysis:</label>
+                                <select id="intraoral-history-select" onchange="updateDiagnosticContent('intraoral', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
+                                    <option value="0" data-key="analysis_date_0">2025/12/10 (Schwarz Baseline)</option>
+                                    <option value="1" data-key="analysis_date_1">2026/06/10 (Mid-Treatment)</option>
+                                </select>
+                                <div id="intraoral-display">
                                     <div class="bg-yellow-50 border-l-4 border-yellow-500 p-2 rounded-md mb-2">
                                         <p class="text-xs font-semibold text-yellow-800" data-key="schwarz_status">Schwarz Analysis Ready</p>
                                     </div>
-                                    <p class="text-xs text-gray-500" data-key="schwarz_note">Analysis shows 5mm maxillary posterior crossbite correction needed.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_schwarz">View Analysis & Report</button>
+                                    <p class="text-xs text-gray-500" id="schwarz-note-display" data-key="schwarz_note">Analysis shows 5mm maxillary posterior crossbite correction needed.</p>
+                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_analysis_report">View Analysis & Report</button>
                                 </div>
+                            </div>
 
-                                <!-- 3. Ceph Flow Metric Analysis -->
-                                <div class="border p-4 rounded-lg bg-gray-50">
-                                    <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">Ceph Flow Metric Analysis</h3>
-                                    <p class="text-xs text-gray-600 mb-2" data-key="ceph_desc">Used for Sassouni Plus Ceph Analysis.</p>
+                            <!-- Ceph Flow Metric Analysis History -->
+                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
+                                <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">3. Ceph Flow Metric Analysis</h3>
+                                <label for="ceph-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="analysis_history_label">View Historical Analysis:</label>
+                                <select id="ceph-history-select" onchange="updateDiagnosticContent('ceph', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
+                                    <option value="0" data-key="analysis_date_0">2025/12/10 (Sassouni Baseline)</option>
+                                    <option value="1" data-key="analysis_date_1">2026/06/10 (Mid-Treatment)</option>
+                                </select>
+                                <div id="ceph-display">
                                     <div class="bg-green-50 border-l-4 border-green-500 p-2 rounded-md mb-2">
                                         <p class="text-xs font-semibold text-green-800" data-key="sassouni_status">Sassouni Plus Report</p>
                                     </div>
-                                    <p class="text-xs text-gray-500" data-key="sassouni_note">Informs appliance growth angles. Current FMA: 23°.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_sassouni">View Report & Angles</button>
+                                    <p class="text-xs text-gray-500" id="sassouni-note-display" data-key="sassouni_note">Informs appliance growth angles. Current FMA: 23°.</p>
+                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_report_angles">View Report & Angles</button>
                                 </div>
                             </div>
                         </div>
@@ -375,15 +391,15 @@
         </main>
     </div>
 
-    <!-- JavaScript for Tab Switching and Translations -->
+    <!-- JavaScript for Tab Switching and Translations (FIXED) -->
     <script>
-        let currentLang = 'en';
+        // --- Global Constants (FIXED: Declared only once) ---
+        const currentLang = 'en'; // Default language
         const monthsCompleted = 6;
         const totalPrescriptionMonths = 24;
         const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
 
         // --- Appliance Timeline Logic (Mock Data) ---
-        // Added more states for better slider interactivity
         const applianceAdjustments = [
             { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
             { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
@@ -391,19 +407,23 @@
             { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
         ];
 
-        // --- Patient Journey Stages (Simplified for Horizontal Pipeline) ---
-        const stages = [
-            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' },
-            { id: 'stage_2_select', labelKey: 'flow_step_2_short' },
-            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' },
-            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' },
-            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' }
-        ];
+        // --- Mock Data for Diagnostic History ---
+        const diagnosticHistory = {
+            cbct: [
+                { id: '0', dateKey: 'scan_date_0', mcs: 'MCS: 285 mm²', statusKey: 'mcs_status_critical', noteKey: 'cbct_note', noteDate: '10/12/2025' },
+                { id: '1', dateKey: 'scan_date_1', mcs: 'MCS: 305 mm²', statusKey: 'mcs_status_improved', note: 'Airway cross-section slightly improved post 3 months therapy.', noteDate: '2026/03/10' }
+            ],
+            intraoral: [
+                { id: '0', dateKey: 'analysis_date_0', statusKey: 'schwarz_status_baseline', noteKey: 'schwarz_note', noteDate: '2025/12/10' },
+                { id: '1', dateKey: 'analysis_date_1', statusKey: 'schwarz_status_inprogress', note: 'Mid-Treatment Check: 3mm correction achieved. Continuing expansion protocol.', noteDate: '2026/06/10' }
+            ],
+            ceph: [
+                { id: '0', dateKey: 'analysis_date_0', statusKey: 'sassouni_status_baseline', noteKey: 'sassouni_note', noteDate: '2025/12/10' },
+                { id: '1', dateKey: 'analysis_date_1', statusKey: 'sassouni_status_followup', note: 'Follow-up Report: FMA stable at 23°. Growth pattern favorable.', noteDate: '2026/06/10' }
+            ]
+        };
 
-        // Set the current phase the client is in (0-indexed)
-        const currentPhaseIndex = 1; 
-
-        // --- Core Translation Data Structure ---
+        // --- Translation Data Structure ---
         const translations = {
             'en': {
                 'header_title': 'AMD Client Dashboard',
@@ -423,10 +443,27 @@
                 'adjustment_summary_title': 'Current Appliance Setting',
                 'app_duration_text': 'Total Prescription: 24 Months', 
                 'app_remaining_time': 'You have [N] months remaining.', 
-                'dentist_note_title': 'Dentist Clinical Note ([D]):', // Dynamic Date Placeholder
+                'dentist_note_title': 'Dentist Clinical Note ([D]):', 
                 'dentist_note_content': 'Monitor patient\'s TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.',
                 'adjustment_timeline_title': 'View Appliance History (Month: [M])', 
                 'btn_request_adjustment': 'Request Appliance Adjustment / View History',
+                'sec_diagnostics_title_new': 'Scans, Analysis & Reports', 
+                'btn_upload_new_scan': 'Upload New Scan', 
+                'cbct_history_label': 'View Historical Scan Data:', 
+                'analysis_history_label': 'View Historical Analysis:', 
+                'scan_date_0': '2025/12/10 (Initial)',
+                'scan_date_1': '2026/03/10 (Month 3 Follow-up)',
+                'analysis_date_0': '2025/12/10 (Baseline)',
+                'analysis_date_1': '2026/06/10 (Mid-Treatment)',
+                'mcs_status_critical': '(Critical!)',
+                'mcs_status_improved': '(Improved)',
+                'schwarz_status_baseline': 'Schwarz Analysis: Baseline Ready',
+                'schwarz_status_inprogress': 'Schwarz Analysis: In Progress',
+                'sassouni_status_baseline': 'Sassouni Plus Report: Baseline Ready',
+                'sassouni_status_followup': 'Sassouni Plus Report: Follow-up',
+                'btn_view_full_scan': 'View Full Scan / IMS Report',
+                'btn_view_analysis_report': 'View Analysis & Report',
+                'btn_view_report_angles': 'View Report & Angles',
                 
                 // Appliance States for History Mock
                 'state_m0_set': 'Initial Fit (No Expansion)', 'note_m0': 'Baseline check and wear-time habit focus.',
@@ -451,10 +488,10 @@
                 'next_action_button': 'View Next Step',
                 'nav_title': 'Navigation',
                 'tab_my_plan': 'My Plan & Support',
-                'tab_diagnostics': 'Diagnostic Inputs',
+                'tab_diagnostics': 'Scans, Analysis & Reports', // UPDATED
                 'tab_progress': 'Progress Tracker',
                 'tab_chat': 'Secure Group Chat',
-                'sec_goals_title_impact': 'My Journey: Goals & Motivation',
+                'sec_goals_title_impact': 'Goals & Motivation',
                 'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.',
                 'goals_list_title': 'My 3 Symptoms to Eliminate:',
                 'goal1': 'Chronic Daytime Fatigue',
@@ -481,7 +518,6 @@
                 'amc_coordinator_title': 'Assigned Coordinator: Jane Chen (AMC)',
                 'amc_coordinator_desc': 'Your dedicated health coach for administrative and non-clinical guidance.',
                 'btn_arrange_appointment': 'Arrange AMC Appointment',
-                'sec_diagnostics_title': 'AMD Diagnostic Inputs',
                 'cbct_title': 'CB CT Scan (Airway)',
                 'cbct_desc': 'Used to measure Minimal Cross Section (MCS).',
                 'mcs_value': 'MCS: 285 mm²',
@@ -544,6 +580,12 @@
                 'state_m4_set': '活躍擴展階段 (1.5 圈)', 'note_m4': '擴展增加。觀察到良好進展。',
                 'state_m6_set': '擴展維持階段 (2.0 圈)', 'note_m6': '擴展維持。TMJ 穩定。在第 9 個月重新評估擴展率。',
 
+                // Clinical Notes (Historical Mock)
+                'note_clinical_m0': '患者已清除開始矯治器治療。初步重點是每晚佩戴 8-10 小時。',
+                'note_clinical_m2': '中線追踪良好。患者對擴展耐受性好。保持當前擴展率。',
+                'note_clinical_m4': '姿勢改善顯著。患者報告早晨僵硬減輕。矯治器設置調整已確認。',
+                'note_clinical_m6': '擴展維持。TMJ 穩定。在第 9 個月重新評估擴展率。',
+
                 // Journey Stages (Shortened for Pipeline)
                 'flow_step_1_short': '評估完成',
                 'flow_step_2_short': '等待牙醫確認',
@@ -554,7 +596,7 @@
                 'next_action_button': '查看下一步',
                 'nav_title': '導航',
                 'tab_my_plan': '我的計劃與支持',
-                'tab_diagnostics': '診斷輸入',
+                'tab_diagnostics': '掃描、分析與報告', // UPDATED
                 'tab_progress': '進度追踪器',
                 'tab_chat': '安全群組聊天',
                 'sec_goals_title_impact': '我的旅程：目標與動力',
@@ -584,7 +626,6 @@
                 'amc_coordinator_title': '指定協調員: Jane Chen (AMC)',
                 'amc_coordinator_desc': '您專屬的健康教練，提供行政和非臨床指導。',
                 'btn_arrange_appointment': '安排 AMC 預約',
-                'sec_diagnostics_title': 'AMD 診斷輸入',
                 'cbct_title': '錐束CT掃描 (氣道)',
                 'cbct_desc': '用於測量最小橫截面積 (MCS)。',
                 'mcs_value': 'MCS: 285 毫米²',
@@ -619,188 +660,3 @@
                 'toggle_text': 'English'
             }
         };
-
-        // --- Appliance Timeline Logic (Mock Data) ---
-        const applianceAdjustments = [
-            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
-            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
-            { month: 4, setKey: 'state_m4_set', expansion: '1.5 Turns / 0.45mm', date: '2026/01/01', noteKey: 'note_m4', clinicalDate: '2025/12/28', clinicalNoteKey: 'note_clinical_m4' },
-            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
-        ];
-
-        // --- Patient Journey Stages (Simplified for Horizontal Pipeline) ---
-        const stages = [
-            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' }, 
-            { id: 'stage_2_select', labelKey: 'flow_step_2_short' }, 
-            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' }, 
-            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' }, 
-            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' } 
-        ];
-
-        // Set the current phase the client is in (0-indexed)
-        const currentPhaseIndex = 1; 
-        const monthsCompleted = 6;
-        const totalPrescriptionMonths = 24;
-        const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
-
-        // --- Core Translation Function ---
-        function updateText() {
-            const langData = translations[currentLang];
-            
-            // 1. Update elements with data-key attribute
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                if (langData[key]) {
-                    element.textContent = langData[key];
-                }
-            });
-
-            // 2. Update dynamic texts
-            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
-            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
-
-            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
-            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
-            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
-
-            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
-            document.getElementById('app_remaining_time').textContent = remainingText;
-            
-            // 3. Update Journey Pipeline
-            renderPipeline();
-
-            // 4. Update HTML lang attribute and toggle
-            document.getElementById('lang-toggle').textContent = langData.toggle_text;
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = langData.header_title;
-            
-            // 5. Update Appliance Section (Mock current status based on slider)
-            const initialMonth = document.getElementById('appliance-timeline-slider').value;
-            updateApplianceDetails(initialMonth); 
-        }
-
-        // --- Journey Pipeline Renderer ---
-        function renderPipeline() {
-            const container = document.getElementById('pipeline-container');
-            const currentStageDisplay = document.getElementById('current-stage-display');
-            const nextActionButton = document.getElementById('next-action-button');
-            const langData = translations[currentLang];
-            
-            // Calculate progress percentage for the bar
-            const stageCount = stages.length;
-            const progressPercent = (currentPhaseIndex / (stageCount - 1)) * 100;
-            document.getElementById('pipeline-progress-bar').style.width = `${progressPercent}%`;
-
-            // Determine the current stage text and next actionable step
-            const currentStage = stages[currentPhaseIndex];
-            const nextStage = stages[currentPhaseIndex + 1];
-
-            currentStageDisplay.textContent = langData[currentStage.labelKey];
-
-            if (nextStage) {
-                 nextActionButton.textContent = langData[nextStage.labelKey];
-                 nextActionButton.onclick = () => { switchTab('diagnostics'); alert(langData.next_action_button + ': ' + langData[nextStage.labelKey]); };
-            } else {
-                 nextActionButton.textContent = langData.flow_step_5_short;
-                 nextActionButton.onclick = () => { switchTab('my-plan'); alert(langData.flow_step_5_short); };
-            }
-            
-
-            container.innerHTML = stages.map((stage, index) => {
-                let statusClass = index < currentPhaseIndex ? 'complete' : (index === currentPhaseIndex ? 'current' : 'pending');
-                
-                const style = index > 0 && index < stageCount - 1 ? 'w-full' : 'w-auto';
-
-                return `
-                    <div class="pipeline-stage z-10 ${style}">
-                        <div class="pipeline-dot ${statusClass}"></div>
-                        <p class="text-xs mt-2 text-center ${index === currentPhaseIndex ? 'font-bold text-sky-700' : 'text-gray-500'}">
-                           ${langData[stage.labelKey]}
-                        </p>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // --- Appliance Detail Update (Improved UX with Slider) ---
-        function updateApplianceDetails(monthValue) {
-            const month = parseInt(monthValue);
-            const langData = translations[currentLang];
-            const adjSetting = document.getElementById('adj-setting-value');
-            const adjDate = document.getElementById('adj-date-value');
-            const adjNoteContentEl = document.getElementById('adj-note-label'); // Element for appliance note
-            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); // Element for dentist note title
-            const dentistNoteContentEl = document.getElementById('dentist-note-content'); // Element for dentist note content
-            const displayMonth = document.getElementById('display-month');
-            
-            // 1. Safety check: prevent sliding past current completed month
-            if (month > monthsCompleted) {
-                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
-                return;
-            }
-            
-            // 2. Update Display Month Title
-            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
-            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
-            displayMonth.textContent = month;
-
-            // 3. Find historical state
-            let state = applianceAdjustments
-                .filter(adj => adj.month <= month)
-                .sort((a, b) => b.month - a.month)[0];
-
-            // 4. Update Appliance Status (Setting + Date)
-            if (state) {
-                adjSetting.textContent = state.expansion;
-                adjDate.textContent = state.date;
-                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
-                
-                // 5. Update Dentist Note based on historical state
-                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('([D])', `(${state.clinicalDate})`);
-                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
-
-            } else {
-                 // Fallback for Month 0/Initial
-                adjSetting.textContent = langData.state_m0_set;
-                adjDate.textContent = 'N/A';
-                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
-                
-                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('([D])', `(2025/09/20)`);
-                dentistNoteContentEl.textContent = langData.note_clinical_m0;
-            }
-        }
-        
-        // --- Language Toggle ---
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-            });
-            const activeContent = document.getElementById('tab-' + tabId);
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
-            }
-            const activeButton = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
-        }
-
-        // Placeholder for compatibility (not needed for current scope)
-        const updateComparisonView = () => {};
-        
-        // Initialize the page on load
-        document.addEventListener('DOMContentLoaded', () => {
-            switchTab('my-plan'); 
-            updateText();
-        });
-    </script>
-</body>
-</html>
