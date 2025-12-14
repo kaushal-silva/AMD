@@ -63,7 +63,7 @@
             margin-top: -7px; 
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
         }
-        /* Pipeline Styling */
+        /* Pipeline Styling (Kept for reference, but not used in top section anymore) */
         .pipeline-stage {
             @apply flex flex-col items-center flex-1 min-w-0 mx-1 relative z-10;
         }
@@ -101,31 +101,27 @@
             </div>
         </header>
 
-        <!-- Patient Key Information & Pipeline Overview (Reworked Top Section) -->
+        <!-- Patient Key Information & Goals Overview (Reworked Top Section) -->
         <section class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- Left Column (2/3): My Journey Status (Pipeline) -->
+                <!-- Left Column (2/3): My Journey: Goals & Motivation (TAKE OVER LEFT SPACE) -->
                 <div class="lg:col-span-2 section-card bg-white/70">
                     <h2 class="text-xl font-bold text-gray-800 mb-4" data-key="journey_title">My Journey</h2>
                     
-                    <div id="pipeline-wrapper" class="relative pt-6 pb-2">
-                        <!-- Horizontal Line & Progress -->
-                        <div class="pipeline-connector top-[40%]">
-                            <div id="pipeline-progress-bar" class="pipeline-connector-progress" style="width: 20%;"></div>
-                        </div>
-
-                        <!-- Stages (Injected by JS to mark status) -->
-                        <div id="pipeline-container" class="flex justify-between items-start relative z-10">
-                        </div>
+                    <h3 class="text-2xl font-extrabold text-gray-900 border-b pb-2 text-sky-600" data-key="sec_goals_title_impact">Goals & Motivation</h3>
+                    <p class="text-sm text-gray-600 my-4" data-key="goals_motivation_intro">Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.</p>
+                            
+                    <div class="mb-5">
+                        <h4 class="font-bold text-gray-700 mb-2" data-key="goals_list_title">My 3 Symptoms to Eliminate:</h4>
+                        <ul class="list-disc list-inside text-sm text-sky-700 font-semibold space-y-1 pl-4">
+                            <li data-key="goal1">Chronic Daytime Fatigue</li>
+                            <li data-key="goal2">Frequent Neck/Shoulder Tension</li>
+                            <li data-key="goal3">Waking up with dry mouth</li>
+                        </ul>
                     </div>
-
-                    <div class="flex justify-between items-start mt-4 border-t pt-4">
-                        <p class="text-lg font-semibold text-sky-700" data-key="current_stage_label">Current Stage: <span id="current-stage-display"></span></p>
-                        <button id="next-action-button" class="py-1 px-3 bg-teal-500 text-white text-sm rounded-lg hover:bg-teal-600 transition duration-150 shadow" data-key="next_action_button">
-                            Upload Scans
-                        </button>
-                    </div>
+                    
+                    <button class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm font-medium" data-key="btn_update_goals">Update Pains & Goals</button>
                 </div>
 
                 <!-- Right Column (1/3): Key Contacts -->
@@ -183,30 +179,7 @@
                     <!-- 1. My Plan & Support Tab (Default) -->
                     <div id="tab-my-plan" class="tab-content space-y-8">
                         
-                        <!-- Patient Goals & Pain Tracking (Updated for impact) -->
-                        <div class="section-card">
-                            <h2 class="text-3xl font-extrabold text-gray-900 mb-4 border-b pb-2 text-sky-600" data-key="sec_goals_title_impact">My Journey: Goals & Motivation</h2>
-                            <p class="text-sm text-gray-600 mb-4" data-key="goals_motivation_intro">Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.</p>
-                            
-                            <div class="mb-5">
-                                <h3 class="font-bold text-gray-700 mb-2" data-key="goals_list_title">My 3 Symptoms to Eliminate:</h3>
-                                <ul class="list-disc list-inside text-sm text-sky-700 font-semibold space-y-1 pl-4">
-                                    <li data-key="goal1">Chronic Daytime Fatigue</li>
-                                    <li data-key="goal2">Frequent Neck/Shoulder Tension</li>
-                                    <li data-key="goal3">Waking up with dry mouth</li>
-                                </ul>
-                            </div>
-
-                            <div class="mb-5">
-                                <h3 class="font-bold text-gray-700 mb-2" data-key="pains_list_title">Existing Pains/Conditions:</h3>
-                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 pl-4">
-                                    <li data-key="pain1">Jaw clicking (Left TMJ)</li>
-                                    <li data-key="pain2">Morning headaches</li>
-                                    <li data-key="pain3">Reflux (GERD)</li>
-                                </ul>
-                            </div>
-                            <button class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm font-medium" data-key="btn_update_goals">Update Pains & Goals</button>
-                        </div>
+                        <!-- Removed My Journey: Goals & Motivation section to avoid duplication -->
 
                         <!-- Treatment Interventions (Improved UX) -->
                         <div class="section-card">
@@ -234,6 +207,7 @@
                                 <div class="mb-6 border-t pt-4">
                                     <h4 class="font-bold text-sm text-gray-700 mb-2" data-key="adjustment_timeline_title">View Appliance History (Month: <span id="display-month">6</span>)</h4>
                                     
+                                    <!-- SLIDER: On input, update appliance details and historical note -->
                                     <input type="range" min="0" max="24" value="6" step="1" class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer" id="appliance-timeline-slider" oninput="updateApplianceDetails(this.value)">
                                     <div class="flex justify-between text-xs mt-1 text-gray-500">
                                         <span data-key="app_start">Start</span>
@@ -242,19 +216,19 @@
                                 </div>
 
 
-                                <!-- Dentist Note Section -->
+                                <!-- Dentist Note Section (DYNAMIC) -->
                                 <div class="p-3 bg-teal-100 border border-teal-300 rounded-lg mb-4">
-                                    <p class="font-bold text-teal-800 mb-1" data-key="dentist_note_title">Dentist Clinical Note (12/01/2025):</p>
+                                    <p class="font-bold text-teal-800 mb-1" id="dentist-note-title" data-key="dentist_note_title">Dentist Clinical Note (12/01/2025):</p>
                                     <p class="text-sm text-teal-700" id="dentist-note-content">Monitor patient's TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.</p>
                                 </div>
 
-                                <!-- Current Appliance Status Display -->
+                                <!-- Current Appliance Status Display (DYNAMIC) -->
                                 <h4 class="font-semibold text-sm text-gray-700 mb-2" data-key="adjustment_summary_title">Current Appliance Setting</h4>
 
                                 <div id="adjustment-list" class="space-y-2 text-sm text-gray-600 p-3 bg-yellow-100 rounded-lg">
                                     <p><strong data-key="adj_setting_label">Setting:</strong> <span id="adj-setting-value">2.0 Turns / 0.50mm Expansion</span></p>
                                     <p><strong data-key="adj_date_label">Last Adjusted:</strong> <span id="adj-date-value">15/11/2025</span></p>
-                                    <p class="text-xs text-gray-500" data-key="adj_note_label">Note: Active expansion phase. Monitor midline spacing.</p>
+                                    <p class="text-xs text-gray-500" id="adj-note-label" data-key="adj_note_label">Note: Active expansion phase. Monitor midline spacing.</p>
                                 </div>
                                 
                                 <button class="mt-4 py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium w-full" data-key="btn_request_adjustment">Request Appliance Adjustment / View History</button>
@@ -409,19 +383,21 @@
         const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
 
         // --- Appliance Timeline Logic (Mock Data) ---
+        // Added more states for better slider interactivity
         const applianceAdjustments = [
-            { month: 0, setKey: 'state_m0_set', noteKey: 'note_m0', expansion: '0.0mm', date: '2025/09/20', noteContent: 'Appliance delivered. Focus on comfort and wear-time habit.' },
-            { month: 2, setKey: 'state_m2_set', noteKey: 'note_m2', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteContent: 'First active adjustment. Slight pressure expected. Next check in 30 days.' },
-            { month: 6, setKey: 'state_m6_set', noteKey: 'note_m6', expansion: '2.0 Turns / 0.50mm', date: '2026/01/20', noteContent: 'Expansion maintained. TMJ stable. Re-evaluate expansion rate at Month 9.' }
+            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
+            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
+            { month: 4, setKey: 'state_m4_set', expansion: '1.5 Turns / 0.45mm', date: '2026/01/01', noteKey: 'note_m4', clinicalDate: '2025/12/28', clinicalNoteKey: 'note_clinical_m4' },
+            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
         ];
 
         // --- Patient Journey Stages (Simplified for Horizontal Pipeline) ---
         const stages = [
-            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' }, // Assessment Done
-            { id: 'stage_2_select', labelKey: 'flow_step_2_short' }, // Waiting for Dentist (CURRENT)
-            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' }, // Upload Scans (NEXT STEP)
-            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' }, // Diagnosis Visit
-            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' }  // Active Treatment
+            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' },
+            { id: 'stage_2_select', labelKey: 'flow_step_2_short' },
+            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' },
+            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' },
+            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' }
         ];
 
         // Set the current phase the client is in (0-indexed)
@@ -432,7 +408,7 @@
             'en': {
                 'header_title': 'AMD Client Dashboard',
                 'logout_link': '← Log Out / Portal',
-                'journey_title': 'My Journey', // UPDATED
+                'journey_title': 'My Journey',
                 'current_stage_label': 'Current Stage:',
                 'key_contacts_title': 'Key Contacts & Appointments',
                 'patient_name_label': 'Patient:',
@@ -447,15 +423,23 @@
                 'adjustment_summary_title': 'Current Appliance Setting',
                 'app_duration_text': 'Total Prescription: 24 Months', 
                 'app_remaining_time': 'You have [N] months remaining.', 
-                'dentist_note_title': 'Dentist Clinical Note (12/01/2025):', // NEW KEY
-                'dentist_note_content': 'Monitor patient\'s TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.', // NEW KEY
-                'adjustment_timeline_title': 'View Appliance History (Month: [M])', // NEW KEY
+                'dentist_note_title': 'Dentist Clinical Note ([D]):', // Dynamic Date Placeholder
+                'dentist_note_content': 'Monitor patient\'s TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.',
+                'adjustment_timeline_title': 'View Appliance History (Month: [M])', 
                 'btn_request_adjustment': 'Request Appliance Adjustment / View History',
                 
                 // Appliance States for History Mock
-                'state_m0_set': 'Initial Fit', 'note_m0': 'Focus on comfort and wear-time habit.',
-                'state_m2_set': 'Active Expansion Phase', 'note_m2': 'First adjustment phase. Slight pressure expected.',
-                'state_m6_set': 'Expansion Maintained', 'note_m6': 'Expansion maintained. TMJ stable. Re-evaluate expansion rate at Month 9.',
+                'state_m0_set': 'Initial Fit (No Expansion)', 'note_m0': 'Baseline check and wear-time habit focus.',
+                'state_m2_set': 'Active Expansion (1.0 Turn)', 'note_m2': 'First adjustment phase. Monitoring pressure and midline.',
+                'state_m4_set': 'Active Expansion (1.5 Turns)', 'note_m4': 'Expansion increased. Good progress observed.',
+                'state_m6_set': 'Expansion Maintained (2.0 Turns)', 'note_m6': 'Expansion maintained. TMJ stable. Re-evaluate CBCT at Month 9.',
+                
+                // Clinical Notes (Historical Mock)
+                'note_clinical_m0': 'Patient cleared to begin appliance therapy. Initial focus on achieving 8-10 hours wear per night.',
+                'note_clinical_m2': 'Midline tracking is good. Patient tolerates expansion well. Continue current rate.',
+                'note_clinical_m4': 'Posture improvement noted. Patient reported less morning stiffness. Appliance setting adjustment confirmed.',
+                'note_clinical_m6': 'Expansion maintained. TMJ stable. Re-evaluate expansion rate at Month 9.',
+
 
                 // Journey Stages (Shortened for Pipeline)
                 'flow_step_1_short': 'Assessment Done',
@@ -549,10 +533,16 @@
                 'adjustment_summary_title': '當前矯治器設置', // NEW
                 'app_duration_text': '總處方期: 24 個月', // NEW
                 'app_remaining_time': '您還有 [N] 個月剩餘。', // NEW
-                'dentist_note_title': '牙醫臨床備註 (2025/12/01):', // NEW KEY
+                'dentist_note_title': '牙醫臨床備註 ([D]):', // Dynamic Date Placeholder
                 'dentist_note_content': '在當前擴展率 (0.50mm) 下監測患者的 TMJ 不適。繼續每日進行口腔功能鍛鍊。下次檢查安排在第 8 個月。', // NEW KEY
                 'adjustment_timeline_title': '查看矯治器歷史 (月份: [M])', // NEW KEY
                 'btn_request_adjustment': '請求矯治器調整 / 查看歷史',
+
+                // Appliance States for History Mock
+                'state_m0_set': '初始佩戴 (無擴展)', 'note_m0': '基線檢查和佩戴習慣養成。',
+                'state_m2_set': '活躍擴展階段 (1.0 圈)', 'note_m2': '第一階段調整。監測壓力和中線。',
+                'state_m4_set': '活躍擴展階段 (1.5 圈)', 'note_m4': '擴展增加。觀察到良好進展。',
+                'state_m6_set': '擴展維持階段 (2.0 圈)', 'note_m6': '擴展維持。TMJ 穩定。在第 9 個月重新評估擴展率。',
 
                 // Journey Stages (Shortened for Pipeline)
                 'flow_step_1_short': '評估完成',
@@ -585,9 +575,6 @@
                 'app_24m': '24 個月',
                 'appliance_duration_text': `處方: ${totalPrescriptionMonths} 個月 | 完成 ${monthsCompleted} 個月`,
                 'adjustment_history_title': '調整歷史記錄',
-                'adj1': '最新調整: 2.0 圈 (AMC)',
-                'adj2': '客戶調整請求 (1.5 圈)',
-                'btn_request_adjustment': '請求矯治器調整',
                 'nutrition_title': '處方營養重點:',
                 'nut_bonebroth': '增加骨湯攝取以支持膠原蛋白。',
                 'nut_calcium': '確保充足的鈣和鎂水平。',
@@ -635,24 +622,19 @@
 
         // --- Appliance Timeline Logic (Mock Data) ---
         const applianceAdjustments = [
-            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0' },
-            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2' },
-            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/01/20', noteKey: 'note_m6' }
+            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
+            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
+            { month: 4, setKey: 'state_m4_set', expansion: '1.5 Turns / 0.45mm', date: '2026/01/01', noteKey: 'note_m4', clinicalDate: '2025/12/28', clinicalNoteKey: 'note_clinical_m4' },
+            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
         ];
-        // Mock Dentist Note for the static box (Assumed Month 6 status)
-        const mockDentistNote = {
-            date: '2025/12/01',
-            contentKey: 'dentist_note_content'
-        };
-
 
         // --- Patient Journey Stages (Simplified for Horizontal Pipeline) ---
         const stages = [
-            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' },
-            { id: 'stage_2_select', labelKey: 'flow_step_2_short' },
-            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' },
-            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' },
-            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' }
+            { id: 'stage_1_signup', labelKey: 'flow_step_1_short' }, 
+            { id: 'stage_2_select', labelKey: 'flow_step_2_short' }, 
+            { id: 'stage_3_upload', labelKey: 'flow_step_3_short' }, 
+            { id: 'stage_4_diagnosis', labelKey: 'flow_step_4_short' }, 
+            { id: 'stage_5_treatment', labelKey: 'flow_step_5_short' } 
         ];
 
         // Set the current phase the client is in (0-indexed)
@@ -673,7 +655,7 @@
                 }
             });
 
-            // 2. Update specific dynamic texts
+            // 2. Update dynamic texts
             const remainingMonths = totalPrescriptionMonths - monthsCompleted;
             const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
 
@@ -684,19 +666,15 @@
             document.getElementById('app_duration_text').textContent = langData.app_duration_text;
             document.getElementById('app_remaining_time').textContent = remainingText;
             
-            // 3. Update Dentist Note Title
-            document.querySelector('[data-key="dentist_note_title"]').textContent = langData.dentist_note_title;
-            document.getElementById('dentist-note-content').textContent = langData.dentist_note_content;
-            
-            // 4. Update Journey Pipeline
+            // 3. Update Journey Pipeline
             renderPipeline();
 
-            // 5. Update HTML lang attribute and toggle
+            // 4. Update HTML lang attribute and toggle
             document.getElementById('lang-toggle').textContent = langData.toggle_text;
             document.documentElement.setAttribute('lang', currentLang);
             document.title = langData.header_title;
             
-            // 6. Update Appliance Section (Mock current status based on slider)
+            // 5. Update Appliance Section (Mock current status based on slider)
             const initialMonth = document.getElementById('appliance-timeline-slider').value;
             updateApplianceDetails(initialMonth); 
         }
@@ -750,7 +728,9 @@
             const langData = translations[currentLang];
             const adjSetting = document.getElementById('adj-setting-value');
             const adjDate = document.getElementById('adj-date-value');
-            const adjNote = document.querySelector('#adjustment-list p.text-xs');
+            const adjNoteContentEl = document.getElementById('adj-note-label'); // Element for appliance note
+            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); // Element for dentist note title
+            const dentistNoteContentEl = document.getElementById('dentist-note-content'); // Element for dentist note content
             const displayMonth = document.getElementById('display-month');
             
             // 1. Safety check: prevent sliding past current completed month
@@ -769,15 +749,24 @@
                 .filter(adj => adj.month <= month)
                 .sort((a, b) => b.month - a.month)[0];
 
+            // 4. Update Appliance Status (Setting + Date)
             if (state) {
                 adjSetting.textContent = state.expansion;
                 adjDate.textContent = state.date;
-                adjNote.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
+                
+                // 5. Update Dentist Note based on historical state
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('([D])', `(${state.clinicalDate})`);
+                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
+
             } else {
                  // Fallback for Month 0/Initial
-                adjSetting.textContent = 'N/A';
-                adjDate.textContent = langData.app_start;
-                adjNote.textContent = langData.adj_note_label + ': ' + langData.state_m0_set;
+                adjSetting.textContent = langData.state_m0_set;
+                adjDate.textContent = 'N/A';
+                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
+                
+                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('([D])', `(2025/09/20)`);
+                dentistNoteContentEl.textContent = langData.note_clinical_m0;
             }
         }
         
