@@ -3,838 +3,610 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Client Dashboard | Tabbed View</title>
+    <title>AMD | My Airway Journey</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
         }
-        .section-card {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
-        .alert-red {
-            background-color: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #b91c1c;
-        }
-        .chat-client {
-            background-color: #dbeafe; /* Blue 100 */
-            align-self: flex-end;
-        }
-        .chat-doctor {
-            background-color: #ecfdf5; /* Teal 100 */
-            align-self: flex-start;
-        }
-        .chat-amc {
-            background-color: #f3e8ff; /* Indigo 100 */
-            align-self: flex-start;
-        }
-        .tab-button {
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #64748b;
+            transition: all 0.2s;
+            width: 100%;
             text-align: left;
-            font-weight: 600;
-            color: #4b5563;
-            border-radius: 0.5rem;
-            transition: all 0.15s ease;
         }
-        .tab-button.active {
-            background-color: #e0f2fe; /* Sky 100 */
-            color: #0369a1; /* Sky 700 */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            border-right: 3px solid #0ea5e9;
+
+        .nav-button.active {
+            background: #0ea5e9;
+            color: white;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
         }
-        .tab-button:not(.active):hover {
-            background-color: #f3f4f6;
+
+        .nav-button:not(.active):hover {
+            background: rgba(14, 165, 233, 0.05);
+            color: #0ea5e9;
         }
-        /* Custom styling for the range input thumb */
+
+        /* Anatomy Glows */
+        .airway-glow { filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.4)); }
+        .jaw-glow { filter: drop-shadow(0 0 8px rgba(20, 184, 166, 0.3)); }
+
+        @keyframes lung-pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        .pulse { animation: lung-pulse 4s infinite ease-in-out; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Chat Styles */
+        .chat-bubble {
+            padding: 1rem;
+            border-radius: 1.25rem;
+            max-width: 85%;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .chat-doctor { background-color: #ecfdf5; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #d1fae5; }
+        .chat-amc { background-color: #f3e8ff; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #e9d5ff; }
+        .chat-client { background-color: #e0f2fe; align-self: flex-end; border-bottom-right-radius: 0; border: 1px solid #bae6fd; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            height: 16px;
-            width: 16px;
+            height: 18px;
+            width: 18px;
             border-radius: 50%;
             background: #0ea5e9;
             cursor: pointer;
-            margin-top: -7px; 
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-        .metric-card {
-            @apply bg-white p-4 rounded-lg shadow-sm border border-gray-100;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-    <div class="min-h-screen">
-        <!-- Header -->
-        <header class="bg-sky-600 shadow-md">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">AMD Client Dashboard</h1>
-                <div class="flex items-center space-x-4">
-                    <!-- Language Toggle Button -->
-                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-sky-700 border border-sky-500 hover:bg-sky-100 transition duration-150 font-semibold text-sm shadow">
-                        <!-- Text updated by JavaScript -->
+    <div class="flex flex-col lg:flex-row max-w-[1600px] mx-auto min-h-screen">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="w-full lg:w-80 p-6 space-y-6 lg:sticky lg:top-0 h-screen overflow-y-auto no-scrollbar border-r border-slate-200/50">
+            <div class="mb-8 px-2">
+                <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">AMD <span class="text-sky-600">AIRWAY</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="tagline">Healthspan Optimizer</p>
+            </div>
+
+            <!-- 1. Key Information -->
+            <div class="glass-card p-5 space-y-4">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider" data-i18n="key_info">Key Information</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-sky-100 flex items-center justify-center text-sky-600">
+                            <i class="fa-solid fa-user-doctor text-sm"></i>
+                        </div>
+                        <div class="text-xs">
+                            <p class="font-bold">Dr. C. Lin</p>
+                            <p class="text-slate-500" data-i18n="clinic_loc">Harmony Clinic (TW)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-teal-100 flex items-center justify-center text-teal-600">
+                            <i class="fa-solid fa-calendar-check text-sm"></i>
+                        </div>
+                        <div class="text-xs">
+                            <p class="font-bold text-sky-600">Dec 20, 10:00 AM</p>
+                            <p class="text-slate-500 italic" data-i18n="next_appt">Next Check-up</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Goals & Motivation -->
+            <div class="glass-card p-5 border-t-4 border-emerald-500">
+                <h3 class="text-xs font-black text-emerald-600 uppercase tracking-wider mb-3" data-i18n="goals_title">Goals & Motivation</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1 text-xs"></i>
+                        <span class="text-xs font-semibold text-slate-600" data-i18n="goal_fatigue">Eliminate Chronic Daytime Fatigue</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1 text-xs"></i>
+                        <span class="text-xs font-semibold text-slate-600" data-i18n="goal_tension">Reduce Neck Tension</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 3. Navigation -->
+            <nav class="space-y-2 pt-4 border-t border-slate-200/60">
+                <button class="nav-button active" onclick="switchTab('plan')">
+                    <i class="fa-solid fa-wind w-5"></i> <span data-i18n="nav_plan">My Anatomy Plan</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('gallery')">
+                    <i class="fa-solid fa-star w-5"></i> <span data-i18n="nav_gallery">Success Gallery</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('vault')">
+                    <i class="fa-solid fa-box-archive w-5"></i> <span data-i18n="nav_vault">Diagnostic Vault</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('tracker')">
+                    <i class="fa-solid fa-chart-line w-5"></i> <span data-i18n="nav_tracker">Growth Tracker</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('chat')">
+                    <i class="fa-solid fa-comments w-5"></i> <span data-i18n="nav_chat">Doctor Chat</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 p-6 space-y-6">
+            
+            <!-- Header with Language Toggle -->
+            <header class="flex justify-between items-center bg-white/40 p-4 rounded-2xl mb-4">
+                <div class="flex items-center gap-4">
+                    <div class="h-12 w-12 rounded-2xl bg-sky-600 flex items-center justify-center text-white font-black text-lg shadow-lg">JL</div>
+                    <div>
+                        <h2 class="font-800 text-lg">John Lee</h2>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tight" data-i18n="user_status">Active Growth • Month 6 of 24</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <!-- Language Toggle -->
+                    <div class="flex bg-slate-200/50 p-1 rounded-xl glass-card">
+                        <button id="lang-en" onclick="setLanguage('en')" class="px-3 py-1 text-[10px] font-black rounded-lg transition-all bg-sky-600 text-white shadow-sm">EN</button>
+                        <button id="lang-zh" onclick="setLanguage('zh')" class="px-3 py-1 text-[10px] font-black rounded-lg transition-all text-slate-500">中文</button>
+                    </div>
+                    <button class="p-2 h-10 w-10 glass-card flex items-center justify-center text-slate-500 hover:text-sky-600 transition-colors">
+                        <i class="fa-solid fa-bell"></i>
                     </button>
-                    <a href="index.html" class="text-sm font-medium text-sky-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
                 </div>
+            </header>
+
+            <!-- TAB: MY ANATOMY PLAN -->
+            <div id="tab-plan" class="tab-content active space-y-6">
+                <section class="glass-card p-8 relative overflow-hidden group">
+                    <h2 class="text-3xl font-800 mb-6 tracking-tight" data-i18n="plan_hero_title">Anatomy in Progress</h2>
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
+                        <!-- Airway Visualization -->
+                        <div class="space-y-4 text-center">
+                            <div class="relative w-full h-64 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100">
+                                <svg viewBox="0 0 200 200" class="w-48 h-48">
+                                    <path d="M100,20 Q120,60 110,100 T105,180" fill="none" stroke="#e2e8f0" stroke-width="20" stroke-linecap="round" />
+                                    <path d="M100,20 Q135,60 125,100 T120,180" fill="none" stroke="#0ea5e9" stroke-width="24" stroke-linecap="round" class="airway-glow pulse" />
+                                    <text x="140" y="50" class="text-[10px] font-black fill-sky-600 uppercase" data-i18n="airway_label">Airway Flow</text>
+                                </svg>
+                            </div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest" data-i18n="plan_viz_1">Expansion Visualizer</p>
+                        </div>
+                        <!-- Jaw Visualization -->
+                        <div class="space-y-4 text-center">
+                            <div class="relative w-full h-64 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100">
+                                <svg viewBox="0 0 200 200" class="w-48 h-48">
+                                    <path d="M40,150 Q40,50 100,50 Q160,50 160,150" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round" stroke-dasharray="4 4" />
+                                    <path d="M25,150 Q25,35 100,35 Q175,35 175,150" fill="none" stroke="#14b8a6" stroke-width="15" stroke-linecap="round" class="jaw-glow" />
+                                    <text x="140" y="50" class="text-[10px] font-black fill-teal-600 uppercase" data-i18n="jaw_label">Jaw Width</text>
+                                </svg>
+                            </div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest" data-i18n="plan_viz_2">Arch Development</p>
+                        </div>
+                    </div>
+                </section>
+                <!-- Intervention & Fuel -->
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6 border-l-8 border-sky-500">
+                        <h3 class="text-xl font-bold italic mb-4" data-i18n="sta_title">The STA Intervention</h3>
+                        <div class="p-4 bg-slate-50 rounded-2xl mb-4 text-xs italic font-medium" data-i18n="sta_quote">"The pressure at Month 6 is the feeling of your jaw reshaping to house your breath."</div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1 bg-slate-200 h-2 rounded-full overflow-hidden">
+                                <div class="bg-sky-500 h-full" style="width: 25%"></div>
+                            </div>
+                            <span class="text-xs font-black">25%</span>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6 border-l-8 border-teal-500">
+                        <h3 class="text-xl font-bold italic mb-4" data-i18n="fuel_title">Growth Blocks</h3>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="p-3 bg-teal-50 rounded-xl text-[10px] font-bold" data-i18n="block_1">Bone Broth: Collagen</div>
+                            <div class="p-3 bg-teal-50 rounded-xl text-[10px] font-bold" data-i18n="block_2">Magnesium: Density</div>
+                        </div>
+                        <button class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-black uppercase" data-i18n="fuel_btn">Order More Fuel</button>
+                    </div>
+                </section>
             </div>
-        </header>
 
-        <!-- Patient Key Information & Goals Overview (Reworked Top Section) -->
-        <section class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <!-- Left Column (2/3): My Journey: Goals & Motivation -->
-                <div class="lg:col-span-2 section-card bg-white/70">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4" data-key="journey_title">My Journey</h2>
-                    
-                    <h3 class="text-2xl font-extrabold text-gray-900 border-b pb-2 text-sky-600" data-key="sec_goals_title_impact">Goals & Motivation</h3>
-                    <p class="text-sm text-gray-600 my-4" data-key="goals_motivation_intro">Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.</p>
-                            
-                    <div class="mb-5">
-                        <h4 class="font-bold text-gray-700 mb-2" data-key="goals_list_title">My 3 Symptoms to Eliminate:</h4>
-                        <ul class="list-disc list-inside text-sm text-sky-700 font-semibold space-y-1 pl-4">
-                            <li data-key="goal1">Chronic Daytime Fatigue</li>
-                            <li data-key="goal2">Frequent Neck/Shoulder Tension</li>
-                            <li data-key="goal3">Waking up with dry mouth</li>
-                        </ul>
+            <!-- TAB: SUCCESS GALLERY -->
+            <div id="tab-gallery" class="tab-content space-y-6">
+                <!-- Shareable Milestone Banner -->
+                <section class="glass-card p-8 bg-gradient-to-br from-sky-600 to-emerald-500 text-white shadow-2xl relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                        <div>
+                            <h2 class="text-2xl font-black mb-2 tracking-tight uppercase" data-i18n="advocate_title">You are an Airway Advocate.</h2>
+                            <p class="text-sky-50 opacity-90 max-w-sm text-sm" data-i18n="advocate_desc">Join the 1,200+ optimizers in Taiwan. Share your expansion milestones and inspire the revolution.</p>
+                        </div>
+                        <button class="px-8 py-4 bg-white text-sky-600 rounded-2xl font-black shadow-xl hover:scale-105 transition-all flex items-center gap-3 active:scale-95">
+                            <i class="fa-solid fa-share-nodes"></i> <span data-i18n="advocate_btn">SHARE YOUR JOURNEY</span>
+                        </button>
                     </div>
-                    
-                    <button class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm font-medium" data-key="btn_update_goals">Update Pains & Goals</button>
-                </div>
+                    <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+                </section>
 
-                <!-- Right Column (1/3): Key Contacts -->
-                <div class="lg:col-span-1 section-card border-t-4 border-sky-500">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4" data-key="key_contacts_title">Key Contacts & Appointments</h2>
-                    
-                    <div class="space-y-3 text-sm">
-                        <p><strong data-key="patient_name_label">Patient:</strong> <span class="font-semibold">Mr. John Lee</span></p>
-                        <p><strong data-key="patient_id_label">Patient ID:</strong> <span class="font-mono text-gray-600">AMDTW001</span></p>
-                        <hr class="border-gray-100">
-                        <p><strong data-key="dentist_label">Dentist:</strong> Dr. C. Lin (Harmony Clinic)</p>
-                        <p><strong data-key="amc_label">AMC:</strong> Jane Chen</p>
+                <section class="glass-card p-8">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-800 tracking-tight" data-i18n="gallery_title">Verified Community Success</h2>
+                        <p class="text-slate-500 text-sm" data-i18n="gallery_subtitle">Real data. Real transformations. Real oxygen.</p>
                     </div>
-                    
-                    <hr class="border-gray-100 my-3">
-                    
-                    <p class="text-xs text-gray-500" data-key="next_appointment_label">Next Appointment:</p>
-                    <p class="text-base font-bold text-sky-600 mb-3">Dec 20, 2025 at 10:00 AM</p>
-                    
-                    <button class="w-full py-2 bg-sky-500 text-white text-sm rounded-lg hover:bg-sky-600 font-medium" data-key="btn_create_appointment">
-                        Create New Appointment
-                    </button>
-                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- Success Card 1 -->
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest" data-i18n="p_a_id">Patient A • Month 12</span>
+                                <span class="bg-emerald-100 text-emerald-700 text-[8px] font-black px-2 py-0.5 rounded" data-i18n="verified">Verified</span>
+                            </div>
+                            <p class="text-sm italic text-slate-700 leading-relaxed mb-6" data-i18n="p_a_quote">"Snoring is gone. My energy levels haven't been this high since my 20s. The STA is a miracle for sleep quality."</p>
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs font-black">
+                                <div class="bg-white p-2 rounded-xl text-sky-600">+4.5mm</div>
+                                <div class="bg-white p-2 rounded-xl text-teal-600" data-i18n="deep_sleep">Deep Sleep</div>
+                            </div>
+                        </div>
+                        <!-- Success Card 2 -->
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest" data-i18n="p_b_id">Patient B • Month 9</span>
+                                <span class="bg-emerald-100 text-emerald-700 text-[8px] font-black px-2 py-0.5 rounded" data-i18n="verified">Verified</span>
+                            </div>
+                            <p class="text-sm italic text-slate-700 leading-relaxed mb-6" data-i18n="p_b_quote">"My persistent neck tension disappeared as my posture corrected itself. I breathe through my nose now effortlessly."</p>
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs font-black">
+                                <div class="bg-white p-2 rounded-xl text-sky-600">+22% MCS</div>
+                                <div class="bg-white p-2 rounded-xl text-teal-600" data-i18n="no_tension">No Tension</div>
+                            </div>
+                        </div>
+                        <!-- Success Card 3 -->
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest" data-i18n="p_c_id">Patient C • Month 24</span>
+                                <span class="bg-emerald-100 text-emerald-700 text-[8px] font-black px-2 py-0.5 rounded" data-i18n="verified">Verified</span>
+                            </div>
+                            <p class="text-sm italic text-slate-700 leading-relaxed mb-6" data-i18n="p_c_quote">"Doc Felix's protocol changed my life. I feel like my body is finally getting the fuel (oxygen) it deserves."</p>
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs font-black">
+                                <div class="bg-white p-2 rounded-xl text-sky-600">+5.0mm</div>
+                                <div class="bg-white p-2 rounded-xl text-teal-600" data-i18n="nasal_breathing">Nasal</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
 
-        <!-- Main Content Area with Tabs -->
-        <main class="max-w-7xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
-            <div class="lg:grid lg:grid-cols-4 lg:gap-8">
-                
-                <!-- LEFT COLUMN: Navigation Tabs -->
-                <div class:lg:col-span-1 mb-8 lg:mb-0>
-                    <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_title">Navigation</h3>
-                        <nav class="flex flex-col space-y-2">
-                            <button class="tab-button active" onclick="switchTab('my-plan')" data-key="tab_my_plan">
-                                My Plan & Support
-                            </button>
-                            <button class="tab-button" onclick="switchTab('diagnostics')" data-key="tab_diagnostics">
-                                Scans, Analysis & Reports
-                            </button>
-                            <button class="tab-button" onclick="switchTab('progress')" data-key="tab_progress">
-                                Progress Tracker
-                            </button>
-                            <button class="tab-button" onclick="switchTab('chat')" data-key="tab_chat">
-                                Secure Group Chat
-                            </button>
-                        </nav>
-                    </div>
-                </div>
-
-                <!-- RIGHT COLUMN: Tab Content -->
-                <div class="lg:col-span-3 space-y-8">
-                    
-                    <!-- 1. My Plan & Support Tab (Default) -->
-                    <div id="tab-my-plan" class="tab-content space-y-8">
-                        
-                        <!-- Treatment Interventions (Improved UX) -->
-                        <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="sec_interventions_title">Treatment Interventions</h2>
-
-                            <!-- Start Thriving Appliance Section -->
-                            <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
-                                <h3 class="font-bold text-gray-700 mb-2" data-key="appliance_title">Start Thriving Appliance (TM)</h3>
-                                
-                                <!-- Progress Bar and Time Left -->
-                                <div class="mb-4">
-                                    <p class="text-sm font-semibold text-gray-800" id="app_duration_text" data-key="app_duration_text">Total Prescription: 24 Months</p>
-                                    <div class="flex items-center space-x-4 mt-2">
-                                        <div class="flex-1">
-                                            <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                                                <div id="appliance-progress-bar-detail" class="h-full bg-sky-500 transition-all duration-500" style="width: 25%;"></div>
-                                            </div>
-                                        </div>
-                                        <span id="appliance-percentage" class="text-base font-extrabold text-sky-700">25%</span>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1" id="app_remaining_time" data-key="app_remaining_time">You have <span id="appliance-remaining-months">18</span> months remaining.</p>
-                                </div>
-                                
-                                <!-- Interactive Timeline -->
-                                <div class="mb-6 border-t pt-4">
-                                    <h4 class="font-bold text-sm text-gray-700 mb-2" data-key="adjustment_timeline_title">View Appliance History (Month: <span id="display-month">6</span>)</h4>
-                                    
-                                    <!-- SLIDER: On input, update appliance details and historical note -->
-                                    <input type="range" min="0" max="24" value="6" step="1" class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer" id="appliance-timeline-slider" oninput="updateApplianceDetails(this.value)">
-                                    <div class="flex justify-between text-xs mt-1 text-gray-500">
-                                        <span data-key="app_start">Start</span>
-                                        <span data-key="app_24m">24 Months</span>
-                                    </div>
-                                </div>
-
-
-                                <!-- Dentist Note Section (DYNAMIC) -->
-                                <div class="p-3 bg-teal-100 border border-teal-300 rounded-lg mb-4">
-                                    <p class="font-bold text-teal-800 mb-1" id="dentist-note-title" data-key="dentist_note_title">Dentist Clinical Note (12/01/2025):</p>
-                                    <p class="text-sm text-teal-700" id="dentist-note-content">Monitor patient's TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.</p>
-                                </div>
-
-                                <!-- Current Appliance Status Display (DYNAMIC) -->
-                                <h4 class="semibold text-sm text-gray-700 mb-2" data-key="adjustment_summary_title">Current Appliance Setting</h4>
-
-                                <div id="adjustment-list" class="space-y-2 text-sm text-gray-600 p-3 bg-yellow-100 rounded-lg">
-                                    <p><strong data-key="adj_setting_label">Setting:</strong> <span id="adj-setting-value">2.0 Turns / 0.50mm Expansion</span></p>
-                                    <p><strong data-key="adj_date_label">Last Adjusted:</strong> <span id="adj-date-value">15/11/2025</span></p>
-                                    <p class="text-xs text-gray-500" id="adj-note-label" data-key="adj_note_label">Note: Active expansion phase. Monitor midline spacing.</p>
-                                </div>
-                                
-                                <button class="mt-4 py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium w-full" data-key="btn_request_adjustment">Request Appliance Adjustment / View History</button>
-                            </div>
-
-                            <!-- Nutrition Section -->
-                            <div class="p-4 border rounded-lg bg-teal-50/50">
-                                <h3 class="font-bold text-gray-700 mb-2" data-key="nutrition_title">Prescribed Nutrition Focus:</h3>
-                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 pl-4 mb-3">
-                                    <li data-key="nut_bonebroth">Increase intake of bone broth for collagen support.</li>
-                                    <li data-key="nut_calcium">Ensure adequate calcium and magnesium levels.</li>
-                                    <li data-key="nut_fattyacids">Focus on essential fatty acids (Omega-3).</li>
-                                </ul>
-                                <button class="w-full py-2 bg-indigo-500 text-white font-medium rounded-lg hover:bg-indigo-600 transition duration-150" data-key="btn_order_supplements">
-                                    Order Supplements Now
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- AMC Support -->
-                        <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-teal-600" data-key="sec_amc_support_title">AMC & Support</h2>
-                            <div class="mb-5">
-                                <h3 class="font-bold text-gray-700 mb-2" data-key="amc_coordinator_title">Assigned Coordinator: Jane Chen (AMC)</h3>
-                                <p class="text-sm text-gray-600 mb-3" data-key="amc_coordinator_desc">Your dedicated health coach for administrative and non-clinical guidance.</p>
-                                <button class="w-full py-2 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition duration-150" data-key="btn_arrange_appointment">
-                                    Arrange AMC Appointment
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Diagnostic Inputs Tab (UPDATED) -->
-                    <div id="tab-diagnostics" class="tab-content space-y-8 hidden">
-                        <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="sec_diagnostics_title_new">Scans, Analysis & Reports</h2>
-                            
-                            <!-- CB CT Scan History -->
-                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h3 class="font-bold text-indigo-700" data-key="cbct_title">1. CB CT Scan (Airway)</h3>
-                                    <button class="text-xs text-indigo-500 hover:underline" data-key="btn_upload_new_scan">Upload New Scan</button>
-                                </div>
-                                <label for="cbct-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="cbct_history_label">View Historical Scan Data:</label>
-                                <select id="cbct-history-select" onchange="updateDiagnosticContent('cbct', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
-                                    <option value="0" data-key="scan_date_0">2025/12/10 (Initial)</option>
-                                    <option value="1" data-key="scan_date_1">2026/03/10 (Month 3 Follow-up)</option>
+            <!-- TAB: DIAGNOSTIC VAULT -->
+            <div id="tab-vault" class="tab-content space-y-6">
+                <section class="glass-card p-8">
+                    <h2 class="text-3xl font-800 tracking-tight mb-8" data-i18n="vault_title">Diagnostic Vault</h2>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-black text-sky-700 uppercase tracking-widest text-xs" data-i18n="vault_scan_1">1. CB CT Scan</h3>
+                                <select class="text-xs font-bold border rounded p-1" onchange="updateVault('cbct', this.value)">
+                                    <option value="initial" data-i18n="opt_initial">Initial</option>
+                                    <option value="followup" data-i18n="opt_m3">Month 3</option>
                                 </select>
-                                
-                                <div id="cbct-display">
-                                    <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red" id="mcs-status-display">
-                                        <span data-key="mcs_value">MCS: 285 mm²</span> <span data-key="mcs_status">(Critical!)</span>
-                                    </div>
-                                    <p class="text-xs text-gray-500" id="cbct-note-display" data-key="cbct_note">Doctor Note (10/12/2025): Significant restriction noted in velopharynx. Immediate intervention required.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_full_scan">View Full Scan / IMS Report</button>
-                                </div>
                             </div>
-                            
-                            <!-- 3D Intra-Oral Scan History -->
-                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                                <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">2. 3D Intra-Oral Scan (Teeth)</h3>
-                                <label for="intraoral-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="analysis_history_label">View Historical Analysis:</label>
-                                <select id="intraoral-history-select" onchange="updateDiagnosticContent('intraoral', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
-                                    <option value="0" data-key="analysis_date_0">2025/12/10 (Schwarz Baseline)</option>
-                                    <option value="1" data-key="analysis_date_1">2026/06/10 (Mid-Treatment)</option>
-                                </select>
-                                <div id="intraoral-display">
-                                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-2 rounded-md mb-2">
-                                        <p class="text-xs font-semibold text-yellow-800" data-key="schwarz_status">Schwarz Analysis Ready</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500" id="schwarz-note-display" data-key="schwarz_note">Analysis shows 5mm maxillary posterior crossbite correction needed.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_analysis_report">View Analysis & Report</button>
-                                </div>
-                            </div>
-
-                            <!-- Ceph Flow Metric Analysis History -->
-                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                                <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">3. Ceph Flow Metric Analysis</h3>
-                                <label for="ceph-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="analysis_history_label">View Historical Analysis:</label>
-                                <select id="ceph-history-select" onchange="updateDiagnosticContent('ceph', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
-                                    <option value="0" data-key="analysis_date_0">2025/12/10 (Sassouni Baseline)</option>
-                                    <option value="1" data-key="analysis_date_1">2026/06/10 (Mid-Treatment)</option>
-                                </select>
-                                <div id="ceph-display">
-                                    <div class="bg-green-50 border-l-4 border-green-500 p-2 rounded-md mb-2">
-                                        <p class="text-xs font-semibold text-green-800" data-key="sassouni_status">Sassouni Plus Report</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500" id="sassouni-note-display" data-key="sassouni_note">Informs appliance growth angles. Current FMA: 23°.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_report_angles">View Report & Angles</button>
-                                </div>
+                            <div id="vault-cbct" class="space-y-3">
+                                <div class="p-3 bg-white border border-red-100 rounded-xl"><p class="text-xs font-bold text-red-600" data-i18n="mcs_crit">MCS: 285 mm² (Critical)</p></div>
+                                <p class="text-xs text-slate-500 italic" data-i18n="vault_note_initial">"Significant restriction noted."</p>
+                                <button class="text-[10px] font-bold text-sky-600 uppercase">View IMS Report</button>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- 3. Progress Tracker Tab -->
-                    <div id="tab-progress" class="tab-content space-y-8 hidden">
-                        <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_title">Progress Photo Timeline</h2>
-                            
-                            <!-- Integrated Progress Metrics (NEW) -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                <div class="metric-card border-l-4 border-yellow-500">
-                                    <p class="text-xs text-gray-500" data-key="metric_jaw_size">Jaw Width Increase (Intermolar):</p>
-                                    <p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-jaw-current">42.5mm</span></p>
-                                    <p class="text-xs text-gray-600" data-key="metric_start_target">Start: 40.0mm | Target: 45.0mm</p>
-                                </div>
-                                <div class="metric-card border-l-4 border-teal-500">
-                                    <p class="text-xs text-gray-500" data-key="metric_airway">Airway Patency (MCS):</p>
-                                    <p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-airway-current">305 mm²</span></p>
-                                    <p class="text-xs text-gray-600" data-key="metric_start_target_airway">Start: 285 mm² | Target: >320 mm²</p>
-                                </div>
-                                <div class="metric-card border-l-4 border-indigo-500">
-                                    <p class="text-xs text-gray-500" data-key="metric_sleep_score">Sleep Symptom Score (MSQ):</p>
-                                    <p class="text-lg font-bold text-green-600 mt-1"><span id="metric-sleep-current">18 <span class="text-sm text-gray-500" data-key="score_change_text">(↓ -7)</span></span></p>
-                                    <p class="text-xs text-gray-600" data-key="metric_start_target_sleep">Start: 25 | Target: < 5</p>
-                                </div>
-                            </div>
-
-                            <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Track your jaw and posture changes over the 18-month growth prescription period.</p>
-                            
-                            <!-- Comparison Slider and Images (Updated for multiple checkpoints) -->
-                            <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
-                            
-                            <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <label for="comparison-slider" id="comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
-                                <!-- Max set to 4 for 5 checkpoints (0 to 4) -->
-                                <input type="range" min="0" max="4" value="0" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="comparison-slider" oninput="updateComparisonView(this.value)">
-                                <div class="flex justify-between text-xs mt-1 text-gray-500">
-                                    <span data-key="comp_c0">Initial</span><span data-key="comp_c1">Month 3</span><span data-key="comp_c2">Month 6</span><span data-key="comp_c3">Month 12</span><span data-key="comp_c4">Current</span>
-                                </div>
-                            </div>
-
-                            <div id="photo-comparison-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <!-- Photos injected by JavaScript -->
-                            </div>
-
-                            <button class="mt-6 w-full py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 text-sm font-medium" data-key="upload_photo">Upload New Progress Photo</button>
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <h3 class="font-black text-teal-700 uppercase tracking-widest text-xs mb-4" data-i18n="vault_scan_2">2. Intra-Oral Analysis</h3>
+                            <div class="p-3 bg-white border border-teal-100 rounded-xl"><p class="text-xs font-bold text-teal-600" data-i18n="vault_schwarz">Schwarz Baseline Ready</p></div>
                         </div>
                     </div>
-
-                    <!-- 4. Secure Group Chat Tab -->
-                    <div id="tab-chat" class="tab-content space-y-8 hidden">
-                         <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-blue-600" data-key="sec_chat_title">Secure Group Chat</h2>
-                            <p class="text-sm text-gray-500 mb-4" data-key="chat_subtitle">Communicate directly with your Doctor and AMC.</p>
-                            
-                            <!-- Chat Box -->
-                            <div class="h-80 overflow-y-auto p-4 border rounded-lg bg-gray-50 flex flex-col space-y-3">
-                                
-                                <!-- Doctor Message -->
-                                <div class="p-3 rounded-xl max-w-[80%] chat-doctor shadow-sm">
-                                    <p class="text-xs font-semibold text-teal-800" data-key="msg_doctor_title">Dr. Smith (Practitioner)</p>
-                                    <p class="text-sm text-gray-800 mt-1" data-key="msg_doctor_text">Hello, I have reviewed your latest CBCT. Please ensure you are wearing the appliance for the full prescribed time daily.</p>
-                                    <p class="text-xs text-gray-500 text-right mt-1">11:30 AM</p>
-                                </div>
-
-                                <!-- AMC Message -->
-                                <div class="p-3 rounded-xl max-w-[80%] chat-amc shadow-sm">
-                                    <p class="text-xs font-semibold text-indigo-800" data-key="msg_amc_title">Jane Chen (AMC)</p>
-                                    <p class="text-sm text-gray-800 mt-1" data-key="msg_amc_text">I've scheduled your next nutrition coaching session for next Tuesday at 4 PM. Confirmation email sent.</p>
-                                    <p class="text-xs text-gray-500 text-right mt-1">1:45 PM</p>
-                                </div>
-
-                                <!-- Client Message -->
-                                <div class="p-3 rounded-xl max-w-[80%] bg-blue-100 shadow-sm self-end">
-                                    <p class="text-xs font-semibold text-blue-800" data-key="msg_client_title">You (Client)</p>
-                                    <p class="text-sm text-gray-800 mt-1" data-key="msg_client_text">Understood, Dr. Smith. I've been consistent. Jane, thank you for setting that up!</p>
-                                    <p class="text-xs text-gray-500 text-right mt-1">2:01 PM</p>
-                                </div>
-                            </div>
-
-                            <!-- Input Field Mock -->
-                            <div class="mt-4 flex space-x-2">
-                                <input type="text" id="chat-input" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Type your message...">
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium" data-key="btn_send">Send</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                </section>
             </div>
+
+            <!-- TAB: GROWTH TRACKER -->
+            <div id="tab-tracker" class="tab-content space-y-6">
+                <section class="glass-card p-8 bg-gradient-to-br from-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                        <div>
+                            <h2 class="text-2xl font-black mb-2 tracking-tight uppercase" data-i18n="tracker_hero_title">Quantify Your Evolution.</h2>
+                            <p class="text-sky-50 opacity-90 max-w-sm text-sm" data-i18n="tracker_hero_desc">Every millimeter of expansion is a victory for your healthspan. Share your metrics with pride.</p>
+                        </div>
+                        <button class="px-8 py-4 bg-white text-indigo-600 rounded-2xl font-black shadow-xl flex items-center gap-3">
+                            <i class="fa-solid fa-share-nodes"></i> <span data-i18n="advocate_btn_2">SHARE MILESTONE CARD</span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="glass-card p-8">
+                    <h2 class="text-3xl font-800 tracking-tight mb-8" data-i18n="tracker_title">Personal Metric Tracking</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="p-6 border border-emerald-100 bg-emerald-50 rounded-2xl">
+                            <h4 class="text-[10px] font-black text-emerald-600 uppercase mb-3 tracking-widest" data-i18n="goal_fatigue_label">Goal: Fatigue Reduction</h4>
+                            <p class="text-sm font-bold text-slate-700 mb-1">MSQ Score</p>
+                            <p class="text-2xl font-black text-emerald-600">18 <span class="text-xs font-normal text-slate-400">/ 25 (↓ -7)</span></p>
+                        </div>
+                        <div class="p-6 border border-sky-100 bg-sky-50 rounded-2xl">
+                            <h4 class="text-[10px] font-black text-sky-600 uppercase mb-3 tracking-widest" data-i18n="goal_neck_label">Goal: Neck Alignment</h4>
+                            <p class="text-sm font-bold text-slate-700 mb-1" data-i18n="posture_angle">Cervical Posture Angle</p>
+                            <p class="text-2xl font-black text-sky-600">+12% <span class="text-xs font-normal text-slate-400" data-i18n="improvement">Improvement</span></p>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+                        <h3 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest" data-i18n="profile_slider">Profile Growth Slider</h3>
+                        <input type="range" min="0" max="4" value="2" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer mb-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="aspect-square bg-slate-200 rounded-xl flex items-center justify-center text-[10px] font-black uppercase text-slate-400" data-i18n="initial_prof">Initial Profile</div>
+                            <div class="aspect-square bg-sky-100 border-2 border-sky-500 rounded-xl flex items-center justify-center text-[10px] font-black uppercase text-sky-600" data-i18n="m6_prof">Month 6 Profile</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB: DOCTOR CHAT -->
+            <div id="tab-chat" class="tab-content space-y-6">
+                <section class="glass-card p-8 flex flex-col h-[700px]">
+                    <div class="flex justify-between items-center border-b pb-6 mb-6">
+                        <div>
+                            <h2 class="text-2xl font-800 tracking-tight" data-i18n="chat_title">Secure Group Chat</h2>
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-wider" data-i18n="chat_members">Practitioner • AMC • Client</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Feed -->
+                    <div class="flex-1 overflow-y-auto pr-4 space-y-6 flex flex-col no-scrollbar">
+                        <!-- Doctor Message -->
+                        <div class="chat-bubble chat-doctor">
+                            <p class="text-[10px] font-black text-emerald-800 uppercase mb-1" data-i18n="role_doc">Dr. Smith (Practitioner)</p>
+                            <p class="text-slate-800 leading-relaxed" data-i18n="msg_doc">Hello John, I have reviewed your latest CBCT. The expansion in the velopharynx is looking excellent. Please ensure you are maintaining the full wear-time protocol.</p>
+                            <p class="text-[9px] text-emerald-600 mt-2 font-bold uppercase">11:30 AM</p>
+                        </div>
+
+                        <!-- AMC Message -->
+                        <div class="chat-bubble chat-amc">
+                            <p class="text-[10px] font-black text-purple-800 uppercase mb-1" data-i18n="role_amc">Jane Chen (AMC)</p>
+                            <p class="text-slate-800 leading-relaxed" data-i18n="msg_amc">Hi John! I've scheduled your next nutrition coaching session for next Tuesday at 4 PM. We'll discuss your collagen scaffolding intake. Confirmation email sent.</p>
+                            <p class="text-[9px] text-purple-600 mt-2 font-bold uppercase">1:45 PM</p>
+                        </div>
+
+                        <!-- Client Message -->
+                        <div class="chat-bubble chat-client">
+                            <p class="text-[10px] font-black text-sky-800 uppercase mb-1" data-i18n="role_user">You (Client)</p>
+                            <p class="text-slate-800 leading-relaxed" data-i18n="msg_user">Understood, Dr. Smith. I've been very consistent with the STA. Jane, thank you for setting that up! Looking forward to the session.</p>
+                            <p class="text-[9px] text-sky-600 mt-2 font-bold uppercase">2:01 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="mt-6 flex items-center gap-3">
+                        <input type="text" placeholder="Type your message..." class="flex-1 p-4 glass-card border-slate-200 outline-none focus:ring-2 focus:ring-sky-500 text-sm">
+                        <button class="h-12 w-12 bg-sky-600 text-white rounded-xl flex items-center justify-center shadow-lg hover:bg-sky-700 transition-all">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="py-12 text-center">
+                <p class="text-slate-400 text-[10px] font-bold italic tracking-widest uppercase" data-i18n="footer_quote">Every breath is a celebration of your agency.</p>
+            </footer>
         </main>
     </div>
 
-    <!-- JavaScript for Tab Switching and Translations (FIXED) -->
     <script>
-        // --- Global Constants ---
-        const currentLang = 'en'; 
-        const monthsCompleted = 6;
-        const totalPrescriptionMonths = 24;
-        const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
-
-        // --- Appliance Timeline Logic (Mock Data) ---
-        const applianceAdjustments = [
-            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
-            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
-            { month: 4, setKey: 'state_m4_set', expansion: '1.5 Turns / 0.45mm', date: '2026/01/01', noteKey: 'note_m4', clinicalDate: '2025/12/28', clinicalNoteKey: 'note_clinical_m4' },
-            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
-        ];
-
-        // --- Mock Data for Diagnostic History ---
-        const diagnosticHistory = {
-            cbct: [
-                { id: '0', dateKey: 'scan_date_0', mcs: 'MCS: 285 mm²', statusKey: 'mcs_status_critical', noteKey: 'cbct_note', noteDate: '10/12/2025' },
-                { id: '1', dateKey: 'scan_date_1', mcs: 'MCS: 305 mm²', statusKey: 'mcs_status_improved', note: 'Airway cross-section slightly improved post 3 months therapy.', noteDate: '2026/03/10' }
-            ],
-            intraoral: [
-                { id: '0', dateKey: 'analysis_date_0', statusKey: 'schwarz_status_baseline', noteKey: 'schwarz_note', noteDate: '2025/12/10' },
-                { id: '1', dateKey: 'analysis_date_1', statusKey: 'schwarz_status_inprogress', note: 'Mid-Treatment Check: 3mm correction achieved. Continuing expansion protocol.', noteDate: '2026/06/10' }
-            ],
-            ceph: [
-                { id: '0', dateKey: 'analysis_date_0', statusKey: 'sassouni_status_baseline', noteKey: 'sassouni_note', noteDate: '2025/12/10' },
-                { id: '1', dateKey: 'analysis_date_1', statusKey: 'sassouni_status_followup', note: 'Follow-up Report: FMA stable at 23°. Growth pattern favorable.', noteDate: '2026/06/10' }
-            ]
-        };
-
-        // --- Translation Data Structure (Defined here for clarity) ---
-        const translations = {
-            'en': {
-                'header_title': 'AMD Client Dashboard',
-                'logout_link': '← Log Out / Portal',
-                'journey_title': 'My Journey',
-                'current_stage_label': 'Current Stage:',
-                'key_contacts_title': 'Key Contacts & Appointments',
-                'patient_name_label': 'Patient:',
-                'patient_id_label': 'Patient ID:',
-                'dentist_label': 'Dentist:',
-                'amc_label': 'AMC:',
-                'next_appointment_label': 'Next Appointment:',
-                'btn_create_appointment': 'Create New Appointment',
-                'adj_setting_label': 'Setting:',
-                'adj_date_label': 'Last Adjusted:',
-                'adj_note_label': 'Note:',
-                'adjustment_summary_title': 'Current Appliance Setting',
-                'app_duration_text': 'Total Prescription: 24 Months', 
-                'app_remaining_time': 'You have [N] months remaining.', 
-                'dentist_note_title': 'Dentist Clinical Note ([D]):', 
-                'dentist_note_content': 'Monitor patient\'s TMJ discomfort at current expansion rate (0.50mm). Continue myofunctional exercises daily. Next checkup scheduled for Month 8.',
-                'adjustment_timeline_title': 'View Appliance History (Month: [M])', 
-                'btn_request_adjustment': 'Request Appliance Adjustment / View History',
-                'sec_diagnostics_title_new': 'Scans, Analysis & Reports', 
-                'btn_upload_new_scan': 'Upload New Scan', 
-                'cbct_history_label': 'View Historical Scan Data:', 
-                'analysis_history_label': 'View Historical Analysis:', 
-                'scan_date_0': '2025/12/10 (Initial)',
-                'scan_date_1': '2026/03/10 (Month 3 Follow-up)',
-                'analysis_date_0': '2025/12/10 (Baseline)',
-                'analysis_date_1': '2026/06/10 (Mid-Treatment)',
-                'mcs_status_critical': '(Critical!)',
-                'mcs_status_improved': '(Improved)',
-                'schwarz_status_baseline': 'Schwarz Analysis: Baseline Ready',
-                'schwarz_status_inprogress': 'Schwarz Analysis: In Progress',
-                'sassouni_status_baseline': 'Sassouni Plus Report: Baseline Ready',
-                'sassouni_status_followup': 'Sassouni Plus Report: Follow-up',
-                'btn_view_full_scan': 'View Full Scan / IMS Report',
-                'btn_view_analysis_report': 'View Analysis & Report',
-                'btn_view_report_angles': 'View Report & Angles',
-                
-                // Appliance States for History Mock
-                'state_m0_set': 'Initial Fit (No Expansion)', 'note_m0': 'Baseline check and wear-time habit focus.',
-                'state_m2_set': 'Active Expansion (1.0 Turn)', 'note_m2': 'First adjustment phase. Monitoring pressure and midline.',
-                'state_m4_set': 'Active Expansion (1.5 Turns)', 'note_m4': 'Expansion increased. Good progress observed.',
-                'state_m6_set': 'Expansion Maintained (2.0 Turns)', 'note_m6': 'Expansion maintained. TMJ stable. Re-evaluate CBCT at Month 9.',
-                
-                // Clinical Notes (Historical Mock)
-                'note_clinical_m0': 'Patient cleared to begin appliance therapy. Initial focus on achieving 8-10 hours wear per night.',
-                'note_clinical_m2': 'Midline tracking is good. Patient tolerates expansion well. Continue current rate.',
-                'note_clinical_m4': 'Posture improvement noted. Patient reported less morning stiffness. Appliance setting adjustment confirmed.',
-                'note_clinical_m6': 'Expansion maintained. TMJ stable. Re-evaluate expansion rate at Month 9.',
-
-
-                // Journey Stages (Shortened for Pipeline)
-                'flow_step_1_short': 'Assessment Done',
-                'flow_step_2_short': 'Waiting for Dentist', 
-                'flow_step_3_short': 'Upload Scans', 
-                'flow_step_4_short': 'Diagnosis Visit',
-                'flow_step_5_short': 'Active Treatment',
-                
-                'next_action_button': 'View Next Step',
-                'nav_title': 'Navigation',
-                'tab_my_plan': 'My Plan & Support',
-                'tab_diagnostics': 'Scans, Analysis & Reports', // UPDATED
-                'tab_progress': 'Progress Tracker',
-                'tab_chat': 'Secure Group Chat',
-                'sec_goals_title_impact': 'Goals & Motivation',
-                'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.',
-                'goals_list_title': 'My 3 Symptoms to Eliminate:',
-                'goal1': 'Chronic Daytime Fatigue',
-                'goal2': 'Frequent Neck/Shoulder Tension',
-                'goal3': 'Waking up with dry mouth',
-                'pains_list_title': 'Existing Pains/Conditions:',
-                'pain1': 'Jaw clicking (Left TMJ)',
-                'pain2': 'Morning headaches',
-                'pain3': 'Reflux (GERD)',
-                'btn_update_goals': 'Update Pains & Goals',
-                'sec_interventions_title': 'Treatment Interventions',
-                'appliance_title': 'Start Thriving Appliance (TM)',
-                'appliance_duration_label': 'Prescription Progress:',
-                'app_start': 'Start',
-                'app_24m': '24 Months',
-                'appliance_duration_text': `Prescription: ${totalPrescriptionMonths} months | ${monthsCompleted} months complete`,
-                'adjustment_history_title': 'Adjustment History',
-                'nutrition_title': 'Prescribed Nutrition Focus:',
-                'nut_bonebroth': 'Increase intake of bone broth for collagen support.',
-                'nut_calcium': 'Ensure adequate calcium and magnesium levels.',
-                'nut_fattyacids': 'Focus on essential fatty acids (Omega-3).',
-                'btn_order_supplements': 'Order Supplements Now',
-                'sec_amc_support_title': 'AMC & Support',
-                'amc_coordinator_title': 'Assigned Coordinator: Jane Chen (AMC)',
-                'amc_coordinator_desc': 'Your dedicated health coach for administrative and non-clinical guidance.',
-                'btn_arrange_appointment': 'Arrange AMC Appointment',
-                'cbct_title': 'CB CT Scan (Airway)',
-                'cbct_desc': 'Used to measure Minimal Cross Section (MCS).',
-                'mcs_value': 'MCS: 285 mm²',
-                'mcs_status': '(Critical!)',
-                'cbct_note': 'Doctor Note (10/12/2025): Significant restriction noted in velopharynx. Immediate intervention required.',
-                'btn_view_cbct': 'View Full Scan / Upload New',
-                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
-                'intraoral_desc': 'Used for Schwarz Analysis measurements.',
-                'schwarz_status': 'Schwarz Analysis Ready',
-                'schwarz_note': 'Analysis shows 5mm maxillary posterior crossbite correction needed.',
-                'btn_view_schwarz': 'View Analysis & Report',
-                'ceph_title': 'Ceph Flow Metric Analysis',
-                'ceph_desc': 'Used for Sassouni Plus Ceph Analysis.',
-                'sassouni_status': 'Sassouni Plus Report',
-                'sassouni_note': 'Informs appliance growth angles. Current FMA: 23°.',
-                'btn_view_sassouni': 'View Report & Angles',
-                'progress_title': 'Progress Photo Timeline',
-                'progress_subtitle': 'Track your jaw and posture changes over the 18-month growth prescription period.',
-                'comparison_view_title': 'Historical Comparison View',
-                'viewing_photos': 'Viewing photos from: Month 6 Check',
-                'comp_c0': 'Initial', 'comp_c1': 'Month 3', 'comp_c2': 'Month 6', 'comp_c3': 'Month 12', 'comp_c4': 'Current',
-                'upload_photo': 'Upload New Progress Photo',
-                'sec_chat_title': 'Secure Group Chat',
-                'chat_subtitle': 'Communicate directly with your Doctor and AMC.',
-                'msg_doctor_title': 'Dr. Smith (Practitioner)',
-                'msg_doctor_text': 'Hello, I have reviewed your latest CBCT. Please ensure you are wearing the appliance for the full prescribed time daily.',
-                'msg_amc_title': 'Jane Chen (AMC)',
-                'msg_amc_text': "I've scheduled your next nutrition coaching session for next Tuesday at 4 PM. Confirmation email sent.",
-                'msg_client_title': 'You (Client)',
-                'msg_client_text': "Understood, Dr. Smith. I've been consistent. Jane, thank you for setting that up!",
-                'btn_send': 'Send',
-                'toggle_text': '中文'
+        const i18n = {
+            en: {
+                tagline: "Healthspan Optimizer",
+                key_info: "Key Information",
+                clinic_loc: "Harmony Clinic (TW)",
+                next_appt: "Next Check-up",
+                goals_title: "Goals & Motivation",
+                goal_fatigue: "Eliminate Chronic Daytime Fatigue",
+                goal_tension: "Reduce Neck Tension",
+                nav_plan: "My Anatomy Plan",
+                nav_gallery: "Success Gallery",
+                nav_vault: "Diagnostic Vault",
+                nav_tracker: "Growth Tracker",
+                nav_chat: "Doctor Chat",
+                user_status: "Active Growth • Month 6 of 24",
+                plan_hero_title: "Anatomy in Progress",
+                airway_label: "Airway Flow",
+                jaw_label: "Jaw Width",
+                plan_viz_1: "Expansion Visualizer",
+                plan_viz_2: "Arch Development",
+                sta_title: "The STA Intervention",
+                sta_quote: '"The pressure at Month 6 is the feeling of your jaw reshaping to house your breath."',
+                fuel_title: "Growth Blocks",
+                block_1: "Bone Broth: Collagen",
+                block_2: "Magnesium: Density",
+                fuel_btn: "Order More Fuel",
+                advocate_title: "You are an Airway Advocate.",
+                advocate_desc: "Join the 1,200+ optimizers in Taiwan. Share your expansion milestones and inspire the revolution.",
+                advocate_btn: "SHARE YOUR JOURNEY",
+                advocate_btn_2: "SHARE MILESTONE CARD",
+                gallery_title: "Verified Community Success",
+                gallery_subtitle: "Real data. Real transformations. Real oxygen.",
+                verified: "Verified",
+                deep_sleep: "Deep Sleep",
+                no_tension: "No Tension",
+                nasal_breathing: "Nasal",
+                vault_title: "Diagnostic Vault",
+                vault_scan_1: "1. CB CT Scan",
+                vault_scan_2: "2. Intra-Oral Analysis",
+                opt_initial: "Initial",
+                opt_m3: "Month 3",
+                mcs_crit: "MCS: 285 mm² (Critical)",
+                mcs_impr: "MCS: 305 mm² (Improving)",
+                vault_note_initial: '"Significant restriction noted."',
+                vault_note_impr: '"Airway cross-section improved post 3 months."',
+                vault_schwarz: "Schwarz Baseline Ready",
+                tracker_hero_title: "Quantify Your Evolution.",
+                tracker_hero_desc: "Every millimeter of expansion is a victory for your healthspan. Share your metrics with pride.",
+                tracker_title: "Personal Metric Tracking",
+                goal_fatigue_label: "Goal: Fatigue Reduction",
+                goal_neck_label: "Goal: Neck Alignment",
+                posture_angle: "Cervical Posture Angle",
+                improvement: "Improvement",
+                profile_slider: "Profile Growth Slider",
+                initial_prof: "Initial Profile",
+                m6_prof: "Month 6 Profile",
+                chat_title: "Secure Group Chat",
+                chat_members: "Practitioner • AMC • Client",
+                role_doc: "Dr. Smith (Practitioner)",
+                role_amc: "Jane Chen (AMC)",
+                role_user: "You (Client)",
+                msg_doc: "Hello John, I have reviewed your latest CBCT. The expansion in the velopharynx is looking excellent. Please ensure you are maintaining the full wear-time protocol.",
+                msg_amc: "Hi John! I've scheduled your next nutrition coaching session for next Tuesday at 4 PM. We'll discuss your collagen scaffolding intake.",
+                msg_user: "Understood, Dr. Smith. I've been very consistent with the STA. Jane, thank you for setting that up!",
+                footer_quote: "Every breath is a celebration of your agency.",
+                p_a_id: "Patient A • Month 12",
+                p_b_id: "Patient B • Month 9",
+                p_c_id: "Patient C • Month 24",
+                p_a_quote: '"Snoring is gone. My energy levels haven\'t been this high since my 20s. The STA is a miracle for sleep quality."',
+                p_b_quote: '"My persistent neck tension disappeared as my posture corrected itself. I breathe through my nose now effortlessly."',
+                p_c_quote: '"Doc Felix\'s protocol changed my life. I feel like my body is finally getting the fuel (oxygen) it deserves."'
             },
-            'zh': {
-                'header_title': 'AMD 客戶儀表板',
-                'logout_link': '← 登出 / 入口網站',
-                'journey_title': '我的旅程', // UPDATED
-                'current_stage_label': '當前階段:',
-                'key_contacts_title': '關鍵聯絡人與預約', // NEW
-                'patient_name_label': '患者姓名:', // NEW
-                'patient_id_label': '患者 ID:', // NEW
-                'dentist_label': '牙醫:', // NEW
-                'amc_label': 'AMC:', // NEW
-                'next_appointment_label': '下次預約:', // NEW
-                'btn_create_appointment': '創建新預約', // NEW
-                'adj_setting_label': '設置:', // NEW
-                'adj_date_label': '上次調整:', // NEW
-                'adj_note_label': '備註:', // NEW
-                'adjustment_summary_title': '當前矯治器設置', // NEW
-                'app_duration_text': '總處方期: 24 個月', // NEW
-                'app_remaining_time': '您還有 [N] 個月剩餘。', // NEW
-                'dentist_note_title': '牙醫臨床備註 ([D]):', // Dynamic Date Placeholder
-                'dentist_note_content': '在當前擴展率 (0.50mm) 下監測患者的 TMJ 不適。繼續每日進行口腔功能鍛鍊。下次檢查安排在第 8 個月。', // NEW KEY
-                'adjustment_timeline_title': '查看矯治器歷史 (月份: [M])', // NEW KEY
-                'btn_request_adjustment': '請求矯治器調整 / 查看歷史',
-
-                // Appliance States for History Mock
-                'state_m0_set': '初始佩戴 (無擴展)', 'note_m0': '基線檢查和佩戴習慣養成。',
-                'state_m2_set': '活躍擴展階段 (1.0 圈)', 'note_m2': '第一階段調整。監測壓力和中線。',
-                'state_m4_set': '活躍擴展階段 (1.5 圈)', 'note_m4': '擴展增加。觀察到良好進展。',
-                'state_m6_set': '擴展維持階段 (2.0 圈)', 'note_m6': '擴展維持。TMJ 穩定。在第 9 個月重新評估擴展率。',
-
-                // Clinical Notes (Historical Mock)
-                'note_clinical_m0': '患者已清除開始矯治器治療。初步重點是每晚佩戴 8-10 小時。',
-                'note_clinical_m2': '中線追踪良好。患者對擴展耐受性好。保持當前擴展率。',
-                'note_clinical_m4': '姿勢改善顯著。患者報告早晨僵硬減輕。矯治器設置調整已確認。',
-                'note_clinical_m6': '擴展維持。TMJ 穩定。在第 9 個月重新評估擴展率。',
-
-                // Journey Stages (Shortened for Pipeline)
-                'flow_step_1_short': '評估完成',
-                'flow_step_2_short': '等待牙醫確認',
-                'flow_step_3_short': '上傳掃描',
-                'flow_step_4_short': '診斷門診',
-                'flow_step_5_short': '積極治療',
-                
-                'next_action_button': '查看下一步',
-                'nav_title': '導航',
-                'tab_my_plan': '我的計劃與支持',
-                'tab_diagnostics': '掃描、分析與報告', // UPDATED
-                'tab_progress': '進度追踪器',
-                'tab_chat': '安全群組聊天',
-                'sec_goals_title_impact': '我的旅程：目標與動力',
-                'goals_motivation_intro': '專注於這些目標—它們是我們正在通過整體治療共同努力消除的強大症狀。',
-                'goals_list_title': '我的 3 個欲消除症狀:',
-                'goal1': '慢性白天疲勞',
-                'goal2': '頻繁頸部/肩部緊張',
-                'goal3': '醒來時口乾',
-                'pains_list_title': '現有疼痛/狀況:',
-                'pain1': '下巴顳顎關節(左側)咯咯作響',
-                'pain2': '早上頭痛',
-                'pain3': '胃食道逆流 (GERD)',
-                'btn_update_goals': '更新疼痛與目標',
-                'sec_interventions_title': '治療干預措施',
-                'appliance_title': '開始興盛矯治器 (TM)',
-                'appliance_duration_label': '處方進度:',
-                'app_start': '開始',
-                'app_24m': '24 個月',
-                'appliance_duration_text': `處方: ${totalPrescriptionMonths} 個月 | 完成 ${monthsCompleted} 個月`,
-                'adjustment_history_title': '調整歷史記錄',
-                'nutrition_title': '處方營養重點:',
-                'nut_bonebroth': '增加骨湯攝取以支持膠原蛋白。',
-                'nut_calcium': '確保充足的鈣和鎂水平。',
-                'nut_fattyacids': '專注於必需脂肪酸 (Omega-3)。',
-                'btn_order_supplements': '立即訂購補充劑',
-                'sec_amc_support_title': 'AMC 與支持',
-                'amc_coordinator_title': '指定協調員: Jane Chen (AMC)',
-                'amc_coordinator_desc': '您專屬的健康教練，提供行政和非臨床指導。',
-                'btn_arrange_appointment': '安排 AMC 預約',
-                'cbct_title': '錐束CT掃描 (氣道)',
-                'cbct_desc': '用於測量最小橫截面積 (MCS)。',
-                'mcs_value': 'MCS: 285 毫米²',
-                'mcs_status': '(危急!)',
-                'cbct_note': '醫生備註 (2025/12/10): 鼻咽部有明顯受限。需立即干預。',
-                'btn_view_cbct': '查看完整掃描 / 上傳新掃描',
-                'intraoral_title': '3D 口內掃描 (牙齒)',
-                'intraoral_desc': '用於 Schwarz 分析測量。',
-                'schwarz_status': 'Schwarz 分析準備就緒',
-                'schwarz_note': '分析顯示上頜後部需要矯正 5 毫米的反頜。',
-                'btn_view_schwarz': '查看分析與報告',
-                'ceph_title': '頭影流動測量分析',
-                'ceph_desc': '用於 Sassouni Plus 頭影分析。',
-                'sassouni_status': 'Sassouni Plus 報告',
-                'sassouni_note': '指導矯治器生長角度。當前 FMA: 23°。',
-                'btn_view_sassouni': '查看報告與角度',
-                'progress_title': '進度照片追踪器',
-                'progress_subtitle': '追踪您在 18 個月生長處方期內的下巴和姿勢變化。',
-                'comparison_view_title': '歷史比較視圖',
-                'viewing_photos': '查看照片來自: 第 6 個月檢查',
-                'comp_c0': '初始', 'comp_c1': '第 3 個月', 'comp_c2': '第 6 個月', 'comp_c3': '第 12 個月', 'comp_c4': '當前',
-                'upload_photo': '上傳新進度照片',
-                'sec_chat_title': '安全群組聊天',
-                'chat_subtitle': '與您的醫生和 AMC 直接溝通。',
-                'msg_doctor_title': 'Smith 醫生 (醫生)',
-                'msg_doctor_text': '您好，我已經審閱了您最新的 CBCT。請確保每天在規定的時間內全程佩戴矯治器。',
-                'msg_amc_title': 'Jane Chen (AMC)',
-                'msg_amc_text': '我已經為您預約了下週二下午 4 點的營養指導課程。確認郵件已發送。',
-                'msg_client_title': '您 (客戶)',
-                'msg_client_text': '明白了，Smith 醫生。我一直很堅持。Jane，謝謝您的安排！',
-                'btn_send': '發送',
-                'toggle_text': 'English'
+            zh: {
+                tagline: "健康壽命優化師",
+                key_info: "關鍵信息",
+                clinic_loc: "和諧診所 (台灣)",
+                next_appt: "下次檢查",
+                goals_title: "目標與動力",
+                goal_fatigue: "消除慢性日間疲勞",
+                goal_tension: "減輕頸部張力",
+                nav_plan: "我的解剖計劃",
+                nav_gallery: "成功案例庫",
+                nav_vault: "診斷資料庫",
+                nav_tracker: "生長追踪器",
+                nav_chat: "醫師對話",
+                user_status: "積極生長中 • 第 6 個月 (共 24 個月)",
+                plan_hero_title: "解剖學進展中",
+                airway_label: "氣道流量",
+                jaw_label: "下顎寬度",
+                plan_viz_1: "擴張可視化",
+                plan_viz_2: "牙弓發育",
+                sta_title: "STA 干預措施",
+                sta_quote: '"第 6 個月的壓力感是您下顎重塑以容納呼吸的感覺。"',
+                fuel_title: "生長基石",
+                block_1: "骨頭湯：膠原蛋白",
+                block_2: "鎂：骨密度",
+                fuel_btn: "訂購更多燃料",
+                advocate_title: "您是氣道倡導者",
+                advocate_desc: "加入台灣 1,200 多名優化者的行列。分享您的擴張里程碑，啟發這場革命。",
+                advocate_btn: "分享您的旅程",
+                advocate_btn_2: "分享里程碑卡",
+                gallery_title: "社區成功認證",
+                gallery_subtitle: "真實數據。真實轉化。真實氧氣。",
+                verified: "已認證",
+                deep_sleep: "深度睡眠",
+                no_tension: "零張力",
+                nasal_breathing: "鼻呼吸",
+                vault_title: "診斷資料庫",
+                vault_scan_1: "1. CB CT 掃描",
+                vault_scan_2: "2. 口內分析",
+                opt_initial: "初始",
+                opt_m3: "第 3 個月",
+                mcs_crit: "MCS: 285 mm² (危急)",
+                mcs_impr: "MCS: 305 mm² (改善中)",
+                vault_note_initial: '"注意到顯著受限。"',
+                vault_note_impr: '"3個月後氣道橫截面有所改善。"',
+                vault_schwarz: "Schwarz 基線已準備就緒",
+                tracker_hero_title: "量化您的演變",
+                tracker_hero_desc: "每一毫米的擴張都是您健康壽命的勝利。帶著自豪分享您的數據。",
+                tracker_title: "個人指標追踪",
+                goal_fatigue_label: "目標：減輕疲勞",
+                goal_neck_label: "目標：頸部對齊",
+                posture_angle: "頸椎姿勢角度",
+                improvement: "改善",
+                profile_slider: "側面生長滑塊",
+                initial_prof: "初始輪廓",
+                m6_prof: "第 6 個月輪廓",
+                chat_title: "安全群組聊天",
+                chat_members: "執業者 • AMC • 客戶",
+                role_doc: "Smith 醫生 (執業者)",
+                role_amc: "Jane Chen (AMC)",
+                role_user: "您 (客戶)",
+                msg_doc: "你好 John，我查看了你最新的 CBCT。口咽部的擴張情況非常好。請確保維持完整的佩戴時間協議。",
+                msg_amc: "嗨 John！我已為你安排了下週二下午 4 點的營養指導課程。我們將討論膠原蛋白支架的攝入量。",
+                msg_user: "明白了，Smith 醫生。我一直非常堅持使用 STA。Jane，謝謝你的安排！",
+                footer_quote: "每一次呼吸都是對您自主權的慶祝。",
+                p_a_id: "患者 A • 第 12 個月",
+                p_b_id: "患者 B • 第 9 個月",
+                p_c_id: "患者 C • 第 24 個月",
+                p_a_quote: '"打鼾消失了。我的精力水平從 20 歲起就沒這麼高過。STA 對睡眠質量來說簡直是奇蹟。"',
+                p_b_quote: '"隨著姿勢的自我修正，我持久的頸部張力消失了。現在我能毫不費力地用鼻子呼吸。"',
+                p_c_quote: '"Doc Felix 的協議改變了我的生活。我感覺我的身體終於得到了它應得的燃料（氧氣）。"'
             }
         };
 
+        let currentLang = 'en';
 
-        // --- Core Functions (FIXED: Defined globally) ---
-
-        function setupDiagnosticHistorySelectors() {
-            const langData = translations[currentLang];
-
-            const cbctSelect = document.getElementById('cbct-history-select');
-            cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
-                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-            ).join('');
-            
-            const intraoralSelect = document.getElementById('intraoral-history-select');
-            intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
-                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-            ).join('');
-
-            const cephSelect = document.getElementById('ceph-history-select');
-            cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
-                `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-            ).join('');
-
-            updateDiagnosticContent('cbct', '0');
-            updateDiagnosticContent('intraoral', '0');
-            updateDiagnosticContent('ceph', '0');
-        }
-
-
-        function updateDiagnosticContent(type, id) {
-            const data = diagnosticHistory[type].find(item => item.id === id);
-            if (!data) return;
-            const langData = translations[currentLang];
-
-            if (type === 'cbct') {
-                const display = document.getElementById('cbct-display');
-                const mcsStatusEl = display.querySelector('#mcs-status-display');
-                const noteEl = display.querySelector('#cbct-note-display');
-                
-                mcsStatusEl.textContent = data.mcs + ' ' + (langData[data.statusKey] || data.statusKey);
-                
-                if (data.statusKey === 'mcs_status_critical') {
-                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 alert-red';
-                } else {
-                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500';
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.textContent = i18n[lang][key];
                 }
+            });
 
-                noteEl.textContent = langData[data.noteKey] || data.note;
-
-            } else if (type === 'intraoral') {
-                const display = document.getElementById('intraoral-display');
-                const statusEl = display.querySelector('[data-key^="schwarz_status"]');
-                const noteEl = display.querySelector('#schwarz-note-display');
-
-                statusEl.textContent = langData[data.statusKey] || data.statusKey;
-                noteEl.textContent = langData[data.noteKey] || data.note;
-
-            } else if (type === 'ceph') {
-                const display = document.getElementById('ceph-display');
-                const statusEl = display.querySelector('[data-key^="sassouni_status"]');
-                const noteEl = display.querySelector('#sassouni-note-display');
-
-                statusEl.textContent = langData[data.statusKey] || data.statusKey;
-                noteEl.textContent = langData[data.noteKey] || data.note;
-            }
-        }
-
-        function updateApplianceDetails(monthValue) {
-            const month = parseInt(monthValue);
-            const langData = translations[currentLang];
-            const adjSetting = document.getElementById('adj-setting-value');
-            const adjDate = document.getElementById('adj-date-value');
-            const adjNoteContentEl = document.getElementById('adj-note-label'); 
-            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); 
-            const dentistNoteContentEl = document.getElementById('dentist-note-content'); 
-            const displayMonth = document.getElementById('display-month');
-            
-            if (month > monthsCompleted) {
-                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
-                return;
-            }
-            
-            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
-            document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
-            displayMonth.textContent = month;
-
-            let state = applianceAdjustments
-                .filter(adj => adj.month <= month)
-                .sort((a, b) => b.month - a.month)[0];
-
-            if (state) {
-                adjSetting.textContent = state.expansion;
-                adjDate.textContent = state.date;
-                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
-                
-                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', state.clinicalDate);
-                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
-
-            } else {
-                adjSetting.textContent = langData.state_m0_set;
-                adjDate.textContent = 'N/A';
-                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
-                
-                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
-                dentistNoteContentEl.textContent = langData.note_clinical_m0;
-            }
-        }
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
+            // Update toggles
+            document.getElementById('lang-en').className = `px-3 py-1 text-[10px] font-black rounded-lg transition-all ${lang === 'en' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-500'}`;
+            document.getElementById('lang-zh').className = `px-3 py-1 text-[10px] font-black rounded-lg transition-all ${lang === 'zh' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-500'}`;
         }
 
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-            });
-            const activeContent = document.getElementById('tab-' + tabId);
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            const activeTab = document.getElementById('tab-' + tabId);
+            if (activeTab) activeTab.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateVault(type, value) {
+            const vaultSection = document.getElementById('vault-cbct');
+            if (value === 'followup') {
+                vaultSection.innerHTML = `
+                    <div class="p-3 bg-white border border-emerald-100 rounded-xl"><p class="text-xs font-bold text-emerald-600">${i18n[currentLang].mcs_impr}</p></div>
+                    <p class="text-xs text-slate-500 italic">${i18n[currentLang].vault_note_impr}</p>
+                    <button class="text-[10px] font-bold text-sky-600 uppercase">View IMS Report</button>
+                `;
+            } else {
+                vaultSection.innerHTML = `
+                    <div class="p-3 bg-white border border-red-100 rounded-xl"><p class="text-xs font-bold text-red-600">${i18n[currentLang].mcs_crit}</p></div>
+                    <p class="text-xs text-slate-500 italic">${i18n[currentLang].vault_note_initial}</p>
+                    <button class="text-[10px] font-bold text-sky-600 uppercase">View IMS Report</button>
+                `;
             }
-            const activeButton = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
         }
-
-        function updateComparisonView() {
-            // Placeholder for compatibility
-        }
-
-        function renderPipeline() {
-             // Placeholder for compatibility
-        }
-
-        function updateText() {
-            const langData = translations[currentLang];
-            
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                if (langData[key]) {
-                    element.textContent = langData[key];
-                }
-            });
-
-            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
-            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
-
-            document.getElementById('appliance-progress-bar-detail').style.width = `${percentageCompleted}%`;
-            document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
-            document.getElementById('appliance-remaining-months').textContent = remainingMonths;
-
-            document.getElementById('app_duration_text').textContent = langData.app_duration_text;
-            document.getElementById('app_remaining_time').textContent = remainingText;
-            
-            setupDiagnosticHistorySelectors();
-            
-            const initialMonth = document.getElementById('appliance-timeline-slider').value;
-            updateApplianceDetails(initialMonth); 
-
-            document.getElementById('lang-toggle').textContent = langData.toggle_text;
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = langData.header_title;
-        }
-        
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            updateText();
-        });
     </script>
 </body>
 </html>
