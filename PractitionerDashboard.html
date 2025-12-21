@@ -3,926 +3,536 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Practitioner Dashboard | Case Management</title>
+    <title>AMD | Practitioner Mastery</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+            color: #0f172a;
         }
-        .bg-teal-gradient {
-            background-image: linear-gradient(to right, #0d9488, #059669); /* Teal 700 to 600 */
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
         }
-        .section-card {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-        }
+
         .nav-button {
-            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #475569;
+            transition: all 0.2s;
+            width: 100%;
             text-align: left;
-            font-weight: 600;
-            color: #4b5563;
-            border-radius: 0.5rem;
-            transition: all 0.15s ease;
         }
+
         .nav-button.active {
-            background-color: #e6fffa; /* Teal 100 */
-            color: #0d9488; /* Teal 700 */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            border-right: 3px solid #0d9488;
+            background: #0d9488;
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
         }
+
         .nav-button:not(.active):hover {
-            background-color: #f0fdfa;
+            background: rgba(13, 148, 136, 0.05);
+            color: #0d9488;
         }
-        .alert-red {
-            background-color: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #b91c1c;
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .chat-practitioner {
-            background-color: #ecfdf5; /* Teal 100 */
-            align-self: flex-end;
+
+        .case-grid-header {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 0.75rem;
         }
-        .chat-client {
-            background-color: #dbeafe; /* Blue 100 */
-            align-self: flex-start;
+
+        /* Chat Styles */
+        .chat-bubble {
+            padding: 0.85rem;
+            border-radius: 1rem;
+            max-width: 85%;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .chat-amc {
-            background-color: #f3e8ff; /* Indigo 100 */
-            align-self: flex-start;
+        .chat-specialist { background-color: #fef3c7; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #fde68a; }
+        .chat-amc { background-color: #f3e8ff; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #e9d5ff; }
+        .chat-dentist { background-color: #ccfbf1; align-self: flex-end; border-bottom-right-radius: 0; border: 1px solid #99f6e4; }
+        .chat-patient { background-color: #e0f2fe; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #bae6fd; }
+
+        .airway-glow { filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.4)); }
+        .jaw-glow { filter: drop-shadow(0 0 8px rgba(20, 184, 166, 0.3)); }
+
+        @keyframes lung-pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
-        .revenue-metric {
-            @apply text-xl font-bold text-green-700;
-        }
-        .diagnostic-value {
-            @apply font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500;
-        }
-        /* Custom modal animation */
-        .modal-fade-enter {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        .modal-fade-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 200ms ease-out, transform 200ms ease-out;
-        }
+        .pulse { animation: lung-pulse 4s infinite ease-in-out; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-    <div class="min-h-screen">
-        <!-- Header -->
-        <header class="bg-teal-gradient shadow-md">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                 <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">AMD Practitioner Dashboard</h1>
-                <div class="flex items-center space-x-4">
-                    <!-- Language Toggle Button (FIXED) -->
-                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-teal-700 border border-teal-500 hover:bg-teal-100 transition duration-150 font-semibold text-sm shadow">
-                        <!-- Text updated by JavaScript -->
-                    </button>
-                    <a href="index.html" class="text-sm font-medium text-teal-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
+    <div class="flex flex-col lg:flex-row max-w-[1700px] mx-auto min-h-screen">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-full lg:w-80 p-6 space-y-6 lg:sticky lg:top-0 h-screen overflow-y-auto no-scrollbar border-r border-slate-200/50">
+            <div class="mb-8 px-2">
+                <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">AMD <span class="text-teal-600">PRO</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="tagline">Mastery Without Friction</p>
+            </div>
+
+            <!-- Practice Metrics -->
+            <div class="glass-card p-5 space-y-4 border-t-4 border-teal-500">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider" data-i18n="practice_stats">Practice Metrics</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase" data-i18n="active_cases">Active Cases</p>
+                        <p class="text-xl font-black text-teal-600">42</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase" data-i18n="revenue">Growth</p>
+                        <p class="text-xl font-black text-emerald-600">92% <i class="fa-solid fa-arrow-up text-[10px]"></i></p>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <!-- Main Content Area with Navigation Panes -->
-        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+            <!-- Navigation -->
+            <nav class="space-y-1 pt-4">
+                <button class="nav-button active" onclick="switchTab('cases')">
+                    <i class="fa-solid fa-clipboard-list w-5"></i> <span data-i18n="nav_cases">Case Management</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('intake')">
+                    <i class="fa-solid fa-user-plus w-5"></i> <span data-i18n="nav_intake">New Intake</span>
+                    <span class="ml-auto bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full">3</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('accounting')">
+                    <i class="fa-solid fa-wallet w-5"></i> <span data-i18n="nav_accounting">Revenue & Growth</span>
+                </button>
+                <button class="nav-button" onclick="switchTab('chat')">
+                    <i class="fa-solid fa-comments w-5"></i> <span data-i18n="nav_chat">Specialist Bridge</span>
+                </button>
+            </nav>
+
+            <div class="pt-8 mt-auto">
+                <div class="glass-card p-4 flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-xl bg-teal-600 flex items-center justify-center text-white font-black">RC</div>
+                    <div class="text-xs">
+                        <p class="font-bold">Dr. Ryan Chiang</p>
+                        <p class="text-slate-500">Harmony Clinic (TW)</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN AREA -->
+        <main class="flex-1 p-6 space-y-6 overflow-x-hidden">
+            
+            <!-- Header -->
+            <header class="flex justify-between items-center bg-white/40 p-4 rounded-2xl">
+                <div class="flex items-center gap-4">
+                    <h2 class="text-xl font-800" data-i18n="welcome">Case Readiness Control</h2>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex bg-slate-200/50 p-1 rounded-xl glass-card">
+                        <button id="lang-en" onclick="setLanguage('en')" class="px-3 py-1 text-[10px] font-black rounded-lg transition-all bg-teal-600 text-white shadow-sm">EN</button>
+                        <button id="lang-zh" onclick="setLanguage('zh')" class="px-3 py-1 text-[10px] font-black rounded-lg transition-all text-slate-500">中文</button>
+                    </div>
+                    <button class="p-2 h-10 w-10 glass-card flex items-center justify-center text-slate-400 hover:text-teal-600"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </header>
+
+            <!-- TAB: MASTER CASE TRACKER -->
+            <div id="tab-cases" class="tab-content active space-y-6">
+                <section class="glass-card overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold" data-i18n="readiness_title">Master Case Tracker</h3>
+                            <p class="text-xs text-slate-400 font-semibold" data-i18n="readiness_subtitle">Complete all data points before Specialist Review.</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50/50 border-b border-slate-100">
+                                <tr>
+                                    <th class="case-grid-header w-48">Patient Name</th>
+                                    <th class="case-grid-header text-center">Ceph</th>
+                                    <th class="case-grid-header text-center">Models</th>
+                                    <th class="case-grid-header text-center">Photos</th>
+                                    <th class="case-grid-header text-center">CBCT</th>
+                                    <th class="case-grid-header text-center">RX</th>
+                                    <th class="case-grid-header text-center">STA</th>
+                                    <th class="case-grid-header text-right pr-6">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="patient-rows">
+                                <!-- Data injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB: PATIENT DETAIL (HIGH DEPTH) -->
+            <div id="tab-patient-detail" class="tab-content space-y-6">
+                <button onclick="switchTab('cases')" class="text-xs font-black text-teal-600 hover:text-teal-700 flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-arrow-left"></i> <span data-i18n="back_to_list">BACK TO MASTER TRACKER</span>
+                </button>
                 
-                <!-- LEFT COLUMN: Navigation Tabs (Fixed) -->
-                <div class="lg:col-span-1 mb-8 lg:mb-0">
-                    <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_practitioner_title">Practice Navigation</h3>
-                        <nav class="flex flex-col space-y-2">
-                            <button id="nav-overview-btn" class="nav-button active" onclick="switchMainPane('overview')" data-key="nav_overview">
-                                Practice Overview
-                            </button>
-                            <button class="nav-button" onclick="switchMainPane('patients')" data-key="nav_patients">
-                                Patient Management
-                            </button>
-                            <button class="nav-button" onclick="switchMainPane('intake')" data-key="nav_intake">
-                                New Patient Intake (3)
-                            </button>
-                            <button class="nav-button" onclick="switchMainPane('payments')" data-key="nav_payments">
-                                Payments & Accounting
-                            </button>
-                        </nav>
-                    </div>
-                </div>
-
-                <!-- RIGHT COLUMNS (3/4): Dynamic Content Area -->
-                <div id="content-area" class="lg:col-span-3 space-y-8">
-                    
-                    <!-- 1. Practice Overview (Default Pane) -->
-                    <div id="pane-overview" class="main-pane">
-                        <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="overview_summary_title">Practice Summary & Metrics</h2>
-
-                        <!-- Practice Statistics -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <div class="section-card border-l-4 border-teal-500">
-                                <p class="text-sm text-gray-500" data-key="stat_active">Active Patients</p>
-                                <p class="text-4xl font-bold text-gray-900 mt-1">45</p>
-                            </div>
-                            <div class="section-card border-l-4 border-amber-500">
-                                <p class="text-sm text-gray-500" data-key="stat_new">New Intake (30 days)</p>
-                                <p class="text-4xl font-bold text-gray-900 mt-1">8</p>
-                            </div>
-                            <div class="section-card border-l-4 border-sky-500">
-                                <p class="text-sm text-gray-500" data-key="stat_total_seen">Total Patients Seen (Historical)</p>
-                                <p class="text-4xl font-bold text-gray-900 mt-1">128</p>
-                            </div>
-                        </div>
-
-                        <!-- Current Patient Load & Status -->
-                        <div class="section-card">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="status_load_title">Current Patient Load & Next Steps</h3>
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_patient">Patient</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_next_app">Next Appt.</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_status">Treatment Status</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_specialist">Specialist Review</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200 text-sm">
-                                    <tr onclick="selectPatient('Jane Chen')" class="hover:bg-teal-50 cursor-pointer">
-                                        <td class="px-3 py-4 font-medium text-gray-900">Jane Chen (ID: 4892)</td>
-                                        <td class="px-3 py-4 text-teal-600 font-medium">Today, 2:00 PM</td>
-                                        <td class="px-3 py-4"><span class="text-xs font-semibold bg-sky-100 text-sky-800 p-1 rounded">Active Treatment (M6)</span></td>
-                                        <td class="px-3 py-4"><span class="text-xs font-medium text-green-600">Complete (Opinion Filed)</span></td>
-                                    </tr>
-                                    <tr onclick="selectPatient('David Lee')" class="hover:bg-teal-50 cursor-pointer">
-                                        <td class="px-3 py-4 font-medium text-gray-900">David Lee (ID: 9011)</td>
-                                        <td class="px-3 py-4 text-amber-600">Pending Scheduling</td>
-                                        <td class="px-3 py-4"><span class="text-xs font-semibold bg-yellow-100 text-yellow-800 p-1 rounded">Awaiting Scans</span></td>
-                                        <td class="px-3 py-4"><span class="text-xs text-gray-500">N/A</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- 2. Patient Management (List Pane) -->
-                    <div id="pane-patients" class="main-pane hidden">
-                         <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="patient_management_title">Patient Management</h2>
-                         <!-- Client Search and Selection -->
-                         <div class="section-card mb-4">
-                             <div class="flex flex-col md:flex-row gap-4 items-center">
-                                 <input type="text" id="patient-search" placeholder="Search by Name, DOB, or Phone Number..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500">
-                                 <button onclick="mockSearchPatients()" class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
-                                     Search Clients
-                                 </button>
-                             </div>
-                         </div>
-                         <!-- Full Patient List Mock (similar to overview list) -->
-                         <div id="full-patient-list" class="section-card">
-                             <ul class="divide-y divide-gray-200">
-                                 <li onclick="selectPatient('Jane Chen')" class="p-3 hover:bg-teal-50 cursor-pointer flex justify-between items-center">
-                                     <span class="font-medium">Jane Chen (ID: 4892)</span>
-                                     <span class="text-sm text-sky-600" data-key="btn_view_file">View Full File →</span>
-                                 </li>
-                                  <li onclick="selectPatient('David Lee')" class="p-3 hover:bg-teal-50 cursor-pointer flex justify-between items-center">
-                                     <span class="font-medium">David Lee (ID: 9011)</span>
-                                     <span class="text-sm text-sky-600" data-key="btn_view_file">View Full File →</span>
-                                 </li>
-                             </ul>
-                         </div>
-                    </div>
-
-                    <!-- 3. New Patient Intake (Intake Pane) -->
-                    <div id="pane-intake" class="main-pane hidden">
-                        <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="intake_title">New Patient Intake Review</h2>
-                        <div class="section-card">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="intake_pending">3 Pending Case Assignments</h3>
-
-                            <!-- Intake Mockup -->
-                            <div class="space-y-4 divide-y divide-gray-200">
-                                <div class="pt-3 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-gray-900">Patient: A. Wong (ID: 1050)</p>
-                                        <p class="text-sm text-gray-500" data-key="intake_date">Submitted Assessment: 2025/12/12</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button onclick="acceptPatient('1050')" class="py-1 px-3 bg-green-500 text-white text-sm rounded-lg" data-key="btn_accept">Accept Patient</button>
-                                        <button onclick="rejectPatient('1050')" class="py-1 px-3 bg-red-500 text-white text-sm rounded-lg" data-key="btn_reject">Reject</button>
-                                    </div>
-                                </div>
-                                <div class="pt-3 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-gray-900">Patient: B. Liu (ID: 1051)</p>
-                                        <p class="text-sm text-gray-500" data-key="intake_date">Submitted Assessment: 2025/12/10</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button onclick="acceptPatient('1051')" class="py-1 px-3 bg-green-500 text-white text-sm rounded-lg" data-key="btn_accept">Accept Patient</button>
-                                        <button onclick="rejectPatient('1051')" class="py-1 px-3 bg-red-500 text-white text-sm rounded-lg" data-key="btn_reject">Reject</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. Payments & Accounting Pane (NEW) -->
-                    <div id="pane-payments" class="main-pane hidden">
-                        <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="payments_title">Payments & Accounting</h2>
-                        <div class="section-card mb-8">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="revenue_summary_title">Revenue Summary (YTD)</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="p-3 border rounded-lg bg-green-50">
-                                    <p class="text-sm text-gray-500" data-key="total_revenue">Total AMD Revenue</p>
-                                    <p class="revenue-metric mt-1">NT$ 1,540,000</p>
-                                </div>
-                                <div class="p-3 border rounded-lg bg-blue-50">
-                                    <p class="text-sm text-gray-500" data-key="appliance_revenue">Appliance Revenue</p>
-                                    <p class="revenue-metric mt-1">NT$ 980,000</p>
-                                </div>
-                                <div class="p-3 border rounded-lg bg-amber-50">
-                                    <p class="text-sm text-gray-500" data-key="consultation_revenue">Consultation/Visit Revenue</p>
-                                    <p class="revenue-metric mt-1">NT$ 560,000</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Patient Financial Breakdown -->
-                        <div class="section-card">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="financial_breakdown_title">Patient Financial Breakdown</h3>
-                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_financial_patient">Patient</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_visits">Clinical Visits</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_treatment_stage">Treatment Stage</th>
-                                        <th class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" data-key="col_revenue">Revenue to Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200 text-sm">
-                                    <tr class="hover:bg-green-50/50 cursor-pointer">
-                                        <td class="px-3 py-4 font-medium text-gray-900">Jane Chen (ID: 4892)</td>
-                                        <td class="px-3 py-4">6</td>
-                                        <td class="px-3 py-4"><span class="text-xs font-semibold bg-sky-100 text-sky-800 p-1 rounded">Active Treatment (M6)</span></td>
-                                        <td class="px-3 py-4 text-right revenue-metric">NT$ 75,000</td>
-                                    </tr>
-                                    <tr class="hover:bg-green-50/50 cursor-pointer">
-                                        <td class="px-3 py-4 font-medium text-gray-900">David Lee (ID: 9011)</td>
-                                        <td class="px-3 py-4">1</td>
-                                        <td class="px-3 py-4"><span class="text-xs font-semibold bg-yellow-100 text-yellow-800 p-1 rounded">Awaiting Scans</span></td>
-                                        <td class="px-3 py-4 text-right revenue-metric">NT$ 3,000</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- 5. Client Detail View (Full File: Hidden Pane, mirrored from client dashboard) -->
-                    <div id="pane-client-detail" class="main-pane hidden space-y-8">
-                        <button onclick="switchMainPane('patients')" class="text-teal-600 font-medium text-sm mb-4 flex items-center">
-                             &larr; <span data-key="btn_back_to_list">Back to Patient List</span>
-                        </button>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Anatomy Sync & Diagnostics -->
+                    <div class="lg:col-span-8 space-y-6">
                         
-                        <h2 id="client-detail-name" class="text-3xl font-bold text-gray-900 mb-6">Jane Chen's Full File</h2>
-                        
-                        <!-- Client Dashboard Tabs (Replicating Client Dashboard Structure) -->
-                        <div class="lg:grid lg:grid-cols-4 lg:gap-8">
-                             <!-- LEFT NAV BAR FOR CLIENT FILE -->
-                            <div class="lg:col-span-1 mb-8 lg:mb-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_client_title">Client File Navigation</h3>
-                                    <nav class="flex flex-col space-y-2">
-                                        <button class="nav-button active" onclick="switchClientDetailTab('client-plan')" data-key="client_tab_plan">My Plan & Support</button>
-                                        <button class="nav-button" onclick="switchClientDetailTab('client-diagnostics')" data-key="client_tab_diagnostics">Scans, Analysis & Reports</button>
-                                        <button class="nav-button" onclick="switchClientDetailTab('client-progress')" data-key="client_tab_progress">Progress Tracker</button>
-                                        <button class="nav-button" onclick="switchClientDetailTab('client-chat')" data-key="client_tab_chat">Secure Group Chat</button>
-                                    </nav>
-                                    <button onclick="requestConsultation()" class="mt-6 py-2 px-4 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-150 w-full" data-key="btn_consult_detail">
-                                        Request Specialist Consultation
-                                    </button>
+                        <!-- Header & Motivations -->
+                        <section class="glass-card p-8">
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 class="text-2xl font-800 tracking-tight"><span id="detail-patient-name">John Lee</span></h2>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">AMD-TW-001 • <span data-i18n="active_growth">Active Growth (M6)</span></p>
+                                </div>
+                                <button onclick="triggerSpecialistRequest()" class="px-6 py-3 bg-teal-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-teal-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="btn_refer">Refer to Doc Felix</span>
+                                </button>
+                            </div>
+
+                            <!-- Anatomy Sync (From Client Dashboard) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-6 border-y border-slate-100 mb-6">
+                                <div class="flex flex-col items-center">
+                                    <svg viewBox="0 0 200 200" class="w-40 h-40">
+                                        <path d="M100,20 Q120,60 110,100 T105,180" fill="none" stroke="#e2e8f0" stroke-width="20" stroke-linecap="round" />
+                                        <path d="M100,20 Q135,60 125,100 T120,180" fill="none" stroke="#0ea5e9" stroke-width="24" stroke-linecap="round" class="airway-glow pulse" />
+                                    </svg>
+                                    <p class="mt-4 text-[10px] font-black text-sky-600 uppercase tracking-widest" data-i18n="airway_viz">Airway Target</p>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <svg viewBox="0 0 200 200" class="w-40 h-40">
+                                        <path d="M40,150 Q40,50 100,50 Q160,50 160,150" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round" stroke-dasharray="4 4" />
+                                        <path d="M25,150 Q25,35 100,35 Q175,35 175,150" fill="none" stroke="#14b8a6" stroke-width="15" stroke-linecap="round" class="jaw-glow" />
+                                    </svg>
+                                    <p class="mt-4 text-[10px] font-black text-teal-600 uppercase tracking-widest" data-i18n="jaw_viz">Jaw Target</p>
                                 </div>
                             </div>
-                            
-                            <!-- RIGHT CONTENT FOR CLIENT FILE -->
-                            <div id="client-detail-content" class="lg:col-span-3 space-y-8">
-                                <!-- Default Client Plan Mock -->
-                                <div id="client-tab-client-plan" class="client-detail-tab">
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-xl text-sky-600" data-key="goals_pains_title">Goals & Pains</h3>
-                                        <p class="text-sm mt-2">Client wants to eliminate: Daytime Fatigue, Neck Tension, Dry Mouth.</p>
-                                    </div>
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-xl text-yellow-600" data-key="appliance_name">Appliance & Nutrition</h3>
-                                        <p class="text-sm mt-2">Appliance Setting: 2.0 Turns (M6). Nutrition: Bone Broth, Vitamin D3.</p>
-                                    </div>
+
+                            <!-- Goals Snapshot -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                                    <h4 class="text-[10px] font-black text-amber-700 uppercase mb-2">Primary Pain</h4>
+                                    <p class="text-sm font-bold">Chronic Daytime Fatigue</p>
                                 </div>
-                                
-                                <!-- Client Diagnostics Mock -->
-                                <div id="client-tab-client-diagnostics" class="client-detail-tab hidden">
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-xl text-indigo-600" data-key="sec_diagnostics_title_new">Scans & Analysis</h3>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                            <div class="metric-card"><p class="font-bold text-indigo-700" data-key="cbct_title">CB CT Scan (Airway)</p><p class="diagnostic-value">MCS: 285 mm² (Critical!)</p></div>
-                                            <div class="metric-card"><p class="font-bold text-indigo-700" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</p><p class="diagnostic-value bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800">Schwarz Analysis Ready</p></div>
+                                <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                                    <h4 class="text-[10px] font-black text-indigo-700 uppercase mb-2">Active Intervention</h4>
+                                    <p class="text-sm font-bold">STA (2.0 Turns / 0.50mm)</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Diagnostic Vault (Replicated from Client Dash) -->
+                        <section class="glass-card p-8">
+                            <h3 class="text-lg font-bold mb-6" data-i18n="vault_title">Diagnostic Inputs</h3>
+                            <div class="space-y-4">
+                                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center">
+                                    <div class="flex items-center gap-4">
+                                        <div class="h-10 w-10 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center"><i class="fa-solid fa-lungs"></i></div>
+                                        <div>
+                                            <p class="text-xs font-bold">CBCT Airway Scan</p>
+                                            <p class="text-[10px] text-slate-400 font-black">MCS: 285mm² • 2025/12/10</p>
                                         </div>
                                     </div>
+                                    <button class="text-[10px] font-black text-sky-600 uppercase hover:underline">View Scan</button>
                                 </div>
-
-                                <!-- Client Progress Mock -->
-                                <div id="client-tab-client-progress" class="client-detail-tab hidden">
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-xl text-sky-600" data-key="progress_title">Progress Photo Timeline</h3>
-                                        <p class="text-sm mt-2" data-key="comparison_view_title">Historical Comparison View</p>
-                                        
-                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                                            <div class="text-center">
-                                                <img src="https://placehold.co/120x150/4c7c8c/ffffff?text=Jaw\n(Front)" alt="Jaw Front" class="w-full rounded-lg mb-1 mx-auto">
-                                                <span class="text-xs text-gray-700 font-medium">Jaw (Front)</span>
-                                            </div>
-                                            <div class="text-center">
-                                                <img src="https://placehold.co/120x150/8c4c7c/ffffff?text=Posture\n(Side)" alt="Posture Side" class="w-full rounded-lg mb-1 mx-auto">
-                                                <span class="text-xs text-gray-700 font-medium">Posture (Side)</span>
-                                            </div>
-                                            <div class="text-center">
-                                                <img src="https://placehold.co/120x150/7c8c4c/ffffff?text=Jaw\n(Side)" alt="Jaw Side" class="w-full rounded-lg mb-1 mx-auto">
-                                                <span class="text-xs text-gray-700 font-medium">Jaw (Side)</span>
-                                            </div>
-                                            <div class="text-center">
-                                                <img src="https://placehold.co/120x150/4c8c7c/ffffff?text=Jaw\n(Bottom)" alt="Jaw Bottom" class="w-full rounded-lg mb-1 mx-auto">
-                                                <span class="text-xs text-gray-700 font-medium">Jaw (Bottom)</span>
-                                            </div>
+                                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center">
+                                    <div class="flex items-center gap-4">
+                                        <div class="h-10 w-10 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center"><i class="fa-solid fa-tooth"></i></div>
+                                        <div>
+                                            <p class="text-xs font-bold">Schwarz Analysis (Models)</p>
+                                            <p class="text-[10px] text-slate-400 font-black">5mm Crossbite Correction • Ready</p>
                                         </div>
                                     </div>
+                                    <button class="text-[10px] font-black text-teal-600 uppercase hover:underline">Review Analysis</button>
                                 </div>
-                                
-                                <!-- Client Chat Mock -->
-                                <div id="client-tab-client-chat" class="client-detail-tab hidden">
-                                    <div class="section-card"><h3 class="font-bold text-xl text-blue-600">Secure Client Chat History</h3><p class="text-sm mt-2">History of communication between Client, AMC, and Dentist.</p></div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Sidebar: Business & Chat -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <!-- Revenue Impact -->
+                        <div class="glass-card p-6 bg-slate-900 text-white">
+                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider mb-4">Practice Impact</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Projected LTV</p>
+                                    <p class="text-2xl font-black text-teal-400">NT$ 185,000</p>
                                 </div>
+                                <button class="w-full py-3 bg-teal-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-700">Schedule Adj Visit</button>
+                            </div>
+                        </div>
+
+                        <!-- Care Chat -->
+                        <div class="glass-card flex flex-col h-[500px] overflow-hidden">
+                            <div class="p-4 border-b border-slate-100">
+                                <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider">AMD Care Chat</h4>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar flex flex-col">
+                                <div class="chat-bubble chat-patient">
+                                    <p class="text-[8px] font-black text-sky-800 uppercase mb-1">John Lee (Patient)</p>
+                                    <p class="text-xs leading-tight">Feels tight near back molars today.</p>
+                                </div>
+                                <div class="chat-bubble chat-dentist">
+                                    <p class="text-[8px] font-black text-teal-800 uppercase mb-1">You</p>
+                                    <p class="text-xs leading-tight">That's your agency in action, John. Keep going.</p>
+                                </div>
+                            </div>
+                            <div class="p-4 border-t border-slate-100 flex gap-2">
+                                <input type="text" placeholder="Message patient..." class="flex-1 text-xs outline-none">
+                                <button class="h-8 w-8 bg-teal-600 text-white rounded-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane text-[10px]"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- TAB: NEW INTAKE -->
+            <div id="tab-intake" class="tab-content space-y-6">
+                <section class="glass-card p-8">
+                    <h2 class="text-2xl font-800 mb-6 tracking-tight">Pending Intake Reviews (3)</h2>
+                    <div class="space-y-4">
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center">
+                            <div>
+                                <p class="text-lg font-bold">Wei-Chun Tseng</p>
+                                <p class="text-xs font-semibold text-amber-600">Headaches & Fatigue • High Airway Risk</p>
+                            </div>
+                            <button class="px-6 py-2 bg-teal-600 text-white rounded-xl font-black text-[10px] uppercase">Claim & Review</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB: REVENUE & GROWTH -->
+            <div id="tab-accounting" class="tab-content space-y-6">
+                <section class="glass-card p-8">
+                    <h2 class="text-2xl font-800 mb-6 tracking-tight">Practice Mastery Dashboard</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-6 bg-teal-50 rounded-2xl border border-teal-100">
+                            <p class="text-[10px] font-black text-teal-600 uppercase mb-1">YTD Revenue</p>
+                            <p class="text-3xl font-black">NT$ 4.82M</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB: SPECIALIST BRIDGE -->
+            <div id="tab-chat" class="tab-content space-y-6">
+                <section class="glass-card p-8 h-[600px] flex flex-col">
+                    <h2 class="text-2xl font-800 mb-6 tracking-tight">Specialist Secure Bridge</h2>
+                    <div class="flex-1 overflow-y-auto space-y-4 flex flex-col no-scrollbar">
+                        <div class="chat-bubble chat-specialist">
+                            <p class="text-[9px] font-black text-amber-800 uppercase mb-1">Doc Felix (Specialist)</p>
+                            <p class="text-sm italic">"Ryan, look at the velopharynx restriction here..."</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
         </main>
     </div>
 
-    <!-- PDPA Confirmation Modal (Unchanged) -->
-    <div id="pdpa-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <!-- Modal Content -->
-        <div id="pdpa-modal-content" class="bg-white w-full max-w-lg p-8 rounded-xl shadow-2xl relative">
-            <h3 class="text-2xl font-bold text-red-600 mb-4 border-b pb-2" data-key="modal_title">Specialist Consultation Request</h3>
-            
-            <p class="text-lg text-gray-800 mb-6" data-key="modal_subtitle">You are about to share client data with an external consultant.</p>
+    <!-- DPA COMPLIANCE MODAL -->
+    <div id="modal-dpa" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-card max-w-lg w-full p-8 shadow-2xl">
+            <h3 class="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight" data-i18n="modal_title">Specialist Referral Check</h3>
+            <p class="text-sm text-slate-500 mb-6" data-i18n="modal_subtitle">You are about to share clinical files with Doc Felix (California, USA).</p>
 
-            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded-lg">
-                <p class="font-semibold text-yellow-800 mb-2" data-key="compliance_check">Compliance Check Required (PDPA/DPA):</p>
-                <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li data-key="pdpa_1"><strong class="text-red-600">(1) Written Consent:</strong> Confirm written consent is obtained from the patient.</li>
-                    <li data-key="pdpa_2"><strong class="text-red-600">(2) Data Processing Agreement (DPA):</strong> Confirm DPA is in place with the consultant.</li>
-                    <li data-key="pdpa_3"><strong class="text-red-600">(3) Pseudonymization:</strong> Ensure data shared is pseudonymized to prevent direct identification.</li>
-                </ul>
+            <div class="bg-amber-50 rounded-2xl p-6 border border-amber-100 space-y-4 mb-6">
+                <h4 class="text-[10px] font-black text-amber-700 uppercase tracking-widest" data-i18n="compliance_header">PDPA/DPA Compliance Checklist</h4>
+                <div class="flex items-start gap-3">
+                    <input type="checkbox" id="check-1" class="mt-1">
+                    <label for="check-1" class="text-xs text-slate-600 font-semibold" data-i18n="check_1">Patient has signed Written Consent for international data transfer.</label>
+                </div>
+                <div class="flex items-start gap-3">
+                    <input type="checkbox" id="check-2" class="mt-1">
+                    <label for="check-2" class="text-xs text-slate-600 font-semibold" data-i18n="check_2">Consultation is covered under existing Practice-to-Specialist DPA.</label>
+                </div>
+                <div class="flex items-start gap-3">
+                    <input type="checkbox" id="check-3" class="mt-1">
+                    <label for="check-3" class="text-xs text-slate-600 font-semibold" data-i18n="check_3">Files are pseudonymized (Patient ID: AMD-TW-001 used).</label>
+                </div>
             </div>
 
-            <p class="text-sm text-gray-600 mb-6" data-key="modal_confirmation">By proceeding, you confirm all three compliance points have been met for sharing <span id="consult-client-name" class="font-bold text-gray-900"></span>'s data.</p>
-
-            <div class="flex justify-end space-x-4">
-                <button onclick="closeModal('pdpa-modal')" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400" data-key="btn_cancel">Cancel</button>
-                <button onclick="confirmConsultation()" class="py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold" data-key="btn_confirm_share">Confirm & Share Data</button>
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-black text-xs uppercase" data-i18n="btn_cancel">Cancel</button>
+                <button onclick="confirmReferral()" class="flex-1 py-3 bg-teal-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-teal-100" data-i18n="btn_confirm">Confirm & Refer</button>
             </div>
         </div>
     </div>
-    
-    <!-- JavaScript for Functionality and Translations (FIXED) -->
+
     <script>
-        // --- Global State & Constants ---
-        let currentClient = null;
-        let currentPane = 'overview';
-        let currentClientTab = 'client-plan';
-        
-        let currentLang = 'en';
-
-        // Mock Patient Data (for dynamic population in client detail view)
-        const mockPatients = {
-            'Jane Chen': { id: '4892', nextAppt: 'Today, 2:00 PM', goals: 'Fatigue, Tension', implantStatus: 'M6' },
-            'David Lee': { id: '9011', nextAppt: 'Pending Scheduling', goals: 'Snoring, Dry Mouth', implantStatus: 'Awaiting Scans' }
+        const i18n = {
+            en: {
+                tagline: "Mastery Without Friction",
+                practice_stats: "Practice Metrics",
+                active_cases: "Active Cases",
+                revenue: "Growth",
+                nav_cases: "Case Management",
+                nav_intake: "New Intake",
+                nav_accounting: "Revenue & Growth",
+                nav_chat: "Specialist Bridge",
+                welcome: "Case Readiness Control",
+                readiness_title: "Master Case Tracker",
+                readiness_subtitle: "Complete all data points before Specialist Review.",
+                active_growth: "Active Growth (M6)",
+                back_to_list: "Back to Master Tracker",
+                btn_refer: "Refer to Doc Felix",
+                airway_viz: "Airway Target",
+                jaw_viz: "Jaw Target",
+                vault_title: "Diagnostic Inputs",
+                modal_title: "Specialist Referral Check",
+                modal_subtitle: "You are about to share clinical files with Doc Felix (California, USA).",
+                compliance_header: "PDPA/DPA Compliance Checklist",
+                check_1: "Patient has signed Written Consent for international data transfer.",
+                check_2: "Consultation is covered under existing Practice-to-Specialist DPA.",
+                check_3: "Files are pseudonymized (Patient ID: AMD-TW-001 used).",
+                btn_cancel: "Cancel",
+                btn_confirm: "Confirm & Refer"
+            },
+            zh: {
+                tagline: "無摩擦的專業掌控",
+                practice_stats: "診所數據",
+                active_cases: "活躍病例",
+                revenue: "營收增長",
+                nav_cases: "病例管理",
+                nav_intake: "新患者入組",
+                nav_accounting: "營收與增長",
+                nav_chat: "專家橋接",
+                welcome: "病例準備度控制",
+                readiness_title: "病例追蹤總表",
+                readiness_subtitle: "在專家審閱前完成所有數據點。",
+                active_growth: "積極生長中 (第6個月)",
+                back_to_list: "返回病例追蹤表",
+                btn_refer: "轉介給 Doc Felix",
+                airway_viz: "氣道目標",
+                jaw_viz: "下顎目標",
+                vault_title: "診斷輸入",
+                modal_title: "專家轉介合規檢查",
+                modal_subtitle: "您即將與 Doc Felix (美國加州) 分享臨床檔案。",
+                compliance_header: "PDPA/DPA 合規清單",
+                check_1: "患者已簽署國際數據傳輸書面同意書。",
+                check_2: "此會診已涵蓋在現有的醫師-專家 DPA 協議中。",
+                check_3: "檔案已進行去識別化處理 (使用患者 ID: AMD-TW-001)。",
+                btn_cancel: "取消",
+                btn_confirm: "確認並轉介"
+            }
         };
-        
-        const monthsCompleted = 6;
-        const totalPrescriptionMonths = 24;
-        const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
 
-        // --- Appliance Timeline Logic (Mock Data) ---
-        const applianceAdjustments = [
-            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
-            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
-            { month: 4, setKey: 'state_m4_set', expansion: '1.5 Turns / 0.45mm', date: '2026/01/01', noteKey: 'note_m4', clinicalDate: '2025/12/28', clinicalNoteKey: 'note_clinical_m4' },
-            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
+        const patients = [
+            { name: "John Lee", id: "001", data: [1, 1, 1, 1, 0, 0], status: "Incomplete" },
+            { name: "Mei-Ling Wu", id: "002", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
+            { name: "Kevin Chen", id: "003", data: [1, 1, 0, 1, 0, 0], status: "Incomplete" },
+            { name: "Alice Chang", id: "004", data: [1, 1, 1, 1, 1, 0], status: "Incomplete" },
+            { name: "David Hsu", id: "005", data: [0, 0, 1, 1, 0, 0], status: "Critical" },
+            { name: "Sarah Lin", id: "006", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
+            { name: "Robert Wang", id: "007", data: [1, 1, 1, 0, 0, 0], status: "Incomplete" },
+            { name: "Emily Yang", id: "008", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
+            { name: "Jason Liu", id: "009", data: [0, 0, 0, 0, 0, 0], status: "Intake" },
+            { name: "Kelly Ho", id: "010", data: [1, 0, 1, 1, 0, 0], status: "Incomplete" },
+            { name: "Peter Tseng", id: "011", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
+            { name: "Linda Su", id: "012", data: [1, 1, 1, 1, 0, 0], status: "Incomplete" }
         ];
 
-        // --- Mock Data for Diagnostic History ---
-        const diagnosticHistory = {
-            cbct: [
-                { id: '0', dateKey: 'scan_date_0', mcs: 'MCS: 285 mm²', statusKey: 'mcs_status_critical', noteKey: 'cbct_note', noteDate: '10/12/2025' },
-                { id: '1', dateKey: 'scan_date_1', mcs: 'MCS: 305 mm²', statusKey: 'mcs_status_improved', note: 'Airway cross-section slightly improved post 3 months therapy.', noteDate: '2026/03/10' }
-            ],
-            intraoral: [
-                { id: '0', dateKey: 'analysis_date_0', statusKey: 'schwarz_status_baseline', noteKey: 'schwarz_note', noteDate: '2025/12/10' },
-                { id: '1', dateKey: 'analysis_date_1', statusKey: 'schwarz_status_inprogress', note: 'Mid-Treatment Check: 3mm correction achieved. Continuing expansion protocol.', noteDate: '2026/06/10' }
-            ],
-            ceph: [
-                { id: '0', dateKey: 'analysis_date_0', statusKey: 'sassouni_status_baseline', noteKey: 'sassouni_note', noteDate: '2025/12/10' },
-                { id: '1', dateKey: 'analysis_date_1', statusKey: 'sassouni_status_followup', note: 'Follow-up Report: FMA stable at 23°. Growth pattern favorable.', noteDate: '2026/06/10' }
-            ]
-        };
+        let currentLang = 'en';
 
-        // --- Translation Data Structure (Defined here for clarity) ---
-        const translations = {
-            'en': {
-                'header_title': 'AMD Practitioner Dashboard',
-                'logout_link': '← Log Out / Portal',
-                'nav_practitioner_title': 'Practice Navigation',
-                'nav_overview': 'Practice Overview',
-                'nav_patients': 'Patient Management',
-                'nav_intake': 'New Patient Intake (3)',
-                'nav_payments': 'Payments & Accounting',
-                'overview_summary_title': 'Practice Summary & Metrics',
-                'stat_active': 'Active Patients',
-                'stat_new': 'New Intake (30 days)',
-                'stat_total_seen': 'Total Patients Seen (Historical)',
-                'col_patient': 'Patient',
-                'col_next_app': 'Next Appt.',
-                'col_status': 'Treatment Status',
-                'col_specialist': 'Specialist Review',
-                'status_load_title': 'Current Patient Load & Next Steps',
-                'patient_management_title': 'Patient Management',
-                'btn_search': 'Search Clients',
-                'btn_view_file': 'View Full File →',
-                'btn_back_to_list': 'Back to Patient List',
-                'client_tab_plan': 'My Plan & Support',
-                'client_tab_diagnostics': 'Scans, Analysis & Reports',
-                'client_tab_progress': 'Progress Tracker',
-                'client_tab_chat': 'Secure Group Chat',
-                'btn_consult_detail': 'Request Specialist Consultation',
-                'intake_title': 'New Patient Intake Review',
-                'intake_pending': 'Pending Case Assignments',
-                'intake_date': 'Submitted Assessment:',
-                'btn_accept': 'Accept Patient',
-                'btn_reject': 'Reject',
-                'chat_title': 'Clinic Group Chat',
-                'chat_subtitle': 'Secure communication with AMC, Specialists, and internal staff.',
-                'msg_practitioner': 'You (Dr. Smith)',
-                'msg_p_text': 'Please verify if the INV file for Jane Chen (4892) was successfully shared with Dr. Felix.',
-                'msg_amc': 'Jane Chen (AMC)',
-                'msg_a_text': 'Confirmed. DPA compliance checked and file uploaded securely at 10:15 AM.',
-                'btn_send': 'Send',
-                'expert_feedback_title': 'Expert Consultation Feedback',
-                'expert_feedback_date': 'Last Updated:',
-                'expert_feedback_summary': 'Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9.',
-                'goals_pains_title': 'Client Goals & Pains',
-                'symptoms_title': 'Symptoms to Eliminate:',
-                'conditions_title': 'Existing Pains/Conditions:',
-                'interventions_title': 'Treatment Interventions',
-                'appliance_name': 'Start Thriving Appliance (TM)',
-                'nutrition_focus': 'Prescribed Nutrition Focus:',
-                'amc_support_title': 'AMC & Support',
-                'amc_coordinator_title': 'Assigned Coordinator: Jane Chen (AMC)',
-                'amc_session': 'Current Coaching Session:',
-                'diagnostics_title': 'AMD Diagnostic Inputs',
-                'cbct_title': 'CB CT Scan (Airway)',
-                'mcs_value_status': 'MCS: 285 mm² (Critical!)',
-                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
-                'ceph_title': 'Ceph Flow Metric Analysis',
-                'reject_reason_prompt': 'Please enter the reason for rejection:',
-                'patient_name_label': 'Patient:',
-                'patient_id_label': 'Patient ID:',
-                'dentist_label': 'Dentist:',
-                'amc_label': 'AMC:',
-                'key_contacts_title': 'Key Contacts & Appointments',
-                'next_appointment_label': 'Next Appointment:',
-                'btn_create_appointment': 'Create New Appointment',
-                'toggle_text': '中文',
-                'journey_title': 'My Journey',
-                'sec_goals_title_impact': 'Goals & Motivation',
-                'goals_motivation_intro': 'Focus on these goals—they are the powerful symptoms we are working together to eliminate through holistic treatment.',
-                'goals_list_title': 'My 3 Symptoms to Eliminate:',
-                'goal1': 'Chronic Daytime Fatigue',
-                'goal2': 'Frequent Neck/Shoulder Tension',
-                'goal3': 'Waking up with dry mouth',
-                'btn_update_goals': 'Update Pains & Goals',
-                
-                'payments_title': 'Payments & Accounting', 
-                'revenue_summary_title': 'Revenue Summary (YTD)', 
-                'total_revenue': 'Total AMD Revenue', 
-                'appliance_revenue': 'Appliance Revenue', 
-                'consultation_revenue': 'Consultation/Visit Revenue', 
-                'financial_breakdown_title': 'Patient Financial Breakdown', 
-                'col_financial_patient': 'Patient', 
-                'col_visits': 'Clinical Visits', 
-                'col_treatment_stage': 'Treatment Stage', 
-                'col_revenue': 'Revenue to Date', 
-                'metric_jaw_size': 'Jaw Width Increase (Intermolar):', 
-                'metric_start_target': 'Start: 40.0mm | Target: 45.0mm', 
-                'metric_airway': 'Airway Patency (MCS):', 
-                'metric_start_target_airway': 'Start: 285 mm² | Target: >320 mm²', 
-                'metric_sleep_score': 'Sleep Symptom Score (MSQ):', 
-                'score_change_text': '(↓ -7)', 
-                'metric_start_target_sleep': 'Start: 25 | Target: < 5', 
-                'cbct_history_label': 'View Historical Scan Data:', 
-                'analysis_history_label': 'View Historical Analysis:',
-                'scan_date_0': '2025/12/10 (Initial)',
-                'scan_date_1': '2026/03/10 (Month 3 Follow-up)',
-                'analysis_date_0': '2025/12/10 (Baseline)',
-                'analysis_date_1': '2026/06/10 (Mid-Treatment)',
-                'schwarz_status': 'Schwarz Analysis Ready',
-                'sassouni_status': 'Sassouni Plus Report',
-                'btn_view_full_scan': 'View Full Scan / IMS Report',
-                'btn_view_analysis_report': 'View Analysis & Report',
-                'btn_view_report_angles': 'View Report & Angles'
-
-
-            },
-            'zh': {
-                'header_title': 'AMD 執業醫師儀表板',
-                'logout_link': '← 登出 / 入口網站',
-                'nav_practitioner_title': '診所導航',
-                'nav_overview': '實務概覽',
-                'nav_patients': '患者管理',
-                'nav_intake': '新患者入組 (3)',
-                'nav_payments': '支付與會計', 
-                'overview_summary_title': '實務摘要與指標',
-                'stat_active': '活躍患者',
-                'stat_new': '新患者入組 (30 天)',
-                'stat_total_seen': '歷史總患者數',
-                'col_patient': '患者',
-                'col_next_app': '下次預約',
-                'col_status': '治療狀態',
-                'col_specialist': '專家審閱',
-                'status_load_title': '當前患者負載與下一步',
-                'patient_management_title': '患者管理',
-                'btn_search': '搜尋客戶',
-                'btn_view_file': '查看完整檔案 →',
-                'btn_back_to_list': '返回患者列表',
-                'client_tab_plan': '我的計劃與支持',
-                'client_tab_diagnostics': '掃描、分析與報告',
-                'client_tab_progress': '進度追踪器',
-                'client_tab_chat': '安全群組聊天',
-                'btn_consult_detail': '請求專家會診',
-                'intake_title': '新患者入組審閱',
-                'intake_pending': '待處理病例分配',
-                'intake_date': '評估提交日期:',
-                'btn_accept': '接受患者',
-                'btn_reject': '拒絕',
-                'chat_title': '診所群組聊天',
-                'chat_subtitle': '與 AMC、專家和內部人員的安全溝通。',
-                'msg_practitioner': '您 (Smith 醫生)',
-                'msg_p_text': '請驗證 Jane Chen (4892) 的 INV 文件是否已成功分享給 Dr. Felix。',
-                'msg_amc': 'Jane Chen (AMC)',
-                'msg_a_text': '已確認。DPA 合規性已檢查，文件已於上午 10:15 安全上傳。',
-                'btn_send': '發送',
-                'expert_feedback_title': '專家會診反饋',
-                'expert_feedback_date': '上次更新:',
-                'expert_feedback_summary': '建議: 維持當前擴展率 3 個月，在第 9 個月重新評估 CBCT。',
-                'goals_pains_title': '客戶目標與疼痛',
-                'symptoms_title': '欲消除症狀:',
-                'conditions_title': '現有疼痛/狀況:',
-                'interventions_title': '治療干預措施',
-                'appliance_name': '開始興盛矯治器 (TM)',
-                'nutrition_focus': '處方營養重點:',
-                'amc_support_title': 'AMC 與支持',
-                'amc_coordinator_title': '指定協調員: Jane Chen (AMC)',
-                'amc_session': '當前指導課程:',
-                'diagnostics_title': 'AMD 診斷輸入',
-                'cbct_title': '錐束CT掃描 (氣道)',
-                'mcs_value_status': 'MCS: 285 毫米²',
-                'intraoral_title': '3D 口內掃描 (牙齒)',
-                'ceph_title': '頭影流動測量分析',
-                'reject_reason_prompt': '請輸入拒絕原因:',
-                'patient_name_label': '患者姓名:',
-                'patient_id_label': '患者 ID:',
-                'dentist_label': '牙醫:',
-                'amc_label': 'AMC:',
-                'key_contacts_title': '關鍵聯絡人與預約',
-                'next_appointment_label': '下次預約:',
-                'btn_create_appointment': '創建新預約',
-                'toggle_text': 'English',
-                'journey_title': '我的旅程',
-                'sec_goals_title_impact': '我的旅程：目標與動力',
-                'goals_motivation_intro': '專注於這些目標—它們是我們正在通過整體治療共同努力消除的強大症狀。',
-                'goals_list_title': '我的 3 個欲消除症狀:',
-                'goal1': '慢性白天疲勞',
-                'goal2': '頻繁頸部/肩部緊張',
-                'goal3': '醒來時口乾',
-                'btn_update_goals': '更新疼痛與目標',
-                
-                'payments_title': '支付與會計', // NEW
-                'revenue_summary_title': '營收摘要 (YTD)', // NEW
-                'total_revenue': '總 AMD 營收', // NEW
-                'appliance_revenue': '矯治器營收', // NEW
-                'consultation_revenue': '諮詢/門診營收', // NEW
-                'financial_breakdown_title': '患者財務明細', // NEW
-                'col_financial_patient': '患者', // NEW
-                'col_visits': '門診次數', // NEW
-                'col_treatment_stage': '治療階段', // NEW
-                'col_revenue': '累計營收', // NEW
-                'metric_jaw_size': '下巴寬度增加 (磨牙間):', // FROM CLIENT
-                'metric_start_target': '開始: 40.0mm | 目標: 45.0mm', // FROM CLIENT
-                'metric_airway': '氣道暢通度 (MCS):', // FROM CLIENT
-                'metric_start_target_airway': '開始: 285 mm² | 目標: >320 mm²', // FROM CLIENT
-                'metric_sleep_score': '睡眠症狀分數 (MSQ):', // FROM CLIENT
-                'score_change_text': '(↓ -7)', // FROM CLIENT
-                'metric_start_target_sleep': '開始: 25 | 目標: < 5', // FROM CLIENT
-                'cbct_history_label': '查看歷史掃描數據:', 
-                'analysis_history_label': '查看歷史分析:',
-                'scan_date_0': '2025/12/10 (初始)',
-                'scan_date_1': '2026/03/10 (第 3 個月追蹤)',
-                'analysis_date_0': '2025/12/10 (基線)',
-                'analysis_date_1': '2026/06/10 (中期治療)',
-                'schwarz_status': 'Schwarz 分析準備就緒',
-                'sassouni_status': 'Sassouni Plus 報告',
-                'btn_view_full_scan': '查看完整掃描 / IMS 報告',
-                'btn_view_analysis_report': '查看分析與報告',
-                'btn_view_report_angles': '查看報告與角度'
-            }
-        };
-        
-        // --- Core Functions (FIXED: Defined globally using function keyword) ---
-
-        function setupDiagnosticHistorySelectors() {
-            const langData = translations[currentLang];
-
-            const cbctSelect = document.getElementById('cbct-history-select');
-            if (cbctSelect) {
-                cbctSelect.innerHTML = diagnosticHistory.cbct.map(item => 
-                    `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-                ).join('');
-                updateDiagnosticContent('cbct', '0');
-            }
-            
-            const intraoralSelect = document.getElementById('intraoral-history-select');
-            if (intraoralSelect) {
-                intraoralSelect.innerHTML = diagnosticHistory.intraoral.map(item => 
-                    `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-                ).join('');
-                updateDiagnosticContent('intraoral', '0');
-            }
-
-            const cephSelect = document.getElementById('ceph-history-select');
-            if (cephSelect) {
-                cephSelect.innerHTML = diagnosticHistory.ceph.map(item => 
-                    `<option value="${item.id}" ${item.id === '0' ? 'selected' : ''}>${langData[item.dateKey] || item.dateKey}</option>`
-                ).join('');
-                updateDiagnosticContent('ceph', '0');
-            }
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) el.textContent = i18n[lang][key];
+            });
+            renderPatients();
+            document.getElementById('lang-en').className = `px-3 py-1 text-[10px] font-black rounded-lg transition-all ${lang === 'en' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-500'}`;
+            document.getElementById('lang-zh').className = `px-3 py-1 text-[10px] font-black rounded-lg transition-all ${lang === 'zh' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-500'}`;
         }
 
-
-        function updateDiagnosticContent(type, id) {
-            const data = diagnosticHistory[type].find(item => item.id === id);
-            if (!data) return;
-            const langData = translations[currentLang];
-
-            if (type === 'cbct') {
-                const display = document.getElementById('cbct-display');
-                if (!display) return;
-                const mcsStatusEl = display.querySelector('#mcs-status-display');
-                const noteEl = display.querySelector('#cbct-note-display');
-                
-                mcsStatusEl.textContent = data.mcs + ' ' + (langData[data.statusKey] || data.statusKey);
-                
-                if (data.statusKey === 'mcs_status_critical') {
-                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 alert-red';
-                } else {
-                    mcsStatusEl.className = 'font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500';
-                }
-
-                noteEl.textContent = langData[data.noteKey] || data.note;
-
-            } else if (type === 'intraoral') {
-                const display = document.getElementById('intraoral-display');
-                 if (!display) return;
-                const statusEl = display.querySelector('[data-key^="schwarz_status"]');
-                const noteEl = display.querySelector('#schwarz-note-display');
-
-                statusEl.textContent = langData[data.statusKey] || data.statusKey;
-                noteEl.textContent = langData[data.noteKey] || data.note;
-
-            } else if (type === 'ceph') {
-                const display = document.getElementById('ceph-display');
-                 if (!display) return;
-                const statusEl = display.querySelector('[data-key^="sassouni_status"]');
-                const noteEl = display.querySelector('#sassouni-note-display');
-
-                statusEl.textContent = langData[data.statusKey] || data.statusKey;
-                noteEl.textContent = langData[data.noteKey] || data.note;
-            }
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            const activeTab = document.getElementById('tab-' + tabId);
+            if (activeTab) activeTab.classList.add('active');
         }
 
-        function updateApplianceDetails(monthValue) {
-            const month = parseInt(monthValue);
-            const langData = translations[currentLang];
-            const adjSetting = document.getElementById('adj-setting-value');
-            const adjDate = document.getElementById('adj-date-value');
-            const adjNoteContentEl = document.getElementById('adj-note-label'); 
-            const dentistNoteTitleEl = document.getElementById('dentist-note-title'); 
-            const dentistNoteContentEl = document.getElementById('dentist-note-content'); 
-            const displayMonth = document.getElementById('display-month');
-            
-            if (month > monthsCompleted) {
-                document.getElementById('appliance-timeline-slider').value = monthsCompleted;
-                return;
-            }
-            
-            const timelineTitle = langData.adjustment_timeline_title.replace('[M]', month);
-            if (document.querySelector('[data-key="adjustment_timeline_title"]')) {
-                document.querySelector('[data-key="adjustment_timeline_title"]').textContent = timelineTitle;
-            }
-            if (displayMonth) {
-                displayMonth.textContent = month;
-            }
+        function openPatient(name) {
+            document.getElementById('detail-patient-name').textContent = name;
+            switchTab('patient-detail');
+        }
 
-            let state = applianceAdjustments
-                .filter(adj => adj.month <= month)
-                .sort((a, b) => b.month - a.month)[0];
+        function renderPatients() {
+            const container = document.getElementById('patient-rows');
+            container.innerHTML = patients.map(p => `
+                <tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="openPatient('${p.name}')">
+                    <td class="px-3 py-4">
+                        <p class="text-xs font-bold text-slate-800">${p.name}</p>
+                        <p class="text-[9px] text-slate-400 font-black">AMD-TW-${p.id}</p>
+                    </td>
+                    ${p.data.map(val => `
+                        <td class="text-center px-3 py-4">
+                            <i class="fa-solid ${val ? 'fa-circle-check text-blue-500' : 'fa-circle text-slate-200'}"></i>
+                        </td>
+                    `).join('')}
+                    <td class="text-right px-3 py-4 pr-6">
+                        <span class="text-[9px] font-black px-2 py-1 rounded-md uppercase ${
+                            p.status === 'Ready' ? 'bg-blue-100 text-blue-700' : 
+                            p.status === 'Critical' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'
+                        }">${p.status}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-            if (state && adjSetting) {
-                adjSetting.textContent = state.expansion;
-                adjDate.textContent = state.date;
-                adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData[state.noteKey];
-                
-                dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', state.clinicalDate);
-                dentistNoteContentEl.textContent = langData[state.clinicalNoteKey] || langData.dentist_note_content;
+        function triggerSpecialistRequest() {
+            document.getElementById('modal-dpa').classList.remove('hidden');
+        }
 
+        function closeModal() {
+            document.getElementById('modal-dpa').classList.add('hidden');
+        }
+
+        function confirmReferral() {
+            const c1 = document.getElementById('check-1').checked;
+            const c2 = document.getElementById('check-2').checked;
+            const c3 = document.getElementById('check-3').checked;
+
+            if (c1 && c2 && c3) {
+                alert("Request Sent to Doc Felix. Case AMD-TW-001 is now under Specialist Review.");
+                closeModal();
             } else {
-                if (adjSetting) {
-                    adjSetting.textContent = langData.state_m0_set;
-                    adjDate.textContent = 'N/A';
-                    adjNoteContentEl.textContent = langData.adj_note_label + ': ' + langData.note_m0;
-                    
-                    dentistNoteTitleEl.textContent = langData.dentist_note_title.replace('[D]', `2025/09/20`);
-                    dentistNoteContentEl.textContent = langData.note_clinical_m0;
-                }
+                alert("Please confirm all compliance points before sharing clinical data.");
             }
         }
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
-        }
 
-        function switchMainPane(paneId) {
-            currentPane = paneId;
-            
-            document.querySelectorAll('.main-pane').forEach(pane => {
-                pane.classList.add('hidden');
-            });
-            document.getElementById(`pane-${paneId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-button').forEach(button => {
-                button.classList.remove('active');
-            });
-            document.querySelector(`[onclick="switchMainPane('${paneId}')"]`).classList.add('active');
-
-            if (paneId === 'overview') {
-                 currentClient = null;
-            }
-        }
-        
-        function switchClientDetailTab(tabId) {
-            currentClientTab = tabId;
-            
-            document.querySelectorAll('.client-detail-tab').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            document.getElementById(`client-tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('#pane-client-detail .nav-button').forEach(button => {
-                 button.classList.remove('active');
-            });
-            // The issue is likely in the selector used here, it should only select within the client file navigation
-            document.querySelector(`#pane-client-detail [onclick="switchClientDetailTab('${tabId}')"]`).classList.add('active');
-        }
-
-
-        function selectPatient(name) {
-            currentClient = mockPatients[name];
-            currentClient.name = name;
-            
-            document.getElementById('client-detail-name').textContent = `${name}'s Full File (ID: ${currentClient.id})`;
-            
-            // Switch to the Client Detail Pane
-            switchMainPane('client-detail');
-            switchClientDetailTab('client-plan');
-        }
-        
-        function mockSearchPatients() {
-             alert(translations[currentLang].btn_search + '...');
-        }
-        
-        function acceptPatient(id) {
-            alert(translations[currentLang].btn_accept + ` patient ID ${id}. Sending welcome packet.`);
-        }
-
-        function rejectPatient(id) {
-            const reason = prompt(translations[currentLang].reject_reason_prompt || "Reason for rejection:");
-            if (reason) {
-                alert(`Rejecting patient ID ${id}. Reason: ${reason}`);
-            }
-        }
-        
-        function requestConsultation() {
-            if (!currentClient) {
-                alert("Please select a patient first.");
-                return;
-            }
-            
-            document.getElementById('consult-client-name').textContent = currentClient.name;
-            openModal('pdpa-modal');
-        }
-
-        function confirmConsultation() {
-            closeModal('pdpa-modal');
-            const message = currentLang === 'en' ? 
-                `Client ${currentClient.name}'s data has been pseudonymized and shared with the professional consultant. Compliance confirmed.` :
-                `Client ${currentClient.name}'s data has been pseudonymized and shared with the professional consultant. Compliance confirmed.`;
-            alert(message);
-        }
-
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const modalContent = document.getElementById(modalId + '-content');
-
-            if (!modal || !modalContent) return;
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('modal-fade-enter');
-                modalContent.classList.add('modal-fade-enter-active');
-            }, 10); 
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const modalContent = document.getElementById(modalId + '-content');
-            
-            if (!modal || !modalContent) return;
-
-            modalContent.classList.remove('modal-fade-enter-active');
-            modalContent.classList.add('modal-fade-enter');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        function updateComparisonView() {
-            // Placeholder for compatibility
-        }
-
-        function renderPipeline() {
-             // Placeholder for compatibility
-        }
-
-        function updateText() {
-            const langData = translations[currentLang];
-            
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                if (langData[key]) {
-                    element.textContent = langData[key];
-                }
-            });
-
-            const remainingMonths = totalPrescriptionMonths - monthsCompleted;
-            const remainingText = langData.app_remaining_time.replace('[N]', remainingMonths);
-
-            // Update main status metrics
-            const applianceProgressBar = document.getElementById('appliance-progress-bar-detail');
-            if (applianceProgressBar) {
-                 applianceProgressBar.style.width = `${percentageCompleted}%`;
-                 document.getElementById('appliance-percentage').textContent = `${percentageCompleted}%`;
-                 document.getElementById('appliance-remaining-months').textContent = remainingMonths;
-                 document.getElementById('app_duration_text').textContent = langData.app_duration_text;
-                 document.getElementById('app_remaining_time').textContent = remainingText;
-            }
-            
-            // Re-initialize dynamic components
-            // Note: setupDiagnosticHistorySelectors is currently commented out/not fully implemented, skipping call to prevent errors.
-            // setupDiagnosticHistorySelectors(); 
-            
-            if (document.getElementById('appliance-timeline-slider')) {
-                const initialMonth = document.getElementById('appliance-timeline-slider').value;
-                updateApplianceDetails(initialMonth); 
-            }
-
-            document.getElementById('lang-toggle').textContent = langData.toggle_text;
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = langData.header_title;
-        }
-        
-        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            updateText();
+            renderPatients();
+            setLanguage('en');
         });
     </script>
 </body>
