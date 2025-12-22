@@ -44,7 +44,6 @@
         .tab-button:not(.active):hover {
             background-color: #f3f4f6;
         }
-        /* Tracker Styles */
         .tracker-header {
             font-size: 0.6rem;
             font-weight: 800;
@@ -55,13 +54,12 @@
             vertical-align: middle;
             line-height: 1.2;
         }
-        /* Custom styling for the range input track/thumb */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 16px;
             width: 16px;
             border-radius: 50%;
-            background: #4b5563; /* Gray 600 */
+            background: #4b5563; 
             cursor: pointer;
             margin-top: -7px; 
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
@@ -72,15 +70,17 @@
             color: #b91c1c;
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        /* Custom modal animation */
-        .modal-fade-enter {
-            opacity: 0;
-            transform: scale(0.95);
+        .modal-fade-enter { opacity: 0; transform: scale(0.95); }
+        .modal-fade-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms ease-out, transform 200ms ease-out; }
+        
+        /* Voice Recorder Animation */
+        .recording-pulse {
+            animation: pulse-red 1.5s infinite;
         }
-        .modal-fade-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
     </style>
 </head>
@@ -90,7 +90,7 @@
         <!-- Header -->
         <header class="bg-gray-gradient shadow-md">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">Professional Consultant Dashboard</h1>
+                <h1 id="header-title" class="text-3xl font-bold text-white">Professional Consultant Dashboard</h1>
                 <div class="flex items-center space-x-4">
                     <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-gray-700 border border-gray-500 hover:bg-gray-100 transition duration-150 font-semibold text-sm shadow">
                         中文
@@ -114,7 +114,7 @@
                 </p>
             </div>
 
-            <!-- Master Case Tracker Section -->
+            <!-- Referred Case Tracker -->
             <div class="section-card mb-8">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-gray-700" data-key="search_title">Referred Case Tracker</h2>
                 
@@ -131,12 +131,12 @@
                             <tr>
                                 <th class="tracker-header" data-key="col_id">Client ID</th>
                                 <th class="tracker-header" data-key="col_doc_clinic">Referring Doctor / Clinic</th>
-                                <th class="tracker-header text-center" data-key="col_ceph">Lateral Ceph for S+ Tracing</th>
-                                <th class="tracker-header text-center" data-key="col_schwarz">Models for Schwartz Analysis</th>
+                                <th class="tracker-header text-center" data-key="col_ceph">Lateral Ceph S+</th>
+                                <th class="tracker-header text-center" data-key="col_schwarz">Models (Schwartz)</th>
                                 <th class="tracker-header text-center" data-key="col_photos">Dental+Facial Photos</th>
                                 <th class="tracker-header text-center" data-key="col_cbct">CBCT Imaging</th>
-                                <th class="tracker-header text-center" data-key="col_rx">RX to STA Lab</th>
-                                <th class="tracker-header text-center" data-key="col_sta">STA Delivery Date</th>
+                                <th class="tracker-header text-center" data-key="col_rx">RX to Lab</th>
+                                <th class="tracker-header text-center" data-key="col_sta">STA Date</th>
                                 <th class="tracker-header text-right pr-4" data-key="col_status">Action</th>
                             </tr>
                         </thead>
@@ -150,21 +150,26 @@
             <!-- Case Details View -->
             <div id="case-details-view" class="hidden">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4 section-card gap-4">
-                    <h2 id="case-details-title" class="text-3xl font-black text-gray-900">
+                    <h2 class="text-3xl font-black text-gray-900">
                         <span data-key="case_details_title">Case Review: Client ID</span> 
                         <span id="client-id-display" class="text-gray-500 ml-2"></span>
                     </h2>
-                    <button class="py-3 px-6 bg-yellow-600 text-white font-black text-xs rounded-xl shadow-lg uppercase tracking-widest hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
-                        Submit Professional Opinion
-                    </button>
+                    <div class="flex gap-3">
+                        <button class="py-3 px-6 bg-yellow-600 text-white font-black text-xs rounded-xl shadow-lg uppercase tracking-widest hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
+                            Submit Professional Opinion
+                        </button>
+                    </div>
                 </div>
 
                 <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+                    <!-- Case File Navigation -->
                     <div class="lg:col-span-1 mb-8 lg:mb-0">
                         <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                             <h3 class="text-xs font-black text-gray-400 uppercase mb-4 border-b pb-2" data-key="nav_case_title">Case File Navigation</h3>
                             <nav class="flex flex-col space-y-2">
                                 <button id="btn-tab-diag" class="tab-button active" onclick="switchCaseTab('case-diagnostics')">Diagnostic Inputs</button>
+                                <button id="btn-tab-report" class="tab-button" onclick="switchCaseTab('case-report')">Initial Consultation Report</button>
+                                <button id="btn-tab-lab" class="tab-button" onclick="switchCaseTab('case-lab')">STA Lab Instructions</button>
                                 <button id="btn-tab-prog" class="tab-button" onclick="switchCaseTab('case-progress')">Progress Tracker</button>
                                 <button id="btn-tab-hist" class="tab-button" onclick="switchCaseTab('case-history')">Consultation History</button>
                             </nav>
@@ -172,6 +177,7 @@
                     </div>
 
                     <div class="lg:col-span-3 space-y-8">
+                        <!-- 1. Diagnostic Inputs Tab -->
                         <div id="tab-case-diagnostics" class="case-tab-content space-y-8">
                             <div class="section-card">
                                 <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="diagnostics_title">Shared Diagnostic Inputs</h2>
@@ -184,17 +190,114 @@
                                     <div class="border p-4 rounded-xl bg-gray-50">
                                         <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
                                         <p class="text-sm font-bold text-green-600 mb-2" data-key="analysis_ready">Analysis ready</p>
-                                        <p class="text-[10px] text-gray-500 italic">Models confirm analysis and crossbite correction requirements.</p>
                                     </div>
                                     <div class="border p-4 rounded-xl bg-gray-50">
                                         <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="ceph_title">Lateral Cephalometric Analysis</h3>
                                         <p class="text-sm font-bold text-green-600 mb-2" data-key="analysis_ready">Analysis ready</p>
-                                        <p class="text-[10px] text-gray-500 italic">S+ Tracing confirmed. FMA: 23°.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- 2. Initial Consultation Report Tab -->
+                        <div id="tab-case-report" class="case-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="report_title">Initial Consultation Assessment</h2>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                    <!-- Voice Note Recorder -->
+                                    <div class="p-6 bg-slate-50 border rounded-2xl flex flex-col items-center justify-center text-center">
+                                        <div id="recorder-ui" class="mb-4">
+                                            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-2" id="record-btn-icon">
+                                                <i class="fa-solid fa-microphone text-2xl"></i>
+                                            </div>
+                                            <p id="record-status" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ready to Record</p>
+                                        </div>
+                                        <button onclick="toggleRecording('report')" id="record-btn-report" class="px-6 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold uppercase shadow-lg">Start Assessment Recording</button>
+                                        <p class="mt-4 text-[10px] text-slate-400 max-w-[200px]">Recording will be transcribed and attached to the generated report for the practitioner.</p>
+                                    </div>
+
+                                    <!-- Report Generation -->
+                                    <div class="flex flex-col gap-4">
+                                        <button onclick="generateReport()" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-indigo-700 transition">
+                                            <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generate Diagnostic Report
+                                        </button>
+                                        <div id="transcription-box" class="flex-1 p-4 bg-yellow-50 border border-yellow-100 rounded-2xl hidden">
+                                            <h4 class="text-[10px] font-black text-yellow-700 uppercase mb-2">Live Transcription Draft</h4>
+                                            <p id="transcription-text" class="text-xs text-slate-700 leading-relaxed italic">The CBCT scan shows a critical restriction in the velopharynx at 285mm². Recommend immediate STA intervention with focus on posterior arch development...</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="report-preview" class="p-6 bg-white border border-slate-200 rounded-2xl hidden">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <h3 class="text-lg font-black uppercase tracking-tight">Report: Airway Assessment Alpha</h3>
+                                        <button class="text-xs font-bold text-sky-600 uppercase underline">Download PDF</button>
+                                    </div>
+                                    <div class="space-y-4 text-xs text-slate-600">
+                                        <p><strong>Clinical Summary:</strong> Significant airway restriction identified.</p>
+                                        <p><strong>Diagnosis:</strong> Maxillary transverse deficiency contributing to reduced airflow volume.</p>
+                                        <p><strong>Next Steps:</strong> Practitioner to verify model alignment before STA design finalization.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. STA Lab Instructions Tab -->
+                        <div id="tab-case-lab" class="case-tab-content space-y-8 hidden">
+                            <div class="section-card border-t-8 border-amber-500">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-key="lab_title">STA Lab Fabrication Instructions</h2>
+                                
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <!-- Expert Diagnosis & Notes -->
+                                    <div class="space-y-6">
+                                        <div>
+                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Voice Diagnosis (For Lab Tech)</label>
+                                            <div class="flex items-center gap-4 p-4 bg-slate-50 border rounded-xl">
+                                                <button onclick="toggleRecording('lab')" id="record-btn-lab" class="h-10 w-10 bg-slate-900 text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-microphone"></i></button>
+                                                <div class="flex-1">
+                                                    <div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div id="recording-progress" class="h-full bg-red-500" style="width: 0%"></div></div>
+                                                    <p class="text-[9px] mt-1 text-slate-500 uppercase font-bold" id="lab-record-status">Click to record expert voice notes</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Fabrication Specifications</label>
+                                            <textarea id="lab-notes" rows="5" class="w-full p-4 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Specify molar anchors, expansion turn increments, and occlusal pad thickness..."></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Image Upload Slots -->
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Reference Images & Blueprints</label>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                                <span class="text-[9px] font-bold uppercase">Upload S+ Trace</span>
+                                            </div>
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                                <span class="text-[9px] font-bold uppercase">Upload Scan Overlay</span>
+                                            </div>
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                                <span class="text-[9px] font-bold uppercase">Molar Prep 1</span>
+                                            </div>
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-plus text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                                <span class="text-[9px] font-bold uppercase">Add Photo</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button onclick="issueToLab()" class="mt-8 w-full py-4 bg-amber-500 text-slate-900 rounded-xl font-black text-xs uppercase shadow-xl hover:bg-amber-400 transition transform active:scale-95">
+                                    <i class="fa-solid fa-truck-ramp-box mr-2"></i> Issue Instructions to STA Lab
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 4. Progress Tracker Tab -->
                         <div id="tab-case-progress" class="case-tab-content space-y-8 hidden">
                             <div class="section-card">
                                 <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_tracker_title">Progress Photo Timeline</h2>
@@ -206,10 +309,11 @@
                             </div>
                         </div>
 
+                        <!-- 5. Consultation History Tab -->
                         <div id="tab-case-history" class="case-tab-content space-y-8 hidden">
                             <div class="section-card">
                                 <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History</h2>
-                                <div class="space-y-3">
+                                <div class="space-y-3" id="history-list">
                                     <div class="p-4 bg-slate-50 border-l-4 border-gray-400 rounded-r-xl">
                                         <p class="text-xs font-bold text-gray-800 uppercase tracking-widest">Referral Request</p>
                                         <p class="text-sm text-gray-600 mt-1">Referred by practitioner for specialist design protocol. (2025/12/12)</p>
@@ -245,8 +349,8 @@
 
     <script>
         let currentLang = 'en';
+        let isRecording = false;
 
-        // --- 12 REFERRAL CASES ---
         const mockReferredCases = [
             { id: 'TW-001', practitioner: 'Dr. Ryan Chiang (Harmony Clinic)', data: [1, 1, 1, 1, 0, 0], status: 'Ready' },
             { id: 'TW-002', practitioner: 'Dr. Clement Lin (Harmony Clinic)', data: [1, 1, 1, 1, 1, 1], status: 'Ready' },
@@ -296,10 +400,9 @@
                 'viewing_photos': 'Viewing photos from',
                 'btn_submit_final': 'Submit Final Opinion',
                 'btn_cancel': 'Cancel',
-                'opinion_modal_title': 'Submit Opinion for Client ID',
-                'opinion_modal_prompt': 'Provide your detailed recommendation regarding the current diagnostics and treatment progress.',
-                'opinion_textarea_placeholder': 'Enter your design blueprint recommendations here...',
-                'toggle_text': '中文'
+                'toggle_text': '中文',
+                'report_title': 'Initial Consultation Assessment',
+                'lab_title': 'STA Lab Fabrication Instructions'
             },
             'zh': {
                 'header_title': '專業顧問儀表板',
@@ -333,10 +436,9 @@
                 'viewing_photos': '查看照片來自',
                 'btn_submit_final': '提交最終意見',
                 'btn_cancel': '取消',
-                'opinion_modal_title': '提交意見給客戶 ID',
-                'opinion_modal_prompt': '請提供關於當前診斷和治療進度的詳細建議。',
-                'opinion_textarea_placeholder': '在此處輸入您的設計藍圖建議...',
-                'toggle_text': 'English'
+                'toggle_text': 'English',
+                'report_title': '初步會診評估',
+                'lab_title': 'STA 實驗室製作指令'
             }
         };
 
@@ -359,15 +461,9 @@
             `).join('');
         }
 
-        function searchCases() {
-            const searchTerm = document.getElementById('case-search').value.toLowerCase();
-            const body = document.getElementById('case-tracker-body');
-            if (!body) return;
-            const rows = body.getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                const text = rows[i].textContent.toLowerCase();
-                rows[i].style.display = text.includes(searchTerm) ? "" : "none";
-            }
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
         }
 
         function updateText() {
@@ -376,33 +472,21 @@
                 const key = el.getAttribute('data-key');
                 if (data[key]) el.textContent = data[key];
             });
-            
-            const headerTitle = document.getElementById('header-title');
-            if (headerTitle) headerTitle.textContent = data.header_title;
-            
-            const langToggle = document.getElementById('lang-toggle');
-            if (langToggle) langToggle.textContent = data.toggle_text;
-            
-            const textarea = document.getElementById('opinion-textarea');
-            if (textarea) textarea.placeholder = data.opinion_textarea_placeholder;
-
+            document.getElementById('header-title').textContent = data.header_title;
+            document.getElementById('lang-toggle').textContent = data.toggle_text;
             renderTracker();
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
         }
 
         function switchCaseTab(tabId) {
             document.querySelectorAll('.case-tab-content').forEach(c => c.classList.add('hidden'));
             const targetTab = document.getElementById('tab-' + tabId);
             if (targetTab) targetTab.classList.remove('hidden');
-            
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
             
             let btnId = '';
             if(tabId === 'case-diagnostics') btnId = 'btn-tab-diag';
+            else if(tabId === 'case-report') btnId = 'btn-tab-report';
+            else if(tabId === 'case-lab') btnId = 'btn-tab-lab';
             else if(tabId === 'case-progress') btnId = 'btn-tab-prog';
             else if(tabId === 'case-history') btnId = 'btn-tab-hist';
             
@@ -411,40 +495,75 @@
         }
 
         function viewCase(caseId) {
-            const idDisplay = document.getElementById('client-id-display');
-            if (idDisplay) idDisplay.textContent = caseId;
-            
-            const detailsView = document.getElementById('case-details-view');
-            if (detailsView) {
-                detailsView.classList.remove('hidden');
-                detailsView.scrollIntoView({ behavior: 'smooth' });
-            }
-            
+            document.getElementById('client-id-display').textContent = caseId;
+            document.getElementById('case-details-view').classList.remove('hidden');
             switchCaseTab('case-diagnostics');
+            document.getElementById('case-details-view').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function openSubmitModal() {
-            const modal = document.getElementById('opinion-modal');
-            if (modal) modal.classList.remove('hidden');
-            
-            const idDisplay = document.getElementById('client-id-display');
-            const opinionIdDisplay = document.getElementById('opinion-client-id');
-            if (idDisplay && opinionIdDisplay) {
-                opinionIdDisplay.textContent = idDisplay.textContent;
+        // --- NEW FEATURES: RECORDING & REPORTING ---
+
+        function toggleRecording(context) {
+            const btn = context === 'report' ? document.getElementById('record-btn-report') : document.getElementById('record-btn-lab');
+            const status = context === 'report' ? document.getElementById('record-status') : document.getElementById('lab-record-status');
+            const icon = document.getElementById('record-btn-icon');
+            const progress = document.getElementById('recording-progress');
+
+            if (!isRecording) {
+                isRecording = true;
+                btn.textContent = "Stop Recording";
+                btn.classList.add('bg-red-600');
+                if (status) status.textContent = "Recording Diagnosis...";
+                if (icon) icon.classList.add('recording-pulse');
+                
+                if (context === 'report') {
+                    document.getElementById('transcription-box').classList.remove('hidden');
+                }
+            } else {
+                isRecording = false;
+                btn.textContent = context === 'report' ? "Start Assessment Recording" : "Start New Recording";
+                btn.classList.remove('bg-red-600');
+                if (status) status.textContent = "Recording Transcribed";
+                if (icon) icon.classList.remove('recording-pulse');
+                alert("Voice note captured and transcription draft generated.");
             }
+        }
+
+        function generateReport() {
+            const preview = document.getElementById('report-preview');
+            preview.classList.remove('hidden');
+            alert("Diagnostic report generated based on scans and expert voice notes.");
+        }
+
+        function issueToLab() {
+            const id = document.getElementById('client-id-display').textContent;
+            alert(`Instructions and blueprints transmitted to the STA Lab for case ${id}. Production status: PENDING.`);
+        }
+
+        // --- MODALS & SEARCH ---
+
+        function openSubmitModal() {
+            document.getElementById('opinion-modal').classList.remove('hidden');
+            document.getElementById('opinion-client-id').textContent = document.getElementById('client-id-display').textContent;
         }
 
         function closeModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) modal.classList.add('hidden');
+            document.getElementById(id).classList.add('hidden');
         }
 
         function submitOpinion() {
-            const opinionIdDisplay = document.getElementById('opinion-client-id');
-            const id = opinionIdDisplay ? opinionIdDisplay.textContent : 'Unknown';
-            const msg = currentLang === 'en' ? `Design transmitted to Practitioner for case ${id}.` : `設計已傳送給執業醫師，病例編號：${id}。`;
-            alert(msg);
+            const id = document.getElementById('opinion-client-id').textContent;
+            alert("Professional design opinion submitted for case " + id);
             closeModal('opinion-modal');
+        }
+
+        function searchCases() {
+            const searchTerm = document.getElementById('case-search').value.toLowerCase();
+            const rows = document.getElementById('case-tracker-body').getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                const text = rows[i].textContent.toLowerCase();
+                rows[i].style.display = text.includes(searchTerm) ? "" : "none";
+            }
         }
 
         function updateConsultantComparisonView(val) {
