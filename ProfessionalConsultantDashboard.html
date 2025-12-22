@@ -3,423 +3,656 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Specialist | Design Mastery</title>
+    <title>AMD Professional Consultant Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
         }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-            box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.3);
+        .bg-gray-gradient {
+            background-image: linear-gradient(to right, #6b7280, #4b5563); /* Gray 500 to 700 */
         }
-
-        .nav-button {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.85rem 1.25rem;
+        .section-card {
+            background-color: white;
+            padding: 1.5rem;
             border-radius: 0.75rem;
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: #94a3b8;
-            transition: all 0.2s;
-            width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .data-point {
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        .tab-button {
+            padding: 0.75rem 1rem;
             text-align: left;
+            font-weight: 600;
+            color: #4b5563;
+            border-radius: 0.5rem;
+            transition: all 0.15s ease;
         }
-
-        .nav-button.active {
-            background: #f59e0b;
-            color: #1e293b;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        .tab-button.active {
+            background-color: #e5e7eb; 
+            color: #1f2937;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            border-right: 3px solid #4b5563;
         }
-
-        .nav-button:not(.active):hover {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
+        .tab-button:not(.active):hover {
+            background-color: #f3f4f6;
         }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Custom styling for the range input track/thumb */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #4b5563; /* Gray 600 */
+            cursor: pointer;
+            margin-top: -7px; 
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
         }
-
-        .case-row:hover { background: rgba(255, 255, 255, 0.05); }
-
-        .airway-glow { filter: drop-shadow(0 0 12px rgba(14, 165, 233, 0.6)); }
-        .jaw-glow { filter: drop-shadow(0 0 12px rgba(20, 184, 166, 0.5)); }
-
-        @keyframes pulse-slow {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
+        .alert-red {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #b91c1c;
         }
-        .pulse { animation: pulse-slow 3s infinite ease-in-out; }
-
-        /* Chat Styles */
-        .chat-bubble {
-            padding: 0.85rem;
-            border-radius: 1rem;
-            max-width: 85%;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
         }
-        .chat-specialist { background-color: #fef3c7; align-self: flex-end; border-bottom-right-radius: 0; border: 1px solid #fde68a; color: #1e293b; }
-        .chat-dentist { background-color: #ccfbf1; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #99f6e4; color: #1e293b; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <div class="flex flex-col lg:flex-row max-w-[1800px] mx-auto min-h-screen">
-        
-        <!-- SIDEBAR -->
-        <aside class="w-full lg:w-80 p-6 space-y-6 lg:sticky lg:top-0 h-screen overflow-y-auto no-scrollbar border-r border-slate-800">
-            <div class="mb-8 px-2 text-center lg:text-left">
-                <h1 class="text-2xl font-extrabold tracking-tight text-white">AMD <span class="text-amber-500">EXPERT</span></h1>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest" data-i18n="tagline">The Global Architect</p>
-            </div>
-
-            <!-- Specialist Stats -->
-            <div class="glass-card p-5 space-y-4 border-t-4 border-amber-500">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider" data-i18n="expert_metrics">Design Metrics</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase" data-i18n="pending_designs">Queue</p>
-                        <p class="text-xl font-black text-amber-500">8</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase" data-i18n="lives_changed">Impact</p>
-                        <p class="text-xl font-black text-emerald-500">1.2k</p>
-                    </div>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-gray-gradient shadow-md">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">Professional Consultant Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Toggle Button -->
+                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-gray-700 border border-gray-500 hover:bg-gray-100 transition duration-150 font-semibold text-sm shadow">
+                        <!-- Text updated by JavaScript -->
+                    </button>
+                    <a href="index.html" class="text-sm font-medium text-gray-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
                 </div>
             </div>
+        </header>
 
-            <!-- Navigation -->
-            <nav class="space-y-1 pt-4">
-                <button class="nav-button active" onclick="switchTab('queue')">
-                    <i class="fa-solid fa-layer-group w-5"></i> <span data-i18n="nav_queue">Design Queue</span>
-                </button>
-                <button class="nav-button" onclick="switchTab('archive')">
-                    <i class="fa-solid fa-box-archive w-5"></i> <span data-i18n="nav_archive">Blueprint Archive</span>
-                </button>
-                <button class="nav-button" onclick="switchTab('bridge')">
-                    <i class="fa-solid fa-bridge w-5"></i> <span data-i18n="nav_bridge">Practitioner Bridge</span>
-                </button>
-            </nav>
-
-            <div class="pt-8 mt-auto text-center">
-                <div class="glass-card p-4 flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-900 font-black">DF</div>
-                    <div class="text-left text-xs">
-                        <p class="font-bold text-white">Doc Felix</p>
-                        <p class="text-slate-500">California, USA</p>
-                    </div>
-                </div>
-                <p class="mt-4 text-[9px] font-bold text-slate-600 uppercase tracking-widest">Pseudonymization Enforced</p>
-            </div>
-        </aside>
-
-        <!-- MAIN AREA -->
-        <main class="flex-1 p-6 space-y-6 overflow-x-hidden">
+        <!-- Main Content Area -->
+        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             
-            <!-- Header -->
-            <header class="flex justify-between items-center bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
-                <div class="flex items-center gap-4">
-                    <h2 class="text-xl font-800 text-white" data-i18n="welcome">Global Design Command</h2>
-                </div>
-                <div class="flex gap-3">
-                    <!-- Language Toggle -->
-                    <div class="flex bg-slate-800 p-1 rounded-xl">
-                        <button id="lang-en" onclick="setLanguage('en')" class="px-3 py-1 text-[10px] font-black rounded-lg transition-all bg-amber-500 text-slate-900 shadow-sm">EN</button>
-                        <button id="lang-zh" onclick="setLanguage('zh')" class="px-3 py-1 text-[10px] font-black rounded-lg transition-all text-slate-400">中文</button>
-                    </div>
-                    <button class="p-2 h-10 w-10 glass-card flex items-center justify-center text-slate-400 hover:text-amber-500"><i class="fa-solid fa-shield-halved"></i></button>
-                </div>
-            </header>
-
-            <!-- TAB: DESIGN QUEUE -->
-            <div id="tab-queue" class="tab-content active space-y-6">
-                <section class="glass-card overflow-hidden">
-                    <div class="p-6 border-b border-slate-800 flex justify-between items-center">
-                        <div>
-                            <h3 class="text-lg font-bold text-white" data-i18n="queue_title">Cases Awaiting Design</h3>
-                            <p class="text-xs text-slate-500 font-semibold" data-i18n="queue_subtitle">Only cases with 100% data readiness appear here.</p>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-900/80 border-b border-slate-800">
-                                <tr>
-                                    <th class="p-4 text-[10px] font-black uppercase text-slate-500 tracking-widest" data-i18n="col_id">Client ID</th>
-                                    <th class="p-4 text-[10px] font-black uppercase text-slate-500 tracking-widest" data-i18n="col_doc">Practitioner</th>
-                                    <th class="p-4 text-[10px] font-black uppercase text-slate-500 tracking-widest" data-i18n="col_time">Queue Time</th>
-                                    <th class="p-4 text-right pr-8 text-[10px] font-black uppercase text-slate-500 tracking-widest" data-i18n="col_action">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-800">
-                                <tr class="case-row transition-colors cursor-pointer" onclick="openCase('AMD-TW-001', 'Dr. Ryan Chiang')">
-                                    <td class="p-4 font-bold text-white">AMD-TW-001</td>
-                                    <td class="p-4 text-xs font-semibold text-slate-400">Dr. Ryan Chiang</td>
-                                    <td class="p-4 text-xs font-bold text-amber-500">14m Remaining</td>
-                                    <td class="p-4 text-right pr-8 text-amber-500 font-black text-xs uppercase">Begin Design →</td>
-                                </tr>
-                                <tr class="case-row transition-colors cursor-pointer" onclick="openCase('AMD-TW-002', 'Dr. Clement Lin')">
-                                    <td class="p-4 font-bold text-white">AMD-TW-002</td>
-                                    <td class="p-4 text-xs font-semibold text-slate-400">Dr. Clement Lin</td>
-                                    <td class="p-4 text-xs font-bold text-slate-500">2h 10m</td>
-                                    <td class="p-4 text-right pr-8 text-amber-500 font-black text-xs uppercase">Begin Design →</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+            <!-- PDPA Compliance & Pseudonymization Enforcement Banner -->
+            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-lg shadow-md" role="alert">
+                <p class="font-bold text-lg mb-2" data-key="pdpa_banner_title">PDPA Compliance & Pseudonymization Enforced</p>
+                <p class="text-sm" data-key="pdpa_banner_text_1">
+                    All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity.
+                </p>
+                <p class="text-sm mt-1 font-semibold" data-key="pdpa_banner_text_2">
+                    Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).
+                </p>
             </div>
 
-            <!-- TAB: CASE DESIGN DETAIL -->
-            <div id="tab-case-detail" class="tab-content space-y-6">
-                <div class="flex justify-between items-center mb-4">
-                    <button onclick="switchTab('queue')" class="text-xs font-black text-amber-500 hover:text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i> <span data-i18n="back_to_queue">BACK TO QUEUE</span>
+            <!-- Case Search and List -->
+            <div class="section-card mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-gray-700" data-key="search_title">Shared Case Files</h2>
+                
+                <div class="flex flex-col md:flex-row gap-4 items-center mb-4">
+                    <input type="text" id="case-search" data-key="search_placeholder" placeholder="Search by Client ID or Practitioner Name..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                    <button onclick="searchCases()" class="py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
+                        Search Cases
                     </button>
                 </div>
-                
-                <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
-                    <div class="xl:col-span-8 space-y-6">
-                        <section class="glass-card p-8">
-                            <div class="flex justify-between items-start mb-8">
-                                <div>
-                                    <h2 class="text-2xl font-800 tracking-tight text-white"><span id="active-id">AMD-TW-001</span></h2>
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Requested by <span id="active-doc">Dr. Ryan Chiang</span></p>
-                                </div>
-                                <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 text-xs font-bold">Goal: Eliminating Fatigue</div>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-10 bg-slate-900/30 rounded-3xl border border-slate-800 mb-8">
-                                <div class="flex flex-col items-center">
-                                    <svg viewBox="0 0 200 200" class="w-40 h-40"><path d="M100,20 Q120,60 110,100 T105,180" fill="none" stroke="#334155" stroke-width="20" stroke-linecap="round" /><path d="M100,20 Q135,60 125,100 T120,180" fill="none" stroke="#0ea5e9" stroke-width="24" stroke-linecap="round" class="airway-glow pulse" /></svg>
-                                    <p class="mt-4 text-[10px] font-black text-sky-400 uppercase tracking-widest">Airway Projection</p>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <svg viewBox="0 0 200 200" class="w-40 h-40"><path d="M40,150 Q40,50 100,50 Q160,50 160,150" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round" stroke-dasharray="4 4" /><path d="M25,150 Q25,35 100,35 Q175,35 175,150" fill="none" stroke="#14b8a6" stroke-width="15" stroke-linecap="round" class="jaw-glow" /></svg>
-                                    <p class="mt-4 text-[10px] font-black text-teal-400 uppercase tracking-widest">Jaw Blueprint</p>
-                                </div>
-                            </div>
-                        </section>
+
+                <!-- Mock Results List (Only shared data is visible) -->
+                <div id="case-list" class="mt-4 space-y-2">
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase('4892')">
+                        <div>
+                            <p class="font-semibold text-gray-800" data-key="case_1_id">Client ID: 4892 (Pseudonymized)</p>
+                            <p class="text-sm text-gray-500" data-key="case_1_info">Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20</p>
+                        </div>
+                        <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
                     </div>
-                    <div class="xl:col-span-4 space-y-6">
-                        <section class="glass-card p-6 border-t-4 border-amber-500">
-                            <h3 class="text-lg font-bold text-white mb-6" data-i18n="design_console">Design Console</h3>
-                            <textarea rows="4" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-300 mb-4" placeholder="Enter Blueprint Configuration..."></textarea>
-                            <button onclick="finalizeDesign()" class="w-full py-4 bg-amber-500 text-slate-900 rounded-2xl font-black text-xs uppercase shadow-xl">Ship Blueprint</button>
-                        </section>
+                    <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center hover:bg-gray-100 cursor-pointer" onclick="viewCase('9011')">
+                        <div>
+                            <p class="font-semibold text-gray-800" data-key="case_2_id">Client ID: 9011 (Pseudonymized)</p>
+                            <p class="text-sm text-gray-500" data-key="case_2_info">Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15</p>
+                        </div>
+                        <span class="text-sm text-gray-600 font-medium" data-key="btn_view_case">Review Case →</span>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: BLUEPRINT ARCHIVE (NEW MOCK) -->
-            <div id="tab-archive" class="tab-content space-y-6">
-                <section class="glass-card p-8">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <h2 class="text-3xl font-800 tracking-tight text-white" data-i18n="archive_title">Blueprint Archive</h2>
-                            <p class="text-slate-500 text-sm" data-i18n="archive_subtitle">Search and review 1,200+ historical STA designs.</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <input type="text" placeholder="Search ID..." class="bg-slate-900 border border-slate-800 p-2 rounded-lg text-xs outline-none focus:ring-1 focus:ring-amber-500">
+            <!-- Case Details View (Hidden initially) -->
+            <div id="case-details-view" class="hidden">
+                <div class="flex justify-between items-center mb-6 border-b pb-4 section-card">
+                    <h2 id="case-details-title" class="text-3xl font-bold text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display"></span></h2>
+                    <button class="py-2 px-4 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
+                        Submit Professional Opinion
+                    </button>
+                </div>
+
+                <div class="lg:grid lg:grid-cols-4 lg:gap-8">
+                    
+                    <!-- LEFT COLUMN: Navigation Tabs -->
+                    <div class="lg:col-span-1 mb-8 lg:mb-0">
+                        <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_case_title">Case File Navigation</h3>
+                            <nav class="flex flex-col space-y-2">
+                                <button class="tab-button active" onclick="switchCaseTab('case-diagnostics')" data-key="case_tab_diagnostics">Diagnostic Inputs</button>
+                                <button class="tab-button" onclick="switchCaseTab('case-progress')" data-key="case_tab_progress">Progress Tracker</button>
+                                <button class="tab-button" onclick="switchCaseTab('case-history')" data-key="case_tab_history">Consultation History</button>
+                            </nav>
                         </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <!-- Archive Item 1 -->
-                        <div class="p-6 bg-slate-900/50 rounded-2xl border border-slate-800 flex justify-between items-center group hover:border-amber-500/50 transition-all">
-                            <div>
-                                <div class="flex items-center gap-3 mb-1">
-                                    <span class="text-lg font-bold text-white">AMD-TW-482</span>
-                                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[9px] font-black rounded uppercase">Completed</span>
+                    <!-- RIGHT COLUMN: Case Tab Content -->
+                    <div class="lg:col-span-3 space-y-8">
+                        
+                        <!-- 1. Diagnostic Inputs Tab (Default) -->
+                        <div id="tab-case-diagnostics" class="case-tab-content space-y-8">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="diagnostics_title">Shared Diagnostic Inputs</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
+                                        <div id="mcs-status-display" class="font-semibold text-lg p-2 rounded-md mb-2" data-key="mcs_value_status">MCS: 285 mm² (Critical!)</div>
+                                        <p class="text-xs text-gray-500" data-key="cbct_note">Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.</p>
+                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
+                                        <p id="schwarz-note-display" class="text-xs text-gray-500" data-key="schwarz_note">Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.</p>
+                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50">
+                                        <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">Ceph Flow Metric Analysis</h3>
+                                        <p id="sassouni-note-display" class="text-xs text-gray-500" data-key="sassouni_note">Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.</p>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-slate-400">Practitioner: Dr. Ryan Chiang • Date: 2025/10/12</p>
-                                <p class="text-[10px] text-slate-600 mt-2 italic">STA Config: 2.5 turns, molar anchors A-1, B-2.</p>
                             </div>
-                            <button class="px-4 py-2 bg-slate-800 text-amber-500 rounded-lg text-[10px] font-black uppercase group-hover:bg-amber-500 group-hover:text-slate-900 transition-all">Re-Open Blueprint</button>
-                        </div>
-                        <!-- Archive Item 2 -->
-                        <div class="p-6 bg-slate-900/50 rounded-2xl border border-slate-800 flex justify-between items-center group hover:border-amber-500/50 transition-all">
-                            <div>
-                                <div class="flex items-center gap-3 mb-1">
-                                    <span class="text-lg font-bold text-white">AMD-TW-391</span>
-                                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[9px] font-black rounded uppercase">Completed</span>
+                            
+                            <!-- Appliance Setting at Current Stage -->
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-yellow-600" data-key="appliance_setting_title">Appliance Setting Details</h2>
+                                <div class="mb-8 p-6 border rounded-lg bg-yellow-50/50">
+                                    <h3 class="text-xl font-bold text-gray-800" data-key="appliance_name">Start Thriving Appliance (TM)</h3>
+                                    <div id="appliance-setting-display" class="text-lg font-medium text-yellow-700 mb-1" data-key="appliance_setting">Current Setting: 2.0 Turns / 0.50mm Expansion</div>
+                                    <p id="appliance-status-display" class="text-sm text-gray-500" data-key="appliance_status">Active expansion phase (Month 6 of 24).</p>
                                 </div>
-                                <p class="text-xs text-slate-400">Practitioner: Dr. Clement Lin • Date: 2025/08/25</p>
-                                <p class="text-[10px] text-slate-600 mt-2 italic">STA Config: 1.5 turns, sagittal focus.</p>
                             </div>
-                            <button class="px-4 py-2 bg-slate-800 text-amber-500 rounded-lg text-[10px] font-black uppercase group-hover:bg-amber-500 group-hover:text-slate-900 transition-all">Re-Open Blueprint</button>
                         </div>
+
+                        <!-- 2. Progress Tracker Tab -->
+                        <div id="tab-case-progress" class="case-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_tracker_title">Progress Photo Timeline</h2>
+                                <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Review historical jaw and posture progress photos.</p>
+                                
+                                <!-- Comparison Slider and Images -->
+                                <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
+                                
+                                <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                    <label for="c-comparison-slider" id="c-comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
+                                    <input type="range" min="0" max="4" value="2" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="c-comparison-slider" oninput="updateConsultantComparisonView(this.value)">
+                                    <div class="flex justify-between text-xs mt-1 text-gray-500">
+                                        <span data-key="c0">Initial</span><span data-key="c1">Month 3</span><span data-key="c2">Month 6</span><span data-key="c3">Month 12</span><span data-key="c4">Current</span>
+                                    </div>
+                                </div>
+
+                                <div id="photo-comparison-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <!-- Photos dynamically populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Consultation History Tab -->
+                        <div id="tab-case-history" class="case-tab-content space-y-8 hidden">
+                            <div class="section-card">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History & Practitioner Notes</h2>
+                                <p class="text-sm text-gray-500 mb-4" data-key="history_intro">Record of communication and previous external opinions regarding this case.</p>
+                                <div class="space-y-3">
+                                    <!-- History data point updated by JS -->
+                                    <div id="history-entry-1" class="data-point">
+                                        <p class="font-bold text-gray-800" data-key="history_entry_1_title">Request sent by Dr. Smith</p>
+                                        <p id="history-details-1" class="text-sm text-gray-600" data-key="history_entry_1_details">Requested opinion on MCS findings and initial expansion rate. (2025/11/22)</p>
+                                    </div>
+                                    <div id="history-entry-2" class="data-point bg-green-50 border-green-500">
+                                        <p class="font-bold text-green-800" data-key="history_entry_2_title">Your Opinion (Mock)</p>
+                                        <p id="history-details-2" class="text-sm text-gray-600" data-key="history_entry_2_details">Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </section>
+                </div>
+
+                <button class="mt-6 w-full py-3 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion">
+                    Submit Professional Opinion
+                </button>
             </div>
-
-            <!-- TAB: PRACTITIONER BRIDGE (NEW MOCK) -->
-            <div id="tab-bridge" class="tab-content space-y-6">
-                <section class="glass-card p-8 h-[750px] flex flex-col">
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-6 mb-6">
-                        <div>
-                            <h2 class="text-2xl font-800 tracking-tight text-white" data-i18n="bridge_title">Practitioner Inbox</h2>
-                            <p class="text-xs text-slate-500 uppercase font-bold tracking-wider" data-i18n="bridge_subtitle">Clinical Communications Taiwan Bridge</p>
-                        </div>
-                        <div class="flex gap-2">
-                             <div class="px-3 py-1 bg-amber-500/10 text-amber-500 text-[10px] font-black rounded-lg border border-amber-500/20">3 UNREAD</div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1 overflow-hidden">
-                        <!-- Message Thread List -->
-                        <div class="lg:col-span-4 border-r border-slate-800 pr-4 overflow-y-auto no-scrollbar space-y-2">
-                            <div class="p-4 bg-amber-500/10 rounded-xl border border-amber-500/30 cursor-pointer">
-                                <p class="text-xs font-black text-white">Dr. Ryan Chiang</p>
-                                <p class="text-[10px] text-amber-500 font-bold">Case: AMD-TW-001</p>
-                                <p class="text-[11px] text-slate-400 mt-2 truncate">Agreed. I've uploaded the new models for confirmation...</p>
-                            </div>
-                            <div class="p-4 hover:bg-slate-800 rounded-xl border border-transparent cursor-pointer transition-all">
-                                <p class="text-xs font-black text-slate-300">Dr. Clement Lin</p>
-                                <p class="text-[10px] text-slate-500 font-bold">Case: AMD-TW-002</p>
-                                <p class="text-[11px] text-slate-500 mt-2 truncate">Patient reporting minor pressure at Molar 7.</p>
-                            </div>
-                            <div class="p-4 hover:bg-slate-800 rounded-xl border border-transparent cursor-pointer transition-all">
-                                <p class="text-xs font-black text-slate-300">Dr. Mei-Ling Wu</p>
-                                <p class="text-[10px] text-slate-500 font-bold">Case: AMD-TW-482</p>
-                                <p class="text-[11px] text-slate-500 mt-2 truncate">Thank you for the prescription adjustment.</p>
-                            </div>
-                        </div>
-
-                        <!-- Active Conversation Content -->
-                        <div class="lg:col-span-8 flex flex-col h-full overflow-hidden">
-                            <div class="flex-1 overflow-y-auto space-y-4 pr-2 flex flex-col no-scrollbar">
-                                <div class="chat-bubble chat-dentist">
-                                    <p class="text-[8px] font-black uppercase mb-1">Dr. Ryan Chiang</p>
-                                    <p class="leading-tight">Doc, I see severe velopharynx restriction. Let's push for 0.5mm more expansion.</p>
-                                    <p class="text-[8px] mt-2 opacity-60">10:15 AM</p>
-                                </div>
-                                <div class="chat-bubble chat-specialist">
-                                    <p class="text-[8px] font-black uppercase mb-1">You (Doc Felix)</p>
-                                    <p class="leading-tight">Agreed, Ryan. I've updated the STA blueprint to reflect the increased posterior width. Proceed with the new fit.</p>
-                                    <p class="text-[8px] mt-2 opacity-60">11:00 AM</p>
-                                </div>
-                                <div class="chat-bubble chat-dentist">
-                                    <p class="text-[8px] font-black uppercase mb-1">Dr. Ryan Chiang</p>
-                                    <p class="leading-tight">Perfect. Lab notified.</p>
-                                    <p class="text-[8px] mt-2 opacity-60">11:45 AM</p>
-                                </div>
-                            </div>
-                            <div class="mt-6 flex gap-3">
-                                <input type="text" placeholder="Type a message to Dr. Ryan..." class="flex-1 p-4 bg-slate-900 border border-slate-800 rounded-xl text-sm outline-none focus:ring-1 focus:ring-amber-500">
-                                <button class="h-12 w-12 bg-amber-500 text-slate-900 rounded-xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-paper-plane"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <footer class="py-12 text-center">
-                <p class="text-slate-600 text-[10px] font-bold italic tracking-widest uppercase">Designing the future of human respiration.</p>
-            </footer>
         </main>
     </div>
+    
+    <!-- Opinion Submission Modal -->
+    <div id="opinion-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <!-- Modal Content -->
+        <div id="opinion-modal-content" class="bg-white w-full max-w-xl p-8 rounded-xl shadow-2xl relative modal-fade-enter">
+            <h3 id="opinion_modal_title" class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="opinion_modal_title">Submit Professional Opinion for Client ID <span id="opinion-client-id"></span></h3>
+            
+            <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your detailed recommendation regarding the current diagnostics and treatment progress.</p>
 
+            <textarea id="opinion-textarea" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500" placeholder="Type your professional opinion here (e.g., 'Recommend increasing expansion rate to 2.5 turns by month 8...')" data-key="opinion_textarea_placeholder"></textarea>
+            
+            <div class="flex justify-end space-x-4 mt-4">
+                <button onclick="closeModal('opinion-modal')" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400" data-key="btn_cancel">Cancel</button>
+                <button onclick="submitOpinion()" class="py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 font-semibold" data-key="btn_submit_final">Submit Final Opinion</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript for Functionality and Translations -->
     <script>
-        const i18n = {
-            en: {
-                tagline: "The Global Architect",
-                expert_metrics: "Design Metrics",
-                pending_designs: "Queue",
-                lives_changed: "Impact",
-                nav_queue: "Design Queue",
-                nav_archive: "Blueprint Archive",
-                nav_bridge: "Practitioner Bridge",
-                welcome: "Global Design Command",
-                queue_title: "Cases Awaiting Design",
-                queue_subtitle: "Only cases with 100% data readiness appear here.",
-                col_id: "Client ID",
-                col_doc: "Practitioner",
-                col_time: "Queue Time",
-                col_action: "Action",
-                back_to_queue: "Back to Queue",
-                design_console: "Design Console",
-                archive_title: "Blueprint Archive",
-                archive_subtitle: "Review historical STA designs.",
-                bridge_title: "Practitioner Inbox",
-                bridge_subtitle: "Clinical Communications Bridge"
+        let currentLang = 'en';
+
+        // --- Translation Data Structure (JSON) ---
+        const translations = {
+            'en': {
+                'header_title': 'Professional Consultant Dashboard',
+                'logout_link': '← Log Out / Portal',
+                'pdpa_banner_title': 'PDPA Compliance & Pseudonymization Enforced',
+                'pdpa_banner_text_1': 'All cases displayed are **pseudonymized** (e.g., Client ID only) to protect patient identity.',
+                'pdpa_banner_text_2': 'Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).',
+                'search_title': 'Shared Case Files',
+                'search_placeholder': 'Search by Client ID or Practitioner Name...',
+                'btn_search': 'Search Cases',
+                'case_1_id': 'Client ID: 4892 (Pseudonymized)',
+                'case_1_info': 'Shared by: Dr. A. Smith (Orthodontics) | Requested: 2025/11/20',
+                'case_2_id': 'Client ID: 9011 (Pseudonymized)',
+                'case_2_info': 'Shared by: Dr. B. Wu (Pediatrics) | Requested: 2025/11/15',
+                'btn_view_case': 'Review Case →',
+                'case_details_title': 'Case Review: Client ID',
+                'btn_submit_opinion_header': 'Submit Professional Opinion',
+                'nav_case_title': 'Case File Navigation',
+                'case_tab_diagnostics': 'Diagnostic Inputs',
+                'case_tab_progress': 'Progress Tracker',
+                'case_tab_history': 'Consultation History',
+                'diagnostics_title': 'Shared Diagnostic Inputs',
+                'cbct_title': 'CB CT Scan (Airway)',
+                'mcs_value_status_4892': 'MCS: 285 mm² (Critical!)',
+                'mcs_value_status_9011': 'MCS: 350 mm² (Stable)',
+                'cbct_note': 'Doctor Note: Significant restriction noted in velopharynx. Immediate intervention required.',
+                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
+                'schwarz_note': 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
+                'ceph_title': 'Ceph Flow Metric Analysis',
+                'sassouni_note': 'Sassouni Plus Report: Informs appliance growth angles. Current FMA: 23°.',
+                'appliance_setting_title': 'Appliance Setting Details',
+                'appliance_name': 'Start Thriving Appliance (TM)',
+                'appliance_setting': 'Current Setting: 2.0 Turns / 0.50mm Expansion',
+                'appliance_status': 'Active expansion phase (Month 6 of 24).',
+                'progress_tracker_title': 'Progress Photo Timeline',
+                'progress_subtitle': 'Review historical jaw and posture progress photos.',
+                'comparison_view_title': 'Historical Comparison View',
+                'viewing_photos': 'Viewing photos from: Month 6 Check',
+                'c0': 'Initial', 'c1': 'Month 3', 'c2': 'Month 6', 'c3': 'Month 12', 'c4': 'Current',
+                'photo_jaw_front': 'Jaw (Front)',
+                'photo_posture_side': 'Posture (Side)',
+                'photo_jaw_side': 'Jaw (Side)',
+                'photo_jaw_bottom': 'Jaw (Bottom)',
+                'consultation_history_title': 'Consultation History & Practitioner Notes',
+                'history_intro': 'Record of communication and previous external opinions regarding this case.',
+                'history_entry_1_title': 'Request sent by Dr. Smith',
+                'history_entry_1_details': 'Requested opinion on MCS findings and initial expansion rate. (2025/11/22)',
+                'history_entry_2_title': 'Your Opinion (Mock)',
+                'history_entry_2_details': 'Recommendation: Maintain current expansion rate for 3 months, reassess CBCT at month 9. (2025/11/25)',
+                'btn_submit_opinion': 'Submit Professional Opinion',
+                'btn_submit_final': 'Submit Final Opinion',
+                'btn_cancel': 'Cancel',
+                'opinion_modal_title': 'Submit Professional Opinion for Client ID',
+                'opinion_modal_prompt': 'Provide your detailed recommendation regarding the current diagnostics and treatment progress.',
+                'opinion_textarea_placeholder': 'Type your professional opinion here (e.g., \'Recommend increasing expansion rate to 2.5 turns by month 8...\')',
+                'toggle_text': '中文'
             },
-            zh: {
-                tagline: "全球架構師",
-                expert_metrics: "設計指標",
-                pending_designs: "待處理隊列",
-                lives_changed: "影響人數",
-                nav_queue: "設計隊列",
-                nav_archive: "藍圖存檔",
-                nav_bridge: "醫師溝通橋樑",
-                welcome: "全球設計指揮中心",
-                queue_title: "等待設計的病例",
-                queue_subtitle: "只有數據準備度達 100% 的病例會顯示在此。",
-                col_id: "客戶 ID",
-                col_doc: "執業醫師",
-                col_time: "隊列時間",
-                col_action: "操作",
-                back_to_queue: "返回隊列",
-                design_console: "設計主控台",
-                archive_title: "藍圖存檔",
-                archive_subtitle: "審閱過往的 STA 設計方案。",
-                bridge_title: "醫師收件匣",
-                bridge_subtitle: "臨床溝通橋樑"
+            'zh': {
+                'header_title': '專業顧問儀表板',
+                'logout_link': '← 登出 / 入口網站',
+                'pdpa_banner_title': 'PDPA 合規與假名化強制執行',
+                'pdpa_banner_text_1': '所有顯示的病例均已**假名化**（例如：僅客戶 ID）以保護患者身份。',
+                'pdpa_banner_text_2': '訪問要求: (1) 患者書面同意, (2) 已執行數據處理協議 (DPA)。',
+                'search_title': '共享病例檔案',
+                'search_placeholder': '按客戶 ID 或執業醫師姓名搜尋...',
+                'btn_search': '搜尋病例',
+                'case_1_id': '客戶 ID: 4892 (已假名化)',
+                'case_1_info': '共享者: Smith 醫生 (牙齒矯正) | 請求日期: 2025/11/20',
+                'case_2_id': '客戶 ID: 9011 (已假名化)',
+                'case_2_info': '共享者: Wu 醫生 (兒科) | 請求日期: 2025/11/15',
+                'btn_view_case': '審閱病例 →',
+                'case_details_title': '病例審閱: 客戶 ID',
+                'btn_submit_opinion_header': '提交專業意見',
+                'nav_case_title': '病例檔案導航',
+                'case_tab_diagnostics': '診斷輸入',
+                'case_tab_progress': '進度追踪器',
+                'case_tab_history': '會診歷史記錄',
+                'diagnostics_title': '共享診斷輸入',
+                'cbct_title': '錐束CT掃描 (氣道)',
+                'mcs_value_status_4892': 'MCS: 285 毫米² (危急!)',
+                'mcs_value_status_9011': 'MCS: 350 毫米² (穩定)',
+                'cbct_note': '醫生備註: 鼻咽部有明顯受限。需立即干預。',
+                'intraoral_title': '3D 口內掃描 (牙齒)',
+                'schwarz_note': 'Schwarz 分析: 需要矯正 5 毫米的反頜。',
+                'ceph_title': '頭影流動測量分析',
+                'sassouni_note': 'Sassouni Plus 報告: 指導矯治器生長角度。當前 FMA: 23°。',
+                'appliance_setting_title': '矯治器設置詳情',
+                'appliance_name': '開始興盛矯治器 (TM)',
+                'appliance_setting': '當前設置: 2.0 圈 / 0.50mm 擴展',
+                'appliance_status': '活躍擴展階段 (24 個月中的第 6 個月)。',
+                'progress_tracker_title': '進度照片追踪器',
+                'progress_subtitle': '審閱歷史下巴和姿勢進度照片。',
+                'comparison_view_title': '歷史比較視圖',
+                'viewing_photos': '查看照片來自: 第 6 個月檢查',
+                'c0': '初始', 'c1': '第 3 個月', 'c2': '第 6 個月', 'c3': '第 12 個月', 'c4': '當前',
+                'photo_jaw_front': '下巴 (正面)',
+                'photo_posture_side': '姿勢 (側面)',
+                'photo_jaw_side': '下巴 (側面)',
+                'photo_jaw_bottom': '下巴 (底部)',
+                'consultation_history_title': '會診歷史記錄與執業醫師備註',
+                'history_intro': '關於此病例的溝通記錄和先前外部意見。',
+                'history_entry_1_title': 'Smith 醫生發送的請求',
+                'history_entry_1_details': '請求對 MCS 發現和初始擴展率的意見。 (2025/11/22)',
+                'history_entry_2_title': '您的意見 (模擬)',
+                'history_entry_2_details': '建議: 維持當前擴展率 3 個月，在第 9 個月重新評估 CBCT。 (2025/11/25)',
+                'btn_submit_opinion': '提交專業意見',
+                'btn_submit_final': '提交最終意見',
+                'btn_cancel': '取消',
+                'opinion_modal_title': '提交專業意見給客戶 ID',
+                'opinion_modal_prompt': '請提供您關於當前診斷和治療進度的詳細建議。',
+                'opinion_textarea_placeholder': '在此處輸入您的專業意見 (例如：「建議在第 8 個月將擴展率增加到 2.5 圈...」)',
+                'toggle_text': 'English'
             }
         };
 
-        let currentLang = 'en';
+        // --- Mock Client Data for dynamic switching ---
+        const mockCaseData = {
+            '4892': {
+                mcs_status_key: 'mcs_value_status_4892', // Critical
+                appliance_setting: '2.0 Turns / 0.50mm Expansion',
+                appliance_status: 'Active expansion phase (Month 6 of 24).',
+                schwarz_note: 'Schwarz Analysis: 5mm maxillary posterior crossbite correction needed.',
+                history_details: 'Requested opinion on MCS findings and initial expansion rate. (2025/11/22)',
+                // Progress Slider default to M6
+                slider_value: 2,
+            },
+            '9011': {
+                mcs_status_key: 'mcs_value_status_9011', // Stable
+                appliance_setting: '1.0 Turns / 0.25mm Expansion',
+                appliance_status: 'Early maintenance phase (Month 12 of 18).',
+                schwarz_note: 'Schwarz Analysis: Mild crowding, no crossbite. Monitoring intercanine width.',
+                history_details: 'Requested opinion on growth trajectory and mid-treatment photos. (2025/11/15)',
+                // Progress Slider default to M12
+                slider_value: 3,
+            }
+        };
 
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (i18n[lang][key]) el.textContent = i18n[lang][key];
-            });
-            document.getElementById('lang-en').className = `px-3 py-1 text-[10px] font-black rounded-lg transition-all ${lang === 'en' ? 'bg-amber-500 text-slate-900 shadow-sm' : 'text-slate-400'}`;
-            document.getElementById('lang-zh').className = `px-3 py-1 text-[10px] font-black rounded-lg transition-all ${lang === 'zh' ? 'bg-amber-500 text-slate-900 shadow-sm' : 'text-slate-400'}`;
-        }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
-            if (activeBtn) activeBtn.classList.add('active');
+        // --- Core Translation Function ---
+        function updateText() {
+            const langData = translations[currentLang];
             
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            const activeTab = document.getElementById('tab-' + tabId);
-            if (activeTab) activeTab.classList.add('active');
+            // Get the ID span before the loop potentially wipes it
+            const clientIdDisplay = document.getElementById('client-id-display'); 
+            const opinionClientId = document.getElementById('opinion-client-id');
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (langData[key]) {
+                    element.textContent = langData[key];
+                }
+            });
+
+            // Manual update of the Case Details Title to preserve the nested span
+            const caseTitleContainer = document.getElementById('case-details-title');
+            if (caseTitleContainer && clientIdDisplay) {
+                caseTitleContainer.textContent = langData.case_details_title + ': ';
+                caseTitleContainer.appendChild(clientIdDisplay); 
+            }
+            
+            // Manual update for the Opinion Modal Title
+             const opinionModalTitle = document.getElementById('opinion_modal_title');
+             if (opinionModalTitle && opinionClientId) {
+                 opinionModalTitle.textContent = langData.opinion_modal_title + ' ';
+                 opinionModalTitle.appendChild(opinionClientId);
+             }
+
+
+            // Handle complex title update
+            const currentId = clientIdDisplay ? clientIdDisplay.textContent : null;
+            if (currentId) {
+                updateCaseContent(currentId);
+            }
+            
+            // Update specific placeholders and elements
+            document.getElementById('case-search').placeholder = langData.search_placeholder;
+            document.getElementById('header-title').textContent = langData.header_title;
+            document.getElementById('lang-toggle').textContent = langData.toggle_text;
+            
+            // Update HTML lang attribute and title
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = langData.header_title;
+            
+            // Update textarea placeholder manually
+            document.getElementById('opinion-textarea').placeholder = langData.opinion_textarea_placeholder;
+
+
+            // Re-run comparison view update to refresh image labels
+            updateConsultantComparisonView(document.getElementById('c-comparison-slider')?.value || 0);
         }
 
-        function openCase(id, doc) {
-            document.getElementById('active-id').textContent = id;
-            document.getElementById('active-doc').textContent = doc;
-            switchTab('case-detail');
+        // --- Language Toggle ---
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
         }
 
-        function finalizeDesign() {
-            alert("Blueprint transmitted to Taiwan. Lab triggered.");
-            switchTab('queue');
+        // --- Dynamic Content Update ---
+
+        function updateCaseContent(clientId) {
+            const data = mockCaseData[clientId];
+            const langData = translations[currentLang];
+            
+            if (!data) return;
+
+            // 1. Diagnostics Tab Update
+            const mcsElement = document.getElementById('mcs-status-display');
+            mcsElement.textContent = langData[data.mcs_status_key];
+            
+            // Apply styling based on criticality
+            mcsElement.classList.remove('alert-red', 'bg-green-50');
+            mcsElement.style.borderLeft = '';
+            if (clientId === '4892') {
+                mcsElement.classList.add('alert-red');
+            } else {
+                 mcsElement.classList.add('bg-green-50');
+                 mcsElement.style.borderLeft = '4px solid #10b981';
+            }
+            
+            document.getElementById('schwarz-note-display').textContent = data.schwarz_note;
+            document.getElementById('sassouni-note-display').textContent = data.sassouni_note;
+
+
+            // 2. Appliance Setting Update
+            document.getElementById('appliance-setting-display').textContent = data.appliance_setting;
+            document.getElementById('appliance-status-display').textContent = data.appliance_status;
+            
+            // 3. History Tab Update
+            document.getElementById('history-details-1').textContent = data.history_details;
+            
+            // 4. Progress Tracker Default Slider Value
+            const progressSlider = document.getElementById('c-comparison-slider');
+            progressSlider.value = data.slider_value;
+            updateConsultantComparisonView(data.slider_value);
         }
 
-        document.addEventListener('DOMContentLoaded', () => setLanguage('en'));
+        // --- Dashboard Functionality ---
+        function searchCases() {
+            const searchTerm = document.getElementById('case-search').value.toLowerCase();
+            const list = document.getElementById('case-list');
+            
+            // Mock search logic
+            Array.from(list.children).forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        function switchCaseTab(tabId) {
+            // 1. Hide all content tabs
+            document.querySelectorAll('.case-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // 2. Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 3. Show the requested content tab
+            const activeContent = document.getElementById('tab-' + tabId);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+            }
+
+            // 4. Activate the clicked button
+            const activeButton = document.querySelector(`[onclick="switchCaseTab('${tabId}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+
+        function viewCase(caseId) {
+            const detailsView = document.getElementById('case-details-view');
+            const clientIdDisplay = document.getElementById('client-id-display');
+            const opinionClientId = document.getElementById('opinion-client-id');
+            
+            // Set client ID
+            clientIdDisplay.textContent = caseId;
+            opinionClientId.textContent = caseId;
+
+            // Update all content fields based on the selected case
+            updateCaseContent(caseId);
+
+            detailsView.classList.remove('hidden');
+            
+            // Ensure first tab is active
+            switchCaseTab('case-diagnostics'); 
+
+            updateText(); // Ensure labels are translated after ID is updated
+            
+            // Scroll to details view for better UX
+            detailsView.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openSubmitModal() {
+            const modal = document.getElementById('opinion-modal');
+            const modalContent = document.getElementById('opinion-modal-content');
+            
+            modal.classList.remove('hidden');
+            // Apply entrance transition classes
+            setTimeout(() => {
+                modalContent.classList.remove('modal-fade-enter');
+                modalContent.classList.add('modal-fade-enter-active');
+            }, 10);
+            document.getElementById('opinion-textarea').value = ''; // Clear previous text
+        }
+        
+        function submitOpinion() {
+            const opinionText = document.getElementById('opinion-textarea').value.trim();
+            const clientId = document.getElementById('client-id-display').textContent;
+            
+            if (opinionText.length < 10) {
+                 const message = currentLang === 'en' ? 
+                    'Please provide a detailed opinion (at least 10 characters).' :
+                    '請提供詳細意見 (至少 10 個字符)。';
+                alert(message);
+                return;
+            }
+
+            closeModal('opinion-modal');
+            const message = currentLang === 'en' ? 
+                `Opinion submitted for pseudonymized Client ID ${clientId}. Practitioner notified. Opinion: "${opinionText.substring(0, 50)}..."` :
+                `已為假名化客戶 ID ${clientId} 提交意見。已通知執業醫師。意見: "${opinionText.substring(0, 50)}..."`;
+            
+            // Mock practitioner notification
+            console.log("MOCK EXPERT OPINION SENT:", opinionText);
+
+            alert(message);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = document.getElementById(modalId + '-content');
+            
+            if (!modal || !modalContent) return;
+
+            // Apply exit transition classes
+            modalContent.classList.remove('modal-fade-enter-active');
+            modalContent.classList.add('modal-fade-enter');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+        
+        // Function to update the images and label in the Progress Tracker tab based on slider value
+        function updateConsultantComparisonView(sliderValue) {
+            const langData = translations[currentLang];
+            const grid = document.getElementById('photo-comparison-grid');
+            const label = document.getElementById('c-comparison-label');
+            
+            // Mapping for 5 checkpoints (0 to 4)
+            const checkpointData = [
+                { titleKey: 'c0', phase: '(Initial)' },
+                { titleKey: 'c1', phase: '(Month 3)' },
+                { titleKey: 'c2', phase: '(Month 6)' },
+                { titleKey: 'c3', phase: '(Month 12)' },
+                { titleKey: 'c4', phase: '(Current)' }
+            ];
+            
+            const currentCheckpoint = checkpointData[sliderValue];
+
+            label.textContent = langData.viewing_photos + `: ${langData[currentCheckpoint.titleKey]}`;
+
+            // Image Placeholders - using unique colors for visual differentiation of photo types
+            const photos = [
+                { titleKey: 'photo_jaw_front', color: '4c7c8c' },
+                { titleKey: 'photo_posture_side', color: '8c4c7c' },
+                { titleKey: 'photo_jaw_side', color: '7c8c4c' },
+                { titleKey: 'photo_jaw_bottom', color: '4c8c7c' }
+            ];
+
+            // Generate HTML for comparison photos
+            grid.innerHTML = photos.map(photo => `
+                <div class="flex flex-col items-center p-2 border rounded-lg bg-white shadow-sm">
+                    <img src="https://placehold.co/180x200/${photo.color}/ffffff?text=${langData[photo.titleKey]}\n${currentCheckpoint.phase}" alt="${langData[photo.titleKey]} ${currentCheckpoint.phase}" class="w-full rounded-lg mb-2">
+                    <span class="text-xs text-gray-700 font-medium">${langData[photo.titleKey]}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Initialize translation on load
+        document.addEventListener('DOMContentLoaded', updateText);
     </script>
 </body>
 </html>
