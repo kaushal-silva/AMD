@@ -131,12 +131,12 @@
                             <tr>
                                 <th class="tracker-header" data-key="col_id">Client ID</th>
                                 <th class="tracker-header" data-key="col_doc_clinic">Referring Doctor / Clinic</th>
-                                <th class="tracker-header text-center" data-key="col_ceph">Lateral Ceph S+</th>
-                                <th class="tracker-header text-center" data-key="col_schwarz">Models (Schwartz)</th>
+                                <th class="tracker-header text-center" data-key="col_ceph">Lateral Ceph for S+ Tracing</th>
+                                <th class="tracker-header text-center" data-key="col_schwarz">Models for Schwartz Analysis</th>
                                 <th class="tracker-header text-center" data-key="col_photos">Dental+Facial Photos</th>
                                 <th class="tracker-header text-center" data-key="col_cbct">CBCT Imaging</th>
-                                <th class="tracker-header text-center" data-key="col_rx">RX to Lab</th>
-                                <th class="tracker-header text-center" data-key="col_sta">STA Date</th>
+                                <th class="tracker-header text-center" data-key="col_rx">RX to STA Lab</th>
+                                <th class="tracker-header text-center" data-key="col_sta">STA Delivery Date</th>
                                 <th class="tracker-header text-right pr-4" data-key="col_status">Action</th>
                             </tr>
                         </thead>
@@ -150,7 +150,10 @@
             <!-- Case Details View -->
             <div id="case-details-view" class="hidden">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4 section-card gap-4">
-                    <h2 id="case-details-title" class="text-3xl font-black text-gray-900" data-key="case_details_title">Case Review: Client ID <span id="client-id-display" class="text-gray-500"></span></h2>
+                    <h2 id="case-details-title" class="text-3xl font-black text-gray-900">
+                        <span data-key="case_details_title">Case Review: Client ID</span> 
+                        <span id="client-id-display" class="text-gray-500 ml-2"></span>
+                    </h2>
                     <button class="py-3 px-6 bg-yellow-600 text-white font-black text-xs rounded-xl shadow-lg uppercase tracking-widest hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
                         Submit Professional Opinion
                     </button>
@@ -161,9 +164,9 @@
                         <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                             <h3 class="text-xs font-black text-gray-400 uppercase mb-4 border-b pb-2" data-key="nav_case_title">Case File Navigation</h3>
                             <nav class="flex flex-col space-y-2">
-                                <button class="tab-button active" onclick="switchCaseTab('case-diagnostics')" data-key="case_tab_diagnostics">Diagnostic Inputs</button>
-                                <button class="tab-button" onclick="switchCaseTab('case-progress')" data-key="case_tab_progress">Progress Tracker</button>
-                                <button class="tab-button" onclick="switchCaseTab('case-history')" data-key="case_tab_history">Consultation History</button>
+                                <button id="btn-tab-diag" class="tab-button active" onclick="switchCaseTab('case-diagnostics')">Diagnostic Inputs</button>
+                                <button id="btn-tab-prog" class="tab-button" onclick="switchCaseTab('case-progress')">Progress Tracker</button>
+                                <button id="btn-tab-hist" class="tab-button" onclick="switchCaseTab('case-history')">Consultation History</button>
                             </nav>
                         </div>
                     </div>
@@ -175,18 +178,18 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div class="border p-4 rounded-xl bg-gray-50">
                                         <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
-                                        <div id="mcs-status-display" class="font-bold text-lg mb-2">MCS: 285 mm²</div>
+                                        <div id="mcs-status-display" class="font-bold text-lg mb-2 text-red-600">MCS: 285 mm²</div>
                                         <p class="text-[10px] text-gray-500 italic" data-key="cbct_note">Note: Significant restriction noted in velopharynx.</p>
                                     </div>
                                     <div class="border p-4 rounded-xl bg-gray-50">
                                         <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
                                         <p class="text-sm font-bold text-green-600 mb-2" data-key="analysis_ready">Analysis ready</p>
-                                        <p class="text-[10px] text-gray-500 italic">Schwarz: 5mm maxillary posterior crossbite correction needed.</p>
+                                        <p class="text-[10px] text-gray-500 italic">Models confirm analysis and crossbite correction requirements.</p>
                                     </div>
                                     <div class="border p-4 rounded-xl bg-gray-50">
                                         <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="ceph_title">Lateral Cephalometric Analysis</h3>
                                         <p class="text-sm font-bold text-green-600 mb-2" data-key="analysis_ready">Analysis ready</p>
-                                        <p class="text-[10px] text-gray-500 italic">S+ Tracing confirmed. Current FMA: 23°.</p>
+                                        <p class="text-[10px] text-gray-500 italic">S+ Tracing confirmed. FMA: 23°.</p>
                                     </div>
                                 </div>
                             </div>
@@ -207,9 +210,9 @@
                             <div class="section-card">
                                 <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History</h2>
                                 <div class="space-y-3">
-                                    <div class="data-point border-l-4 border-gray-400">
+                                    <div class="p-4 bg-slate-50 border-l-4 border-gray-400 rounded-r-xl">
                                         <p class="text-xs font-bold text-gray-800 uppercase tracking-widest">Referral Request</p>
-                                        <p class="text-sm text-gray-600 mt-1">Referred by Dr. Ryan Chiang for specialist design protocol. (2025/12/12)</p>
+                                        <p class="text-sm text-gray-600 mt-1">Referred by practitioner for specialist design protocol. (2025/12/12)</p>
                                     </div>
                                 </div>
                             </div>
@@ -227,12 +230,15 @@
     <!-- Opinion Modal -->
     <div id="opinion-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
         <div id="opinion-modal-content" class="bg-white w-full max-w-xl p-8 rounded-2xl shadow-2xl relative modal-fade-enter">
-            <h3 class="text-xl font-black text-gray-800 mb-4 border-b pb-2 uppercase tracking-tight" data-key="opinion_modal_title">Submit Opinion for Client ID <span id="opinion-client-id" class="text-gray-400"></span></h3>
-            <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your design blueprint recommendation for the STA lab.</p>
+            <h3 class="text-xl font-black text-gray-800 mb-4 border-b pb-2 uppercase tracking-tight">
+                <span data-key="opinion_modal_title">Submit Opinion for Client ID</span> 
+                <span id="opinion-client-id" class="text-gray-400 ml-2"></span>
+            </h3>
+            <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your detailed recommendation regarding the current diagnostics and treatment progress.</p>
             <textarea id="opinion-textarea" rows="6" class="w-full p-4 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-sm" placeholder="..." data-key="opinion_textarea_placeholder"></textarea>
             <div class="flex gap-4 mt-6">
                 <button onclick="closeModal('opinion-modal')" class="flex-1 py-3 bg-gray-100 text-gray-500 rounded-xl font-black text-xs uppercase" data-key="btn_cancel">Cancel</button>
-                <button onclick="submitOpinion()" class="flex-1 py-3 bg-yellow-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-yellow-700 transition" data-key="btn_submit_final">Submit Design</button>
+                <button onclick="submitOpinion()" class="flex-1 py-3 bg-yellow-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-yellow-700 transition" data-key="btn_submit_final">Submit Final Opinion</button>
             </div>
         </div>
     </div>
@@ -240,7 +246,7 @@
     <script>
         let currentLang = 'en';
 
-        // --- 12 MOCKED REFERRAL CASES ---
+        // --- 12 REFERRAL CASES ---
         const mockReferredCases = [
             { id: 'TW-001', practitioner: 'Dr. Ryan Chiang (Harmony Clinic)', data: [1, 1, 1, 1, 0, 0], status: 'Ready' },
             { id: 'TW-002', practitioner: 'Dr. Clement Lin (Harmony Clinic)', data: [1, 1, 1, 1, 1, 1], status: 'Ready' },
@@ -265,11 +271,11 @@
                 'pdpa_banner_text_2': 'Access requires: (1) Written Patient Consent, (2) Executed DPA.',
                 'search_title': 'Referred Case Tracker',
                 'search_placeholder': 'Search by ID or practitioner...',
-                'btn_search': 'Search',
+                'btn_search': 'Search Cases',
                 'col_id': 'Client ID',
                 'col_doc_clinic': 'Referring Doctor / Clinic',
-                'col_ceph': 'Lateral Ceph S+',
-                'col_schwarz': 'Models (Schwartz)',
+                'col_ceph': 'Lateral Ceph for S+ Tracing',
+                'col_schwarz': 'Models for Schwartz Analysis',
                 'col_photos': 'Dental+Facial Photos',
                 'col_cbct': 'CBCT Imaging',
                 'col_rx': 'RX to STA Lab',
@@ -277,6 +283,7 @@
                 'col_status': 'Action',
                 'case_details_title': 'Case Review: Client ID',
                 'btn_submit_opinion_header': 'Submit Professional Opinion',
+                'nav_case_title': 'Case File Navigation',
                 'case_tab_diagnostics': 'Diagnostic Inputs',
                 'case_tab_progress': 'Progress Tracker',
                 'case_tab_history': 'Consultation History',
@@ -287,8 +294,11 @@
                 'analysis_ready': 'Analysis ready',
                 'btn_view_case': 'Review Case →',
                 'viewing_photos': 'Viewing photos from',
-                'btn_submit_final': 'Submit Final Design',
+                'btn_submit_final': 'Submit Final Opinion',
                 'btn_cancel': 'Cancel',
+                'opinion_modal_title': 'Submit Opinion for Client ID',
+                'opinion_modal_prompt': 'Provide your detailed recommendation regarding the current diagnostics and treatment progress.',
+                'opinion_textarea_placeholder': 'Enter your design blueprint recommendations here...',
                 'toggle_text': '中文'
             },
             'zh': {
@@ -302,12 +312,12 @@
                 'btn_search': '搜尋',
                 'col_id': '客戶 ID',
                 'col_doc_clinic': '轉介醫師 / 診所',
-                'col_ceph': '側位頭影 S+',
-                'col_schwarz': '模型 (Schwartz)',
+                'col_ceph': '側位頭影 S+ 追蹤',
+                'col_schwarz': '模型 (Schwartz 分析)',
                 'col_photos': '牙齒+面部照片',
                 'col_cbct': 'CBCT 影像',
-                'col_rx': '技工單 (STA)',
-                'col_sta': 'STA 交付',
+                'col_rx': '技工單 (STA Lab)',
+                'col_sta': 'STA 交付日期',
                 'col_status': '操作',
                 'case_details_title': '病例審閱: 客戶 ID',
                 'btn_submit_opinion_header': '提交專業意見',
@@ -321,14 +331,18 @@
                 'analysis_ready': '分析已準備就緒',
                 'btn_view_case': '審閱病例 →',
                 'viewing_photos': '查看照片來自',
-                'btn_submit_final': '提交最終設計',
+                'btn_submit_final': '提交最終意見',
                 'btn_cancel': '取消',
+                'opinion_modal_title': '提交意見給客戶 ID',
+                'opinion_modal_prompt': '請提供關於當前診斷和治療進度的詳細建議。',
+                'opinion_textarea_placeholder': '在此處輸入您的設計藍圖建議...',
                 'toggle_text': 'English'
             }
         };
 
         function renderTracker() {
             const body = document.getElementById('case-tracker-body');
+            if (!body) return;
             body.innerHTML = mockReferredCases.map(c => `
                 <tr class="hover:bg-gray-50 cursor-pointer transition-colors" onclick="viewCase('${c.id}')">
                     <td class="p-4 font-bold text-gray-800">ID: ${c.id}</td>
@@ -345,13 +359,33 @@
             `).join('');
         }
 
+        function searchCases() {
+            const searchTerm = document.getElementById('case-search').value.toLowerCase();
+            const body = document.getElementById('case-tracker-body');
+            if (!body) return;
+            const rows = body.getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                const text = rows[i].textContent.toLowerCase();
+                rows[i].style.display = text.includes(searchTerm) ? "" : "none";
+            }
+        }
+
         function updateText() {
             const data = translations[currentLang];
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if (data[key]) el.textContent = data[key];
             });
-            document.getElementById('lang-toggle').textContent = data.toggle_text;
+            
+            const headerTitle = document.getElementById('header-title');
+            if (headerTitle) headerTitle.textContent = data.header_title;
+            
+            const langToggle = document.getElementById('lang-toggle');
+            if (langToggle) langToggle.textContent = data.toggle_text;
+            
+            const textarea = document.getElementById('opinion-textarea');
+            if (textarea) textarea.placeholder = data.opinion_textarea_placeholder;
+
             renderTracker();
         }
 
@@ -362,36 +396,62 @@
 
         function switchCaseTab(tabId) {
             document.querySelectorAll('.case-tab-content').forEach(c => c.classList.add('hidden'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) targetTab.classList.remove('hidden');
+            
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-            const btn = document.querySelector(`[onclick="switchCaseTab('${tabId}')"]`);
-            if (btn) btn.classList.add('active');
+            
+            let btnId = '';
+            if(tabId === 'case-diagnostics') btnId = 'btn-tab-diag';
+            else if(tabId === 'case-progress') btnId = 'btn-tab-prog';
+            else if(tabId === 'case-history') btnId = 'btn-tab-hist';
+            
+            const activeBtn = document.getElementById(btnId);
+            if (activeBtn) activeBtn.classList.add('active');
         }
 
         function viewCase(caseId) {
-            document.getElementById('client-id-display').textContent = caseId;
-            document.getElementById('case-details-view').classList.remove('hidden');
+            const idDisplay = document.getElementById('client-id-display');
+            if (idDisplay) idDisplay.textContent = caseId;
+            
+            const detailsView = document.getElementById('case-details-view');
+            if (detailsView) {
+                detailsView.classList.remove('hidden');
+                detailsView.scrollIntoView({ behavior: 'smooth' });
+            }
+            
             switchCaseTab('case-diagnostics');
-            document.getElementById('case-details-view').scrollIntoView({ behavior: 'smooth' });
         }
 
         function openSubmitModal() {
-            document.getElementById('opinion-modal').classList.remove('hidden');
-            document.getElementById('opinion-client-id').textContent = document.getElementById('client-id-display').textContent;
+            const modal = document.getElementById('opinion-modal');
+            if (modal) modal.classList.remove('hidden');
+            
+            const idDisplay = document.getElementById('client-id-display');
+            const opinionIdDisplay = document.getElementById('opinion-client-id');
+            if (idDisplay && opinionIdDisplay) {
+                opinionIdDisplay.textContent = idDisplay.textContent;
+            }
         }
 
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.add('hidden');
         }
 
         function submitOpinion() {
-            alert("Design transmitted to Practitioner. Case " + document.getElementById('opinion-client-id').textContent + " archived.");
+            const opinionIdDisplay = document.getElementById('opinion-client-id');
+            const id = opinionIdDisplay ? opinionIdDisplay.textContent : 'Unknown';
+            const msg = currentLang === 'en' ? `Design transmitted to Practitioner for case ${id}.` : `設計已傳送給執業醫師，病例編號：${id}。`;
+            alert(msg);
             closeModal('opinion-modal');
         }
 
         function updateConsultantComparisonView(val) {
             const grid = document.getElementById('photo-comparison-grid');
-            grid.innerHTML = `<div class="p-4 bg-gray-50 border rounded-xl flex items-center justify-center h-48 text-[10px] font-black text-gray-300 uppercase tracking-widest">Pseudonymized Imaging: Phase ${val}</div>`;
+            if (grid) {
+                grid.innerHTML = `<div class="p-4 bg-gray-50 border rounded-xl flex items-center justify-center h-48 text-[10px] font-black text-gray-300 uppercase tracking-widest text-center">Pseudonymized Progress Data: Phase ${val}<br>(Comparison Ready)</div>`;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', updateText);
