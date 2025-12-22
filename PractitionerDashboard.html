@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMD Practitioner Dashboard | Case Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Essential for icons used in the Tracker -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
@@ -27,6 +29,7 @@
             color: #4b5563;
             border-radius: 0.5rem;
             transition: all 0.15s ease;
+            width: 100%;
         }
         .nav-button.active {
             background-color: #e6fffa; /* Teal 100 */
@@ -37,48 +40,37 @@
         .nav-button:not(.active):hover {
             background-color: #f0fdfa;
         }
-        .alert-red {
-            background-color: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #b91c1c;
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            max-width: 85%;
+            font-size: 0.875rem;
         }
         .chat-practitioner {
             background-color: #ecfdf5; /* Teal 100 */
             align-self: flex-end;
+            border-bottom-right-radius: 0;
         }
         .chat-client {
             background-color: #dbeafe; /* Blue 100 */
             align-self: flex-start;
-        }
-        .chat-amc {
-            background-color: #f3e8ff; /* Indigo 100 */
-            align-self: flex-start;
+            border-bottom-left-radius: 0;
         }
         .revenue-metric {
             @apply text-xl font-bold text-green-700;
         }
-        .diagnostic-value {
-            @apply font-semibold text-lg p-2 rounded-md mb-2 bg-green-50 border-l-4 border-green-500;
-        }
-        /* Tracker Styles */
+        /* Tracker Header Styling */
         .tracker-header {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #64748b;
-            padding: 0.75rem;
+            padding: 0.75rem 0.5rem;
+            vertical-align: middle;
+            line-height: 1.2;
         }
-        /* Custom modal animation */
-        .modal-fade-enter {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        .modal-fade-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 200ms ease-out, transform 200ms ease-out;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
@@ -87,20 +79,21 @@
         <!-- Header -->
         <header class="bg-teal-gradient shadow-md">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                 <h1 id="header-title" class="text-3xl font-bold text-white" data-key="header_title">AMD Practitioner Dashboard</h1>
+                 <h1 id="header-title" class="text-2xl font-bold text-white" data-key="header_title">AMD Practitioner Dashboard</h1>
                 <div class="flex items-center space-x-4">
                     <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-teal-700 border border-teal-500 hover:bg-teal-100 transition duration-150 font-semibold text-sm shadow">
+                        中文
                     </button>
                     <a href="index.html" class="text-sm font-medium text-teal-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Area with Navigation Panes -->
+        <!-- Main Content Area -->
         <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                 
-                <!-- LEFT COLUMN: Navigation Tabs -->
+                <!-- LEFT COLUMN: Navigation -->
                 <div class="lg:col-span-1 mb-8 lg:mb-0">
                     <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                         <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_practitioner_title">Practice Navigation</h3>
@@ -118,50 +111,50 @@
                                 Payments & Accounting
                             </button>
                         </nav>
-                        <div class="mt-8 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Logged in as:</p>
+                        <div class="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Clinic Director:</p>
                             <p class="text-sm font-bold text-teal-700">Dr. Ryan Chiang</p>
+                            <p class="text-[10px] text-slate-500">Harmony Clinic (Taipei)</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMNS (3/4): Dynamic Content Area -->
+                <!-- RIGHT COLUMN: Dynamic Content -->
                 <div id="content-area" class="lg:col-span-3 space-y-8">
                     
-                    <!-- 1. Practice Overview (Default Pane) -->
+                    <!-- 1. Practice Overview / Master Tracker -->
                     <div id="pane-overview" class="main-pane">
                         <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="overview_summary_title">Practice Summary & Metrics</h2>
 
-                        <!-- Practice Statistics -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             <div class="section-card border-l-4 border-teal-500">
-                                <p class="text-sm text-gray-500" data-key="stat_active">Active Patients</p>
-                                <p class="text-4xl font-bold text-gray-900 mt-1">45</p>
+                                <p class="text-xs font-bold text-gray-400 uppercase" data-key="stat_active">Active Patients</p>
+                                <p class="text-3xl font-black text-gray-900 mt-1">45</p>
                             </div>
                             <div class="section-card border-l-4 border-amber-500">
-                                <p class="text-sm text-gray-500" data-key="stat_new">New Intake (30 days)</p>
-                                <p class="text-4xl font-bold text-gray-900 mt-1">8</p>
+                                <p class="text-xs font-bold text-gray-400 uppercase" data-key="stat_new">New Intake (30 days)</p>
+                                <p class="text-3xl font-black text-gray-900 mt-1">8</p>
                             </div>
                             <div class="section-card border-l-4 border-sky-500">
-                                <p class="text-sm text-gray-500" data-key="stat_total_seen">Total Patients Seen (Historical)</p>
-                                <p class="text-4xl font-bold text-gray-900 mt-1">128</p>
+                                <p class="text-xs font-bold text-gray-400 uppercase" data-key="stat_total_seen">Total Patients</p>
+                                <p class="text-3xl font-black text-gray-900 mt-1">128</p>
                             </div>
                         </div>
 
                         <!-- MASTER CASE TRACKER -->
                         <div class="section-card overflow-hidden">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="readiness_title">Master Case Tracker</h3>
-                            <div class="overflow-x-auto">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="readiness_title">Master Case Tracker</h3>
+                            <div class="overflow-x-auto no-scrollbar">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
-                                            <th class="tracker-header" data-key="col_patient">Patient</th>
-                                            <th class="tracker-header text-center" data-i18n="col_ceph">Lateral Ceph for S+ Tracing</th>
-                                            <th class="tracker-header text-center" data-i18n="col_schwarz">Models for Schwartz Analysis</th>
-                                            <th class="tracker-header text-center" data-i18n="col_photos">Dental+Facial Photos</th>
-                                            <th class="tracker-header text-center" data-i18n="col_cbct">CBCT Imaging</th>
-                                            <th class="tracker-header text-center" data-i18n="col_rx">RX to STA Lab</th>
-                                            <th class="tracker-header text-center" data-i18n="col_sta">STA Delivery Date</th>
+                                            <th class="tracker-header text-left" data-key="col_patient">Patient</th>
+                                            <th class="tracker-header text-center" data-key="col_ceph">Lateral Ceph S+</th>
+                                            <th class="tracker-header text-center" data-key="col_schwarz">Models (Schwartz)</th>
+                                            <th class="tracker-header text-center" data-key="col_photos">Dental+Facial Photos</th>
+                                            <th class="tracker-header text-center" data-key="col_cbct">CBCT Imaging</th>
+                                            <th class="tracker-header text-center" data-key="col_rx">RX to Lab</th>
+                                            <th class="tracker-header text-center" data-key="col_sta">STA Date</th>
                                             <th class="tracker-header text-right pr-4" data-key="col_status">Status</th>
                                         </tr>
                                     </thead>
@@ -173,139 +166,114 @@
                         </div>
                     </div>
 
-                    <!-- 2. Patient Management (List Pane) -->
+                    <!-- 2. Patient Management -->
                     <div id="pane-patients" class="main-pane hidden">
                          <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="patient_management_title">Patient Management</h2>
                          <div class="section-card mb-4">
-                             <div class="flex flex-col md:flex-row gap-4 items-center">
-                                 <input type="text" id="patient-search" placeholder="Search by Name, DOB, or ID..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500">
-                                 <button onclick="mockSearchPatients()" class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
-                                     Search Clients
-                                 </button>
+                             <div class="flex gap-4 items-center">
+                                 <input type="text" id="patient-search" placeholder="Search by Name, DOB, or ID..." class="flex-grow p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-teal-500">
+                                 <button class="py-3 px-6 bg-teal-600 text-white font-bold rounded-lg" data-key="btn_search">Search</button>
                              </div>
                          </div>
-                         <div id="full-patient-list" class="section-card">
-                             <ul class="divide-y divide-gray-200" id="management-list">
-                                 <!-- Population by JS -->
-                             </ul>
+                         <div class="section-card" id="management-list">
+                             <ul class="divide-y divide-gray-200" id="patients-ul"></ul>
                          </div>
                     </div>
 
-                    <!-- 3. New Patient Intake (Intake Pane) -->
+                    <!-- 3. New Patient Intake -->
                     <div id="pane-intake" class="main-pane hidden">
-                        <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="intake_title">New Patient Intake Review</h2>
+                        <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="intake_title">New Patient Intake</h2>
                         <div class="section-card">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="intake_pending">3 Pending Case Assignments</h3>
-                            <div class="space-y-4 divide-y divide-gray-200">
-                                <div class="pt-3 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-gray-900">Patient: Wei-Chun Tseng (ID: 1050)</p>
-                                        <p class="text-sm text-gray-500">Submitted Assessment: 2025/12/12</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button onclick="acceptPatient('1050')" class="py-1 px-3 bg-green-500 text-white text-sm rounded-lg" data-key="btn_accept">Accept Patient</button>
-                                        <button onclick="rejectPatient('1050')" class="py-1 px-3 bg-red-500 text-white text-sm rounded-lg" data-key="btn_reject">Reject</button>
-                                    </div>
-                                </div>
-                                <div class="pt-3 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-gray-900">Patient: Sophia Hsieh (ID: 1051)</p>
-                                        <p class="text-sm text-gray-500">Submitted Assessment: 2025/12/10</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button onclick="acceptPatient('1051')" class="py-1 px-3 bg-green-500 text-white text-sm rounded-lg" data-key="btn_accept">Accept Patient</button>
-                                        <button onclick="rejectPatient('1051')" class="py-1 px-3 bg-red-500 text-white text-sm rounded-lg" data-key="btn_reject">Reject</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2" data-key="intake_pending">3 Pending Case Assignments</h3>
+                            <div class="space-y-4" id="intake-list"></div>
                         </div>
                     </div>
 
-                    <!-- 4. Payments & Accounting Pane -->
+                    <!-- 4. Payments & Accounting -->
                     <div id="pane-payments" class="main-pane hidden">
                         <h2 class="text-3xl font-bold text-teal-600 mb-6" data-key="payments_title">Payments & Accounting</h2>
-                        <div class="section-card mb-8">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2" data-key="revenue_summary_title">Revenue Summary (YTD)</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="p-3 border rounded-lg bg-green-50">
-                                    <p class="text-sm text-gray-500" data-key="total_revenue">Total AMD Revenue</p>
-                                    <p class="revenue-metric mt-1">NT$ 4,820,000</p>
-                                </div>
-                                <div class="p-3 border rounded-lg bg-blue-50">
-                                    <p class="text-sm text-gray-500">Projected LTV (6M)</p>
-                                    <p class="revenue-metric mt-1">NT$ 1,200,000</p>
-                                </div>
-                            </div>
+                        <div class="section-card border-l-4 border-green-500">
+                            <p class="text-sm font-bold text-gray-500 uppercase" data-key="total_revenue">Total AMD Revenue (YTD)</p>
+                            <p class="revenue-metric text-4xl">NT$ 4,820,000</p>
                         </div>
                     </div>
 
-                    <!-- 5. Client Detail View -->
+                    <!-- 5. Client Detail View (Master View) -->
                     <div id="pane-client-detail" class="main-pane hidden space-y-8">
-                        <button onclick="switchMainPane('overview')" class="text-teal-600 font-medium text-sm mb-4 flex items-center">
+                        <button onclick="switchMainPane('overview')" class="text-teal-600 font-bold text-sm mb-4 flex items-center gap-2">
                              &larr; <span data-key="btn_back_to_list">Back to Master Tracker</span>
                         </button>
                         
-                        <div class="flex justify-between items-center mb-6 border-b pb-4">
-                            <h2 id="client-detail-name" class="text-3xl font-bold text-gray-900">Jane Chen's Full File</h2>
-                            <button onclick="requestConsultation()" class="py-2 px-4 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-150" data-key="btn_consult_detail">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b pb-4">
+                            <div>
+                                <h2 id="client-detail-name" class="text-3xl font-black text-gray-900">Jane Chen's File</h2>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">ID: <span id="client-detail-id">TW-001</span> • Active Growth Phase</p>
+                            </div>
+                            <button onclick="requestConsultation()" class="py-3 px-6 bg-red-600 text-white font-black text-xs rounded-xl shadow-lg uppercase tracking-widest" data-key="btn_consult_detail">
                                 Refer to Specialist (Doc Felix)
                             </button>
                         </div>
                         
                         <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                             <div class="lg:col-span-1 mb-8 lg:mb-0">
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">File Sections</h3>
-                                    <nav class="flex flex-col space-y-2">
-                                        <button class="nav-button active" onclick="switchClientDetailTab('client-plan')">Plan & Support</button>
-                                        <button class="nav-button" onclick="switchClientDetailTab('client-diagnostics')">Diagnostics</button>
-                                        <button class="nav-button" onclick="switchClientDetailTab('client-chat')">Care Chat</button>
-                                    </nav>
+                                <div class="bg-white p-4 rounded-xl shadow-lg space-y-2">
+                                    <h3 class="text-xs font-black text-gray-400 uppercase mb-4 border-b pb-2">File Navigation</h3>
+                                    <button class="nav-button active" onclick="switchClientDetailTab('client-plan')">Plan & Motivation</button>
+                                    <button class="nav-button" onclick="switchClientDetailTab('client-diagnostics')">Diagnostics</button>
+                                    <button class="nav-button" onclick="switchClientDetailTab('client-chat')">Patient Care Chat</button>
                                 </div>
                             </div>
                             
                             <div id="client-detail-content" class="lg:col-span-3 space-y-8">
                                 <div id="client-tab-client-plan" class="client-detail-tab">
-                                    <div class="section-card border-l-4 border-amber-500 mb-6">
-                                        <h3 class="font-bold text-xl text-amber-600 uppercase text-xs tracking-widest mb-4">Patient Motivation</h3>
-                                        <ul class="list-disc list-inside text-sm text-slate-600 space-y-2">
-                                            <li>Chronic Daytime Fatigue</li>
-                                            <li>Severe Neck/Shoulder Tension</li>
-                                        </ul>
+                                    <div class="section-card border-t-8 border-amber-500 mb-6">
+                                        <h3 class="font-black text-xs text-amber-600 uppercase tracking-widest mb-4">Core Motivation</h3>
+                                        <p class="text-sm font-semibold text-slate-700 leading-relaxed">"Client primary goal is the total elimination of severe daytime fatigue and morning headaches. Posture correction is secondary but noted for LTV tracking."</p>
                                     </div>
                                     <div class="section-card">
-                                        <h3 class="font-bold text-xl text-sky-600 mb-4">Clinical Status</h3>
-                                        <p class="text-sm">Active Treatment Stage: <strong>Month 6</strong></p>
-                                        <p class="text-sm">Current Appliance: <strong>STA (2.0 Turns)</strong></p>
+                                        <h3 class="font-bold text-xl text-sky-600 mb-4">Intervention Status</h3>
+                                        <div class="p-4 bg-sky-50 rounded-xl border border-sky-100 flex justify-between items-center">
+                                            <div>
+                                                <p class="text-xs font-bold text-sky-600 uppercase">Appliance Config</p>
+                                                <p class="text-sm font-bold text-slate-800">STA (2.0 Turns / 0.50mm)</p>
+                                            </div>
+                                            <span class="px-3 py-1 bg-sky-200 text-sky-800 text-[10px] font-black rounded-full uppercase">Month 6 of 24</span>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div id="client-tab-client-diagnostics" class="client-detail-tab hidden">
                                     <div class="section-card">
-                                        <h3 class="font-bold text-xl text-indigo-600 mb-4">Shared Diagnostic History</h3>
+                                        <h3 class="font-bold text-xl text-indigo-600 mb-6">Clinical Data Synchronized</h3>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div class="p-4 bg-slate-50 border rounded-lg">
-                                                <p class="text-xs font-bold text-indigo-700 uppercase mb-2">Lateral Ceph</p>
-                                                <p class="text-sm font-semibold text-green-600">Analysis Ready</p>
+                                            <div class="p-4 bg-slate-50 border rounded-xl flex items-center gap-4">
+                                                <div class="h-10 w-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center"><i class="fa-solid fa-check"></i></div>
+                                                <div><p class="text-xs font-bold text-slate-500 uppercase">Lateral Ceph</p><p class="text-sm font-bold text-slate-800">Analysis Ready</p></div>
                                             </div>
-                                            <div class="p-4 bg-slate-50 border rounded-lg">
-                                                <p class="text-xs font-bold text-indigo-700 uppercase mb-2">CBCT Scan</p>
-                                                <p class="text-sm font-semibold text-red-600">MCS: 285mm² (Critical)</p>
+                                            <div class="p-4 bg-slate-50 border rounded-xl flex items-center gap-4">
+                                                <div class="h-10 w-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center"><i class="fa-solid fa-exclamation"></i></div>
+                                                <div><p class="text-xs font-bold text-slate-500 uppercase">CBCT Airway</p><p class="text-sm font-bold text-red-600">MCS: 285mm² (Critical)</p></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div id="client-tab-client-chat" class="client-detail-tab hidden">
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-xl text-blue-600 mb-4">AMD Patient Care Chat</h3>
-                                        <div class="h-64 overflow-y-auto p-4 bg-slate-50 rounded-lg space-y-4 mb-4 flex flex-col no-scrollbar">
-                                            <div class="chat-bubble chat-client p-3 rounded-xl max-w-[80%] self-start bg-blue-100 text-xs">
-                                                <p class="font-bold">John Lee (Patient)</p>
-                                                <p>Device feels a bit tight today.</p>
+                                    <div class="section-card flex flex-col h-[400px]">
+                                        <h3 class="font-bold text-xl text-blue-600 mb-4">Direct Patient Care</h3>
+                                        <div class="flex-1 overflow-y-auto space-y-4 mb-4 flex flex-col no-scrollbar p-2">
+                                            <div class="chat-bubble chat-client">
+                                                <p class="text-[10px] font-black text-blue-800 uppercase mb-1">John Lee (Patient)</p>
+                                                <p>The device feels a bit tight near the molars this morning. Is this the right feeling?</p>
                                             </div>
-                                            <div class="chat-bubble chat-practitioner p-3 rounded-xl max-w-[80%] self-end bg-teal-100 text-xs">
-                                                <p class="font-bold">You (Dr. Ryan Chiang)</p>
-                                                <p>That is your agency in action, John. Keep going.</p>
+                                            <div class="chat-bubble chat-practitioner">
+                                                <p class="text-[10px] font-black text-teal-800 uppercase mb-1">You (Dr. Ryan Chiang)</p>
+                                                <p>Yes, John. That pressure is your anatomy reshaping for better flow. Agency is earned through that effort.</p>
                                             </div>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <input type="text" placeholder="Reply to patient..." class="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                                            <button class="h-12 w-12 bg-teal-600 text-white rounded-xl shadow-lg flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -317,38 +285,41 @@
         </main>
     </div>
 
-    <!-- PDPA Confirmation Modal -->
-    <div id="pdpa-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <div id="pdpa-modal-content" class="bg-white w-full max-w-lg p-8 rounded-xl shadow-2xl relative">
-            <h3 class="text-2xl font-bold text-red-600 mb-4 border-b pb-2" data-key="modal_title">Specialist Consultation Request</h3>
-            <p class="text-lg text-gray-800 mb-6" data-key="modal_subtitle">You are about to share pseudonymized client data with Doc Felix (California).</p>
-            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded-lg">
-                <p class="font-semibold text-yellow-800 mb-2" data-key="compliance_check">Compliance Check Required (PDPA/DPA):</p>
-                <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li data-key="pdpa_1">Written Consent obtained for international transfer.</li>
-                    <li data-key="pdpa_2">Data shared is pseudonymized (ID only).</li>
-                    <li data-key="pdpa_3">Case readiness check complete (100% data points).</li>
-                </ul>
+    <!-- PDPA Compliance Modal -->
+    <div id="pdpa-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white w-full max-w-lg p-8 rounded-2xl shadow-2xl">
+            <h3 class="text-xl font-black text-red-600 mb-4 border-b pb-2 uppercase tracking-tight">Specialist Referral Check</h3>
+            <p class="text-base text-slate-800 mb-6 font-semibold">Confirming compliance for international transfer to Doc Felix (California).</p>
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 mb-8 rounded-xl space-y-3">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="c1" class="h-4 w-4 text-teal-600"><label for="c1" class="text-xs text-slate-700 font-bold uppercase">Written Consent Obtained</label>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="c2" class="h-4 w-4 text-teal-600"><label for="c2" class="text-xs text-slate-700 font-bold uppercase">Pseudonymized (ID: TW-001)</label>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="c3" class="h-4 w-4 text-teal-600"><label for="c3" class="text-xs text-slate-700 font-bold uppercase">Executing Practice DPA</label>
+                </div>
             </div>
-            <div class="flex justify-end space-x-4">
-                <button onclick="closeModal('pdpa-modal')" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">Cancel</button>
-                <button onclick="confirmConsultation()" class="py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold">Confirm & Refer Case</button>
+            <div class="flex gap-4">
+                <button onclick="closeModal('pdpa-modal')" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-black text-xs uppercase">Cancel</button>
+                <button onclick="confirmConsultation()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-xl">Confirm & Refer</button>
             </div>
         </div>
     </div>
     
     <script>
         let currentLang = 'en';
-        let currentPane = 'overview';
         
+        // --- 12 PATIENTS MOCK DATA ---
         const mockPatients = [
             { name: "John Lee", id: "TW-001", data: [1, 1, 1, 1, 0, 0], status: "Active" },
             { name: "Mei-Ling Wu", id: "TW-002", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
-            { name: "Kevin Chen", id: "TW-003", data: [1, 1, 0, 1, 0, 0], status: "Scan Needed" },
-            { name: "Alice Chang", id: "TW-004", data: [1, 1, 1, 1, 1, 0], status: "Pending RX" },
-            { name: "David Hsu", id: "TW-005", data: [0, 0, 1, 1, 0, 0], status: "Incomplete" },
+            { name: "Kevin Chen", id: "TW-003", data: [1, 1, 0, 1, 0, 0], status: "Missing Photos" },
+            { name: "Alice Chang", id: "TW-004", data: [1, 1, 1, 1, 1, 0], status: "Awaiting STA" },
+            { name: "David Hsu", id: "TW-005", data: [0, 0, 1, 1, 0, 0], status: "Scan Needed" },
             { name: "Sarah Lin", id: "TW-006", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
-            { name: "Robert Wang", id: "TW-007", data: [1, 1, 1, 0, 0, 0], status: "Awaiting Lab" },
+            { name: "Robert Wang", id: "TW-007", data: [1, 1, 1, 0, 0, 0], status: "Incomplete" },
             { name: "Emily Yang", id: "TW-008", data: [1, 1, 1, 1, 1, 1], status: "Ready" },
             { name: "Jason Liu", id: "TW-009", data: [0, 0, 0, 0, 0, 0], status: "New Intake" },
             { name: "Kelly Ho", id: "TW-010", data: [1, 0, 1, 1, 0, 0], status: "Incomplete" },
@@ -357,73 +328,75 @@
         ];
 
         const translations = {
-            'en': {
-                'header_title': 'AMD Practitioner Dashboard',
-                'logout_link': '← Log Out / Portal',
-                'nav_practitioner_title': 'Practice Navigation',
-                'nav_overview': 'Practice Overview',
-                'nav_patients': 'Patient Management',
-                'nav_intake': 'New Patient Intake (3)',
-                'nav_payments': 'Payments & Accounting',
-                'overview_summary_title': 'Practice Summary & Metrics',
-                'readiness_title': 'Master Case Tracker',
-                'col_patient': 'Patient Name',
-                'col_status': 'Clinical Status',
-                'btn_back_to_list': 'Back to Master Tracker',
-                'toggle_text': '中文',
-                'stat_active': 'Active Patients',
-                'stat_new': 'New Intake (30 days)',
-                'stat_total_seen': 'Historical Patients',
-                'col_ceph': 'Lateral Ceph for S+ Tracing',
-                'col_schwarz': 'Models for Schwartz Analysis',
-                'col_photos': 'Dental+Facial Photos',
-                'col_cbct': 'CBCT Imaging',
-                'col_rx': 'RX to STA Lab',
-                'col_sta': 'STA Delivery Date'
+            en: {
+                header_title: "AMD Practitioner Dashboard",
+                logout_link: "← Log Out / Portal",
+                nav_practitioner_title: "Practice Navigation",
+                nav_overview: "Practice Overview",
+                nav_patients: "Patient Management",
+                nav_intake: "New Patient Intake (3)",
+                nav_payments: "Payments & Accounting",
+                overview_summary_title: "Practice Summary & Metrics",
+                readiness_title: "Master Case Tracker",
+                col_patient: "Patient Name",
+                col_status: "Status",
+                btn_back_to_list: "Back to Master Tracker",
+                btn_search: "Search",
+                toggle_text: "中文",
+                stat_active: "Active Patients",
+                stat_new: "New Intake (30 days)",
+                stat_total_seen: "Total Cases",
+                col_ceph: "Lat. Ceph (S+)",
+                col_schwarz: "Models (Schwartz)",
+                col_photos: "Photos (D+F)",
+                col_cbct: "CBCT Imaging",
+                col_rx: "RX to Lab",
+                col_sta: "STA Date"
             },
-            'zh': {
-                'header_title': 'AMD 執業醫師儀表板',
-                'logout_link': '← 登出 / 入口網站',
-                'nav_practitioner_title': '診所導航',
-                'nav_overview': '實務概覽',
-                'nav_patients': '患者管理',
-                'nav_intake': '新患者入組 (3)',
-                'nav_payments': '支付與會計',
-                'overview_summary_title': '實務摘要與指標',
-                'readiness_title': '病例追蹤總表',
-                'col_patient': '患者姓名',
-                'col_status': '臨床狀態',
-                'btn_back_to_list': '返回追蹤總表',
-                'toggle_text': 'English',
-                'stat_active': '活躍患者',
-                'stat_new': '新入組 (30天)',
-                'stat_total_seen': '歷史總患者',
-                'col_ceph': '側位頭影測量 (S+ 追蹤)',
-                'col_schwarz': '模型 (Schwartz 分析)',
-                'col_photos': '牙齒+面部照片',
-                'col_cbct:': 'CBCT 影像',
-                'col_rx': '技工單 (STA Lab)',
-                'col_sta': 'STA 交付日期'
+            zh: {
+                header_title: "AMD 執業醫師儀表板",
+                logout_link: "← 登出 / 入口網站",
+                nav_practitioner_title: "診所導航",
+                nav_overview: "實務概覽",
+                nav_patients: "患者管理",
+                nav_intake: "新患者入組 (3)",
+                nav_payments: "支付與會計",
+                overview_summary_title: "實務摘要與指標",
+                readiness_title: "病例追蹤總表",
+                col_patient: "患者姓名",
+                col_status: "狀態",
+                btn_back_to_list: "返回追蹤總表",
+                btn_search: "搜尋",
+                toggle_text: "English",
+                stat_active: "活躍患者",
+                stat_new: "新入組 (30天)",
+                stat_total_seen: "總病例數",
+                col_ceph: "側位頭影 (S+)",
+                col_schwarz: "模型 (Schwartz)",
+                col_photos: "照片 (牙+面)",
+                col_cbct: "CBCT 影像",
+                col_rx: "技工單",
+                col_sta: "STA 交付"
             }
         };
 
         function renderTracker() {
             const body = document.getElementById('tracker-body');
             body.innerHTML = mockPatients.map(p => `
-                <tr class="hover:bg-teal-50 cursor-pointer" onclick="selectPatient('${p.name}')">
-                    <td class="px-3 py-4 font-medium text-gray-900">
+                <tr class="hover:bg-teal-50 cursor-pointer transition-colors" onclick="selectPatient('${p.name}', '${p.id}')">
+                    <td class="px-3 py-4 font-bold text-gray-800">
                         <div class="flex flex-col">
                             <span>${p.name}</span>
-                            <span class="text-[10px] text-gray-400 font-mono">AMD-${p.id}</span>
+                            <span class="text-[9px] text-gray-400 font-black uppercase">AMD-${p.id}</span>
                         </div>
                     </td>
                     ${p.data.map(val => `
                         <td class="text-center px-3 py-4">
-                            <i class="fa-solid ${val ? 'fa-circle-check text-blue-500' : 'fa-circle text-gray-200'} text-lg"></i>
+                            <i class="fa-solid ${val ? 'fa-circle-check text-blue-500' : 'fa-circle text-slate-200'} text-lg"></i>
                         </td>
                     `).join('')}
                     <td class="px-3 py-4 text-right pr-4">
-                        <span class="text-[10px] font-bold px-2 py-1 rounded uppercase ${
+                        <span class="text-[9px] font-black px-2 py-1 rounded uppercase tracking-tighter ${
                             p.status === 'Ready' ? 'bg-green-100 text-green-700' : 'bg-sky-100 text-sky-700'
                         }">${p.status}</span>
                     </td>
@@ -435,11 +408,13 @@
             document.querySelectorAll('.main-pane').forEach(p => p.classList.add('hidden'));
             document.getElementById(`pane-${paneId}`).classList.remove('hidden');
             document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-            document.querySelector(`[onclick="switchMainPane('${paneId}')"]`).classList.add('active');
+            const activeBtn = document.querySelector(`[onclick="switchMainPane('${paneId}')"]`);
+            if(activeBtn) activeBtn.classList.add('active');
         }
 
-        function selectPatient(name) {
-            document.getElementById('client-detail-name').textContent = `${name}'s File (Master View)`;
+        function selectPatient(name, id) {
+            document.getElementById('client-detail-name').textContent = `${name}'s Master File`;
+            document.getElementById('client-detail-id').textContent = `AMD-${id}`;
             switchMainPane('client-detail');
         }
 
@@ -452,7 +427,7 @@
             document.querySelectorAll('.client-detail-tab').forEach(t => t.classList.add('hidden'));
             document.getElementById(`client-tab-${tabId}`).classList.remove('hidden');
             document.querySelectorAll('#pane-client-detail .nav-button').forEach(b => b.classList.remove('active'));
-            document.querySelector(`[onclick="switchClientDetailTab('${tabId}')"]`).classList.add('active');
+            event.target.classList.add('active');
         }
 
         function requestConsultation() {
@@ -464,8 +439,12 @@
         }
 
         function confirmConsultation() {
-            alert("Referral sent to Doc Felix. Pseudonymized case TW-001 transmitted.");
-            closeModal('pdpa-modal');
+            if(document.getElementById('c1').checked && document.getElementById('c2').checked && document.getElementById('c3').checked) {
+                alert("Case successfully referred to Doc Felix. Digital files transmitted.");
+                closeModal('pdpa-modal');
+            } else {
+                alert("Please verify all compliance points.");
+            }
         }
 
         function updateText() {
@@ -474,12 +453,6 @@
                 const key = el.getAttribute('data-key');
                 if (data[key]) el.textContent = data[key];
             });
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (data[key]) el.textContent = data[key];
-            });
-
             document.getElementById('lang-toggle').textContent = data.toggle_text;
             renderTracker();
         }
