@@ -169,7 +169,7 @@
                             <nav class="flex flex-col space-y-2">
                                 <button id="btn-tab-diag" class="tab-button active" onclick="switchCaseTab('case-diagnostics')">Diagnostic Inputs</button>
                                 <button id="btn-tab-report" class="tab-button" onclick="switchCaseTab('case-report')">Initial Consultation Report</button>
-                                <button id="btn-tab-lab" class="tab-button" onclick="switchCaseTab('case-lab')">STA Lab Instructions</button>
+                                <button id="btn-tab-lab" class="tab-button" onclick="switchCaseTab('case-lab')">Treatment</button>
                                 <button id="btn-tab-prog" class="tab-button" onclick="switchCaseTab('case-progress')">Progress Tracker</button>
                                 <button id="btn-tab-hist" class="tab-button" onclick="switchCaseTab('case-history')">Consultation History</button>
                             </nav>
@@ -214,45 +214,68 @@
                                             <p id="record-status" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ready to Record</p>
                                         </div>
                                         <button onclick="toggleRecording('report')" id="record-btn-report" class="px-6 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold uppercase shadow-lg">Start Assessment Recording</button>
-                                        <p class="mt-4 text-[10px] text-slate-400 max-w-[200px]">Recording will be transcribed and attached to the generated report for the practitioner.</p>
+                                        <p class="mt-4 text-[10px] text-slate-400 max-w-[200px]"> ट्रांसक्रिप्टेड और जनरेटेड रिपोर्ट के साथ अटैच किया जाएगा।</p>
                                     </div>
 
-                                    <!-- Report Generation -->
+                                    <!-- Report Setup -->
                                     <div class="flex flex-col gap-4">
-                                        <button onclick="generateReport()" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-indigo-700 transition">
-                                            <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generate Diagnostic Report
-                                        </button>
-                                        <div id="transcription-box" class="flex-1 p-4 bg-yellow-50 border border-yellow-100 rounded-2xl hidden">
+                                        <div class="space-y-2">
+                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Report Template</label>
+                                            <select id="report-template" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-sky-500">
+                                                <option value="airway">Template 1: Airway Volume Assessment</option>
+                                                <option value="arch">Template 2: Arch Expansion Protocol</option>
+                                                <option value="total">Template 3: Total Health Optimization</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="space-y-2">
+                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Similar Case Study</label>
+                                            <select id="case-study" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-sky-500">
+                                                <option value="none">-- Benchmark Case (Optional) --</option>
+                                                <option value="tw402">Case TW-402: High Arch Expansion Success</option>
+                                                <option value="tw122">Case TW-122: Obstructive Sleep Apnea Relief</option>
+                                                <option value="tw88">Case TW-088: Cervical Tension Resolution</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex gap-2">
+                                            <button onclick="generateReport()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-indigo-700 transition">
+                                                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generate Report
+                                            </button>
+                                            <button onclick="downloadPPT()" class="px-4 py-3 bg-slate-200 text-slate-700 rounded-xl font-black text-xs uppercase hover:bg-slate-300 transition">
+                                                <i class="fa-solid fa-file-powerpoint"></i> PPT
+                                            </button>
+                                        </div>
+
+                                        <div id="transcription-box" class="p-4 bg-yellow-50 border border-yellow-100 rounded-2xl hidden">
                                             <h4 class="text-[10px] font-black text-yellow-700 uppercase mb-2">Live Transcription Draft</h4>
-                                            <p id="transcription-text" class="text-xs text-slate-700 leading-relaxed italic">The CBCT scan shows a critical restriction in the velopharynx at 285mm². Recommend immediate STA intervention with focus on posterior arch development...</p>
+                                            <p id="transcription-text" class="text-xs text-slate-700 leading-relaxed italic">Analysis of scans for Case <span class="active-id-placeholder"></span>...</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div id="report-preview" class="p-6 bg-white border border-slate-200 rounded-2xl hidden">
                                     <div class="flex justify-between items-center mb-6">
-                                        <h3 class="text-lg font-black uppercase tracking-tight">Report: Airway Assessment Alpha</h3>
+                                        <h3 class="text-lg font-black uppercase tracking-tight" id="preview-title">Report Preview</h3>
                                         <button class="text-xs font-bold text-sky-600 uppercase underline">Download PDF</button>
                                     </div>
-                                    <div class="space-y-4 text-xs text-slate-600">
-                                        <p><strong>Clinical Summary:</strong> Significant airway restriction identified.</p>
-                                        <p><strong>Diagnosis:</strong> Maxillary transverse deficiency contributing to reduced airflow volume.</p>
-                                        <p><strong>Next Steps:</strong> Practitioner to verify model alignment before STA design finalization.</p>
+                                    <div class="space-y-4 text-xs text-slate-600" id="preview-content">
+                                        <!-- Dynamic content -->
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 3. STA Lab Instructions Tab -->
+                        <!-- 3. Treatment Tab (Renamed from STA Lab Instructions) -->
                         <div id="tab-case-lab" class="case-tab-content space-y-8 hidden">
                             <div class="section-card border-t-8 border-amber-500">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-key="lab_title">STA Lab Fabrication Instructions</h2>
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-key="lab_title">Treatment Protocol Design</h2>
                                 
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    <!-- Expert Diagnosis & Notes -->
+                                    <!-- Expert Diagnosis & Sub-Notes -->
                                     <div class="space-y-6">
                                         <div>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Voice Diagnosis (For Lab Tech)</label>
+                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Voice Protocol Notes (Transcribed)</label>
                                             <div class="flex items-center gap-4 p-4 bg-slate-50 border rounded-xl">
                                                 <button onclick="toggleRecording('lab')" id="record-btn-lab" class="h-10 w-10 bg-slate-900 text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-microphone"></i></button>
                                                 <div class="flex-1">
@@ -261,30 +284,33 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Fabrication Specifications</label>
-                                            <textarea id="lab-notes" rows="5" class="w-full p-4 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Specify molar anchors, expansion turn increments, and occlusal pad thickness..."></textarea>
+
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2 block">STA Lab Specifications</label>
+                                                <textarea id="lab-notes" rows="4" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Specify molar anchors, expansion turn increments..."></textarea>
+                                            </div>
+                                            <div>
+                                                <label class="text-[10px] font-black text-teal-600 uppercase tracking-widest mb-2 block">Nutrition & Bio-Support Notes</label>
+                                                <textarea id="nutrition-notes" rows="3" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" placeholder="e.g. Bone Broth + Magnesium Glycinate loading phase..."></textarea>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <!-- Image Upload Slots -->
+                                    <!-- Image Upload Slots (Kept as is) -->
                                     <div>
                                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Reference Images & Blueprints</label>
                                         <div class="grid grid-cols-2 gap-3">
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1"></i>
                                                 <span class="text-[9px] font-bold uppercase">Upload S+ Trace</span>
                                             </div>
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1"></i>
                                                 <span class="text-[9px] font-bold uppercase">Upload Scan Overlay</span>
                                             </div>
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 group-hover:scale-110 transition-transform"></i>
-                                                <span class="text-[9px] font-bold uppercase">Molar Prep 1</span>
-                                            </div>
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 hover:text-amber-500 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-plus text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 transition-colors cursor-pointer group">
+                                                <i class="fa-solid fa-plus text-xl mb-1"></i>
                                                 <span class="text-[9px] font-bold uppercase">Add Photo</span>
                                             </div>
                                         </div>
@@ -402,7 +428,7 @@
                 'btn_cancel': 'Cancel',
                 'toggle_text': '中文',
                 'report_title': 'Initial Consultation Assessment',
-                'lab_title': 'STA Lab Fabrication Instructions'
+                'lab_title': 'Treatment Protocol Design'
             },
             'zh': {
                 'header_title': '專業顧問儀表板',
@@ -438,7 +464,7 @@
                 'btn_cancel': '取消',
                 'toggle_text': 'English',
                 'report_title': '初步會診評估',
-                'lab_title': 'STA 實驗室製作指令'
+                'lab_title': '治療方案設計'
             }
         };
 
@@ -507,7 +533,6 @@
             const btn = context === 'report' ? document.getElementById('record-btn-report') : document.getElementById('record-btn-lab');
             const status = context === 'report' ? document.getElementById('record-status') : document.getElementById('lab-record-status');
             const icon = document.getElementById('record-btn-icon');
-            const progress = document.getElementById('recording-progress');
 
             if (!isRecording) {
                 isRecording = true;
@@ -525,19 +550,35 @@
                 btn.classList.remove('bg-red-600');
                 if (status) status.textContent = "Recording Transcribed";
                 if (icon) icon.classList.remove('recording-pulse');
-                alert("Voice note captured and transcription draft generated.");
             }
         }
 
         function generateReport() {
             const preview = document.getElementById('report-preview');
+            const template = document.getElementById('report-template').value;
+            const study = document.getElementById('case-study').value;
+            const id = document.getElementById('client-id-display').textContent;
+
+            let content = `
+                <p><strong>Selected Template:</strong> ${template.toUpperCase()}</p>
+                <p><strong>Benchmark Study:</strong> ${study.toUpperCase()}</p>
+                <p><strong>Diagnostic Findings:</strong> Airway volume deficiency noted in CBCT. Lateral Ceph tracing indicates favorable growth vector for ${template} protocol.</p>
+                <p><strong>Expert Conclusion:</strong> Patient is a high-priority candidate for STA Phase 1.</p>
+            `;
+
+            document.getElementById('preview-content').innerHTML = content;
             preview.classList.remove('hidden');
-            alert("Diagnostic report generated based on scans and expert voice notes.");
+            alert(`Diagnostic Report for ${id} generated using ${template} template.`);
+        }
+
+        function downloadPPT() {
+            const id = document.getElementById('client-id-display').textContent;
+            alert(`Generating PPT Presentation for case ${id}. Download starting...`);
         }
 
         function issueToLab() {
             const id = document.getElementById('client-id-display').textContent;
-            alert(`Instructions and blueprints transmitted to the STA Lab for case ${id}. Production status: PENDING.`);
+            alert(`Protocol for Case ${id} issued. Lab specs and Nutrition guidelines transmitted to Taiwan.`);
         }
 
         // --- MODALS & SEARCH ---
@@ -569,7 +610,7 @@
         function updateConsultantComparisonView(val) {
             const grid = document.getElementById('photo-comparison-grid');
             if (grid) {
-                grid.innerHTML = `<div class="p-4 bg-gray-50 border rounded-xl flex items-center justify-center h-48 text-[10px] font-black text-gray-300 uppercase tracking-widest text-center">Pseudonymized Progress Data: Phase ${val}<br>(Comparison Ready)</div>`;
+                grid.innerHTML = `<div class="p-4 bg-gray-50 border rounded-xl flex items-center justify-center h-48 text-[10px] font-black text-gray-300 uppercase tracking-widest text-center">Pseudonymized Data Phase ${val}<br>(Case Benchmarking Active)</div>`;
             }
         }
 
