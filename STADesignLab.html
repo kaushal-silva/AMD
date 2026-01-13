@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMD Design Lab Portal | Sassouni Plus Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .bg-blue-gradient { background-image: linear-gradient(to right, #2563eb, #1e40af); }
+        .section-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="min-h-screen">
+        <header class="bg-blue-gradient shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                 <div class="flex items-center gap-3">
+                     <i class="fa-solid fa-compass-drafting text-white text-2xl"></i>
+                     <h1 class="text-xl font-bold text-white tracking-tight">AMD Design Lab</h1>
+                 </div>
+                <div class="h-8 w-8 rounded-full bg-blue-900 flex items-center justify-center text-white text-xs font-bold">DL</div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="section-card">
+                <h3 class="font-black text-slate-800 uppercase text-xs mb-6 tracking-widest">Pending Sassouni Plus Analyses</h3>
+                <div class="space-y-4">
+                    <div class="p-6 bg-slate-50 border rounded-xl grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase">Case Reference</p>
+                            <p class="text-xl font-black text-slate-800">TW-001</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[10px] font-black text-slate-400 uppercase">Requested On</p>
+                            <p class="text-sm font-bold text-slate-600">Jan 12, 2026</p>
+                        </div>
+                        <div class="text-right">
+                            <button class="px-6 py-3 bg-blue-600 text-white font-black text-[10px] rounded-lg uppercase tracking-widest shadow-lg">Upload Sassouni S+ Analysis</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
