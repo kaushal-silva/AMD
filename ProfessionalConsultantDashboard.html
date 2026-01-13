@@ -3,372 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Professional Consultant Dashboard</title>
+    <title>AMD Remote Specialist Dashboard | The Brain</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .bg-gray-gradient {
-            background-image: linear-gradient(to right, #6b7280, #4b5563); /* Gray 500 to 700 */
-        }
-        .section-card {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-        }
-        .data-point {
-            padding: 0.75rem;
-            background-color: #f9fafb;
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        .tab-button {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #4b5563;
-            border-radius: 0.5rem;
-            transition: all 0.15s ease;
-        }
-        .tab-button.active {
-            background-color: #e5e7eb; 
-            color: #1f2937;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            border-right: 3px solid #4b5563;
-        }
-        .tab-button:not(.active):hover {
-            background-color: #f3f4f6;
-        }
-        .tracker-header {
-            font-size: 0.6rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-            padding: 0.75rem 0.5rem;
-            vertical-align: middle;
-            line-height: 1.2;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: #4b5563; 
-            cursor: pointer;
-            margin-top: -7px; 
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-        .alert-red {
-            background-color: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #b91c1c;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .modal-fade-enter { opacity: 0; transform: scale(0.95); }
-        .modal-fade-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms ease-out, transform 200ms ease-out; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .bg-gray-gradient { background-image: linear-gradient(to right, #475569, #1e293b); }
+        .section-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         
-        /* Voice Recorder Animation */
-        .recording-pulse {
-            animation: pulse-red 1.5s infinite;
-        }
+        .nav-button { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: #64748b; border-radius: 0.5rem; transition: all 0.2s ease; width: 100%; display: flex; align-items: center; gap: 10px; }
+        .nav-button:hover { background-color: #f1f5f9; color: #1e293b; }
+        .nav-button.active { background-color: #f1f5f9; color: #1e293b; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border-right: 3px solid #1e293b; }
+
+        .tracker-header { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; vertical-align: middle; }
+        .ageing-pill { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700; display: inline-block; }
+        .ageing-active { background-color: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; }
+        
+        .sub-nav-btn { padding: 0.6rem 1rem; font-size: 0.8rem; font-weight: 600; color: #64748b; border-radius: 0.5rem; transition: all 0.2s; display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border-left: 3px solid transparent; }
+        .sub-nav-btn:hover { background-color: #f8fafc; color: #1e293b; }
+        .sub-nav-btn.active { background-color: #f8fafc; color: #1e293b; border-left: 3px solid #1e293b; font-weight: 700; }
+
+        .scan-card { background: #ffffff; border-radius: 0.75rem; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.2s; }
+        .scan-card:hover { border-color: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .scan-preview-placeholder { aspect-ratio: 4/3; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; }
+
+        .recording-pulse { animation: pulse-red 1.5s infinite; }
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
     <div class="min-h-screen">
-        <!-- Header -->
-        <header class="bg-gray-gradient shadow-md">
+        <header class="bg-gray-gradient shadow-sm sticky top-0 z-50">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 id="header-title" class="text-3xl font-bold text-white">Professional Consultant Dashboard</h1>
+                 <div class="flex items-center gap-3">
+                     <svg width="32" height="32" viewBox="0 0 100 100" class="fill-white">
+                        <path d="M70,20 C60,10 40,10 30,20 C20,30 15,50 20,65 C22,70 25,75 30,78 C35,82 45,85 55,85 C65,85 75,80 80,70 C85,60 85,30 70,20 Z M50,15 C65,15 75,25 78,40 C80,50 80,65 72,78 C65,85 50,85 40,78 C35,74 30,65 30,50 C30,35 40,15 50,15 Z" opacity="0.4"/>
+                        <path d="M45,45 Q50,40 55,45 Q60,50 55,65 Q50,75 45,65 Q40,55 45,45 Z" fill="#94a3b8"/>
+                        <path d="M35,65 Q40,75 55,75 Q70,75 75,65" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+                     </svg>
+                     <h1 class="text-xl font-bold text-white tracking-tight" data-key="header_title">AMD Specialist Dashboard</h1>
+                 </div>
                 <div class="flex items-center space-x-4">
-                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1 px-3 rounded-full bg-white text-gray-700 border border-gray-500 hover:bg-gray-100 transition duration-150 font-semibold text-sm shadow">
-                        中文
-                    </button>
-                    <a href="index.html" class="text-sm font-medium text-gray-200 hover:text-white" data-key="logout_link">← Log Out / Portal</a>
+                    <button id="lang-toggle" onclick="toggleLanguage()" class="py-1.5 px-4 rounded-full bg-white/10 text-white font-semibold text-xs border border-white/20 hover:bg-white/20 transition">中文</button>
+                    <div class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center text-white text-xs font-bold border border-slate-400">FL</div>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Area -->
         <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             
-            <!-- PDPA Compliance Banner -->
-            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-lg shadow-md" role="alert">
-                <p class="font-bold text-lg mb-2" data-key="pdpa_banner_title">PDPA Compliance & Pseudonymization Enforced</p>
-                <p class="text-sm" data-key="pdpa_banner_text_1">
-                    All cases displayed are **pseudonymized** (Client ID only) to protect patient identity.
-                </p>
-                <p class="text-sm mt-1 font-semibold" data-key="pdpa_banner_text_2">
-                    Access requires: (1) Written Patient Consent, (2) Executed Data Processing Agreement (DPA).
-                </p>
+            <!-- PDPA Compliance -->
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 rounded-r-xl flex items-center gap-4 shadow-sm">
+                <i class="fa-solid fa-user-shield text-blue-600 text-xl"></i>
+                <div>
+                    <p class="text-[10px] font-black text-blue-800 uppercase tracking-widest">Pseudonymization Enforced</p>
+                    <p class="text-xs text-blue-700 font-medium leading-relaxed">International Data Transfer Protocols Active. Remote access is restricted to anonymized Case IDs. Practitioner PII has been scrubbed.</p>
+                </div>
             </div>
 
-            <!-- Referred Case Tracker -->
-            <div class="section-card mb-8">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-gray-700" data-key="search_title">Referred Case Tracker</h2>
+            <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                 
-                <div class="flex flex-col md:flex-row gap-4 items-center mb-6">
-                    <input type="text" id="case-search" data-key="search_placeholder" placeholder="Search by Client ID or Practitioner Name..." class="flex-grow p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-gray-500">
-                    <button onclick="searchCases()" class="py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150 w-full md:w-auto" data-key="btn_search">
-                        Search Cases
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto no-scrollbar">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="tracker-header" data-key="col_id">Client ID</th>
-                                <th class="tracker-header" data-key="col_doc_clinic">Referring Doctor / Clinic</th>
-                                <th class="tracker-header text-center" data-key="col_ceph">Lateral Ceph S+</th>
-                                <th class="tracker-header text-center" data-key="col_schwarz">Models (Schwartz)</th>
-                                <th class="tracker-header text-center" data-key="col_photos">Dental+Facial Photos</th>
-                                <th class="tracker-header text-center" data-key="col_cbct">CBCT Imaging</th>
-                                <th class="tracker-header text-center" data-key="col_rx">RX to Lab</th>
-                                <th class="tracker-header text-center" data-key="col_sta">STA Date</th>
-                                <th class="tracker-header text-right pr-4" data-key="col_status">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="case-tracker-body" class="bg-white divide-y divide-gray-200 text-sm">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Case Details View -->
-            <div id="case-details-view" class="hidden">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4 section-card gap-4">
-                    <h2 class="text-3xl font-black text-gray-900">
-                        <span data-key="case_details_title">Case Review: Client ID</span> 
-                        <span id="client-id-display" class="text-gray-500 ml-2"></span>
-                    </h2>
-                    <div class="flex gap-3">
-                        <button class="py-3 px-6 bg-yellow-600 text-white font-black text-xs rounded-xl shadow-lg uppercase tracking-widest hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion_header">
-                            Submit Professional Opinion
-                        </button>
+                <div class="lg:col-span-1 mb-8">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 sticky top-24">
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-2">Expert Review Portal</h3>
+                        <nav class="flex flex-col space-y-1">
+                            <button id="nav-overview" class="nav-button active" onclick="switchMainPane('overview')">
+                                <i class="fa-solid fa-folder-tree w-4"></i> Case Queue
+                            </button>
+                            <button id="nav-archive" class="nav-button" onclick="switchMainPane('archive')">
+                                <i class="fa-solid fa-box-archive w-4"></i> Review Archive
+                            </button>
+                        </nav>
+                        <div class="mt-8 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Queue Status</p>
+                            <p class="text-sm font-bold text-slate-700">4 Urgent Reviews Pending</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="lg:grid lg:grid-cols-4 lg:gap-8">
-                    <!-- Case File Navigation -->
-                    <div class="lg:col-span-1 mb-8 lg:mb-0">
-                        <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
-                            <h3 class="text-xs font-black text-gray-400 uppercase mb-4 border-b pb-2" data-key="nav_case_title">Case File Navigation</h3>
-                            <nav class="flex flex-col space-y-2">
-                                <button id="btn-tab-diag" class="tab-button active" onclick="switchCaseTab('case-diagnostics')">Diagnostic Inputs</button>
-                                <button id="btn-tab-report" class="tab-button" onclick="switchCaseTab('case-report')">Initial Consultation Report</button>
-                                <button id="btn-tab-lab" class="tab-button" onclick="switchCaseTab('case-lab')">Treatment</button>
-                                <button id="btn-tab-prog" class="tab-button" onclick="switchCaseTab('case-progress')">Progress Tracker</button>
-                                <button id="btn-tab-hist" class="tab-button" onclick="switchCaseTab('case-history')">Consultation History</button>
-                            </nav>
+                <div id="content-area" class="lg:col-span-3 space-y-8">
+                    
+                    <!-- 1. Case Queue -->
+                    <div id="pane-overview" class="main-pane space-y-6">
+                        <h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="registry_title">Expert Analysis Queue</h2>
+                        <div class="section-card overflow-hidden !p-0 border border-slate-100">
+                            <div class="overflow-x-auto no-scrollbar">
+                                <table class="min-w-full divide-y divide-slate-100">
+                                    <thead class="bg-slate-50/50">
+                                        <tr>
+                                            <th class="tracker-header text-left pl-6" data-key="col_id">Case ID</th>
+                                            <th class="tracker-header text-left">Referring Dr / Clinic</th>
+                                            <th class="tracker-header text-center">S+</th>
+                                            <th class="tracker-header text-center">CBCT</th>
+                                            <th class="tracker-header text-right pr-6" data-key="col_ageing">Queue / Total Age</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="case-tracker-body" class="bg-white divide-y divide-slate-100 text-sm"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="lg:col-span-3 space-y-8">
-                        <!-- 1. Diagnostic Inputs Tab -->
-                        <div id="tab-case-diagnostics" class="case-tab-content space-y-8">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="diagnostics_title">Shared Diagnostic Inputs</h2>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div class="border p-4 rounded-xl bg-gray-50">
-                                        <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="cbct_title">CB CT Scan (Airway)</h3>
-                                        <div id="mcs-status-display" class="font-bold text-lg mb-2 text-red-600">MCS: 285 mm²</div>
-                                        <p class="text-[10px] text-gray-500 italic" data-key="cbct_note">Note: Significant restriction noted in velopharynx.</p>
-                                    </div>
-                                    <div class="border p-4 rounded-xl bg-gray-50">
-                                        <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="intraoral_title">3D Intra-Oral Scan (Teeth)</h3>
-                                        <p class="text-sm font-bold text-green-600 mb-2" data-key="analysis_ready">Analysis ready</p>
-                                    </div>
-                                    <div class="border p-4 rounded-xl bg-gray-50">
-                                        <h3 class="text-xs font-bold text-indigo-700 uppercase mb-2" data-key="ceph_title">Lateral Cephalometric Analysis</h3>
-                                        <p class="text-sm font-bold text-green-600 mb-2" data-key="analysis_ready">Analysis ready</p>
-                                    </div>
+                    <!-- 2. Review Archive (Previously Historical) -->
+                    <div id="pane-archive" class="main-pane hidden space-y-6">
+                        <h2 class="text-2xl font-black text-slate-800 tracking-tight">Review Archive</h2>
+                        <div class="section-card border-slate-100">
+                            <div class="relative mb-6">
+                                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="text" placeholder="Search historical Case IDs..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm">
+                            </div>
+                            <div class="text-center py-20 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                                <i class="fa-solid fa-clock-rotate-left text-slate-300 text-4xl mb-4"></i>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">No finalized reviews in archive yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Detailed Case Review Workspace -->
+                    <div id="pane-case-review" class="main-pane hidden space-y-6">
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-4">
+                                <button onclick="switchMainPane('overview')" class="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                </button>
+                                <div>
+                                    <h2 id="detail-id" class="text-2xl font-black text-slate-900 leading-none mb-1">--</h2>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                        Assigned Priority: <span class="text-red-600 font-bold">Urgent Review</span>
+                                    </p>
                                 </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="pushToLab()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-[10px] font-black rounded-lg uppercase tracking-widest shadow-lg hover:bg-amber-400 transition transform active:scale-95">Finalize Airway Prescription</button>
                             </div>
                         </div>
 
-                        <!-- 2. Initial Consultation Report Tab -->
-                        <div id="tab-case-report" class="case-tab-content space-y-8 hidden">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="report_title">Initial Consultation Assessment</h2>
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                                    <!-- Voice Note Recorder -->
-                                    <div class="p-6 bg-slate-50 border rounded-2xl flex flex-col items-center justify-center text-center">
-                                        <div id="recorder-ui" class="mb-4">
-                                            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-2" id="record-btn-icon">
-                                                <i class="fa-solid fa-microphone text-2xl"></i>
-                                            </div>
-                                            <p id="record-status" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ready to Record</p>
-                                        </div>
-                                        <button onclick="toggleRecording('report')" id="record-btn-report" class="px-6 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold uppercase shadow-lg">Start Assessment Recording</button>
-                                        <p class="mt-4 text-[10px] text-slate-400 max-w-[200px]"> ट्रांसक्रिप्टेड और जनरेटेड रिपोर्ट के साथ अटैच किया जाएगा।</p>
-                                    </div>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-64 flex-shrink-0">
+                                <div class="bg-white p-3 rounded-xl border border-slate-100 space-y-1">
+                                    <button class="sub-nav-btn active" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> Vitals Package</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('prescription')"><i class="fa-solid fa-file-signature w-4"></i> Airway Prescription</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('design')"><i class="fa-solid fa-compass-drafting w-4"></i> Design Specifications</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('videos')"><i class="fa-solid fa-video w-4"></i> Coaching Review</button>
+                                </div>
+                            </div>
 
-                                    <!-- Report Setup -->
-                                    <div class="flex flex-col gap-4">
-                                        <div class="space-y-2">
-                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Report Template</label>
-                                            <select id="report-template" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-sky-500">
-                                                <option value="airway">Template 1: Airway Volume Assessment</option>
-                                                <option value="arch">Template 2: Arch Expansion Protocol</option>
-                                                <option value="total">Template 3: Total Health Optimization</option>
-                                            </select>
+                            <div class="flex-1 min-w-0 space-y-6">
+                                <!-- Vitals Package (Redesigned for better readability) -->
+                                <div id="tab-diagnostics" class="detail-tab space-y-6">
+                                    <div class="section-card">
+                                        <div class="flex justify-between items-center mb-6">
+                                            <h3 class="font-bold text-slate-800 uppercase text-xs tracking-widest">Clinical Vitals Verification</h3>
+                                            <span class="text-[9px] font-black text-slate-400 uppercase">Pseudonymized Scan Access</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="scan-grid">
+                                            <!-- Scan cards with approve/reject -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Airway Prescription AI Hub -->
+                                <div id="tab-prescription" class="detail-tab hidden space-y-6">
+                                    <div class="section-card border-t-8 border-indigo-500">
+                                        <div class="flex justify-between items-center mb-6">
+                                            <h3 class="font-bold text-slate-800 uppercase text-xs">Expert Assessment (Voice-to-AI)</h3>
+                                            <div class="flex gap-2">
+                                                <button onclick="toggleRecording()" id="record-btn" class="px-4 py-1.5 bg-red-600 text-white text-[10px] font-black rounded-lg uppercase shadow-lg transition hover:scale-105"><i class="fa-solid fa-microphone mr-2"></i> Record Assessment</button>
+                                                <button onclick="generateAIPrescription()" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black rounded-lg uppercase shadow-lg transition hover:bg-indigo-700">Run AI Agent</button>
+                                            </div>
                                         </div>
                                         
-                                        <div class="space-y-2">
-                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Similar Case Study</label>
-                                            <select id="case-study" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-sky-500">
-                                                <option value="none">-- Benchmark Case (Optional) --</option>
-                                                <option value="tw402">Case TW-402: High Arch Expansion Success</option>
-                                                <option value="tw122">Case TW-122: Obstructive Sleep Apnea Relief</option>
-                                                <option value="tw88">Case TW-088: Cervical Tension Resolution</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="flex gap-2">
-                                            <button onclick="generateReport()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-indigo-700 transition">
-                                                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generate Report
-                                            </button>
-                                            <button onclick="downloadPPT()" class="px-4 py-3 bg-slate-200 text-slate-700 rounded-xl font-black text-xs uppercase hover:bg-slate-300 transition">
-                                                <i class="fa-solid fa-file-powerpoint"></i> PPT
-                                            </button>
-                                        </div>
-
-                                        <div id="transcription-box" class="p-4 bg-yellow-50 border border-yellow-100 rounded-2xl hidden">
-                                            <h4 class="text-[10px] font-black text-yellow-700 uppercase mb-2">Live Transcription Draft</h4>
-                                            <p id="transcription-text" class="text-xs text-slate-700 leading-relaxed italic">Analysis of scans for Case <span class="active-id-placeholder"></span>...</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="report-preview" class="p-6 bg-white border border-slate-200 rounded-2xl hidden">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <h3 class="text-lg font-black uppercase tracking-tight" id="preview-title">Report Preview</h3>
-                                        <button class="text-xs font-bold text-sky-600 uppercase underline">Download PDF</button>
-                                    </div>
-                                    <div class="space-y-4 text-xs text-slate-600" id="preview-content">
-                                        <!-- Dynamic content -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. Treatment Tab (Renamed from STA Lab Instructions) -->
-                        <div id="tab-case-lab" class="case-tab-content space-y-8 hidden">
-                            <div class="section-card border-t-8 border-amber-500">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-key="lab_title">Treatment Protocol Design</h2>
-                                
-                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    <!-- Expert Diagnosis & Sub-Notes -->
-                                    <div class="space-y-6">
-                                        <div>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Voice Protocol Notes (Transcribed)</label>
-                                            <div class="flex items-center gap-4 p-4 bg-slate-50 border rounded-xl">
-                                                <button onclick="toggleRecording('lab')" id="record-btn-lab" class="h-10 w-10 bg-slate-900 text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-microphone"></i></button>
-                                                <div class="flex-1">
-                                                    <div class="h-1 bg-slate-200 rounded-full overflow-hidden"><div id="recording-progress" class="h-full bg-red-500" style="width: 0%"></div></div>
-                                                    <p class="text-[9px] mt-1 text-slate-500 uppercase font-bold" id="lab-record-status">Click to record expert voice notes</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div class="space-y-2">
+                                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Select Report Template</label>
+                                                <select id="report-template" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+                                                    <option value="airway">Template 1: Airway Volume Deficiency focus</option>
+                                                    <option value="arch">Template 2: Maxillary Arch Constriction focus</option>
+                                                    <option value="total">Template 3: Holistic Health focus</option>
+                                                </select>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Benchmark Past Similar Cases</label>
+                                                <div class="bg-slate-50 border border-slate-200 rounded-xl p-2 h-24 overflow-y-auto space-y-2 no-scrollbar">
+                                                    <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                                                        <input type="checkbox" class="h-3 w-3 text-indigo-600" checked>
+                                                        <span class="text-[10px] font-bold text-slate-600 uppercase">Case TW-402 (High Arch Expansion)</span>
+                                                    </label>
+                                                    <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                                                        <input type="checkbox" class="h-3 w-3 text-indigo-600">
+                                                        <span class="text-[10px] font-bold text-slate-600 uppercase">Case TW-122 (OSA Resolution)</span>
+                                                    </label>
+                                                    <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
+                                                        <input type="checkbox" class="h-3 w-3 text-indigo-600" checked>
+                                                        <span class="text-[10px] font-bold text-slate-600 uppercase">Case TW-088 (Posture Correction)</span>
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
 
+                                        <div id="ai-draft-box" class="p-4 bg-slate-50 border border-slate-100 rounded-xl mb-6">
+                                            <p class="text-[9px] font-black text-indigo-600 uppercase mb-2">AI Whisper Transcript</p>
+                                            <p id="transcript-text" class="text-sm italic text-slate-600 leading-relaxed">"Analysis indicates critical velopharyngeal narrowing...Intermolar width currently 40.0mm. Recommend rapid expansion protocol..."</p>
+                                        </div>
+
                                         <div class="space-y-4">
                                             <div>
-                                                <label class="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2 block">STA Lab Specifications</label>
-                                                <textarea id="lab-notes" rows="4" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Specify molar anchors, expansion turn increments..."></textarea>
+                                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Case Notes for local AMD</label>
+                                                <textarea id="amd-notes" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none" rows="3" placeholder="Clinical context..."></textarea>
                                             </div>
                                             <div>
-                                                <label class="text-[10px] font-black text-teal-600 uppercase tracking-widest mb-2 block">Nutrition & Bio-Support Notes</label>
-                                                <textarea id="nutrition-notes" rows="3" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" placeholder="e.g. Bone Broth + Magnesium Glycinate loading phase..."></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Image Upload Slots (Kept as is) -->
-                                    <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Reference Images & Blueprints</label>
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1"></i>
-                                                <span class="text-[9px] font-bold uppercase">Upload S+ Trace</span>
-                                            </div>
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1"></i>
-                                                <span class="text-[9px] font-bold uppercase">Upload Scan Overlay</span>
-                                            </div>
-                                            <div class="aspect-video border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300 hover:border-amber-400 transition-colors cursor-pointer group">
-                                                <i class="fa-solid fa-plus text-xl mb-1"></i>
-                                                <span class="text-[9px] font-bold uppercase">Add Photo</span>
+                                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Clinical Milestone Summary</label>
+                                                <textarea id="clinical-summary" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none" rows="3" placeholder="Target intermolar width, anatomy goals..."></textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <button onclick="issueToLab()" class="mt-8 w-full py-4 bg-amber-500 text-slate-900 rounded-xl font-black text-xs uppercase shadow-xl hover:bg-amber-400 transition transform active:scale-95">
-                                    <i class="fa-solid fa-truck-ramp-box mr-2"></i> Issue Instructions to STA Lab
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 4. Progress Tracker Tab -->
-                        <div id="tab-case-progress" class="case-tab-content space-y-8 hidden">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_tracker_title">Progress Photo Timeline</h2>
-                                <div class="bg-gray-100 p-4 rounded-xl mb-4">
-                                    <label for="c-comparison-slider" id="c-comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
-                                    <input type="range" min="0" max="4" value="2" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="c-comparison-slider" oninput="updateConsultantComparisonView(this.value)">
+                                <!-- Design Specs -->
+                                <div id="tab-design" class="detail-tab hidden space-y-6">
+                                    <div class="section-card border-t-8 border-amber-500">
+                                        <div class="flex justify-between items-center mb-6">
+                                            <h3 class="font-bold text-slate-800 uppercase text-xs">STA Lab Fabrication Details</h3>
+                                            <button onclick="pushToLab()" class="px-4 py-2 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase shadow-lg hover:bg-black transition">
+                                                <i class="fa-solid fa-truck-ramp-box mr-2"></i> Send Design to STA Lab
+                                            </button>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="text-[10px] font-black text-amber-600 uppercase mb-1 block">Appliance Setting Protocol</label>
+                                                    <input type="text" id="design-protocol" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold" value="2 Turns / Bi-weekly (0.50mm)">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[10px] font-black text-teal-600 uppercase mb-1 block">Bio-Support Requirements</label>
+                                                    <textarea id="design-bio" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm italic" rows="3" placeholder="e.g. Mandatory bone broth loading phase..."></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="space-y-4">
+                                                <p class="text-[10px] font-black text-slate-400 uppercase">Attachments for Lab</p>
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <div class="scan-card gap-1 border-amber-100 bg-amber-50/30 text-center py-6">
+                                                        <i class="fa-solid fa-file-invoice text-amber-400 text-xl"></i><br>
+                                                        <span class="text-[8px] font-black uppercase text-amber-500">S+ Trace</span>
+                                                    </div>
+                                                    <div class="scan-card gap-1 border-amber-100 bg-amber-50/30 text-center py-6">
+                                                        <i class="fa-solid fa-layer-group text-amber-400 text-xl"></i><br>
+                                                        <span class="text-[8px] font-black uppercase text-amber-500">Overlay</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div id="photo-comparison-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                            </div>
-                        </div>
 
-                        <!-- 5. Consultation History Tab -->
-                        <div id="tab-case-history" class="case-tab-content space-y-8 hidden">
-                            <div class="section-card">
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-red-600" data-key="consultation_history_title">Consultation History</h2>
-                                <div class="space-y-3" id="history-list">
-                                    <div class="p-4 bg-slate-50 border-l-4 border-gray-400 rounded-r-xl">
-                                        <p class="text-xs font-bold text-gray-800 uppercase tracking-widest">Referral Request</p>
-                                        <p class="text-sm text-gray-600 mt-1">Referred by practitioner for specialist design protocol. (2025/12/12)</p>
+                                <!-- Coaching Review -->
+                                <div id="tab-videos" class="detail-tab hidden space-y-6">
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-slate-800 mb-4 uppercase text-xs">ATC Shared Progress Review</h3>
+                                        <div id="video-review-list" class="space-y-4"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <button class="mt-6 w-full py-4 bg-yellow-600 text-white font-black rounded-xl shadow-xl uppercase tracking-widest hover:bg-yellow-700 transition duration-150" onclick="openSubmitModal()" data-key="btn_submit_opinion">
-                    Submit Professional Opinion
-                </button>
+                </div>
             </div>
         </main>
     </div>
-    
-    <!-- Opinion Modal -->
-    <div id="opinion-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
-        <div id="opinion-modal-content" class="bg-white w-full max-w-xl p-8 rounded-2xl shadow-2xl relative modal-fade-enter">
-            <h3 class="text-xl font-black text-gray-800 mb-4 border-b pb-2 uppercase tracking-tight">
-                <span data-key="opinion_modal_title">Submit Opinion for Client ID</span> 
-                <span id="opinion-client-id" class="text-gray-400 ml-2"></span>
-            </h3>
-            <p class="text-sm text-gray-600 mb-4" data-key="opinion_modal_prompt">Provide your detailed recommendation regarding the current diagnostics and treatment progress.</p>
-            <textarea id="opinion-textarea" rows="6" class="w-full p-4 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-sm" placeholder="..." data-key="opinion_textarea_placeholder"></textarea>
-            <div class="flex gap-4 mt-6">
-                <button onclick="closeModal('opinion-modal')" class="flex-1 py-3 bg-gray-100 text-gray-500 rounded-xl font-black text-xs uppercase" data-key="btn_cancel">Cancel</button>
-                <button onclick="submitOpinion()" class="flex-1 py-3 bg-yellow-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-yellow-700 transition" data-key="btn_submit_final">Submit Final Opinion</button>
+
+    <!-- Reject Scan Modal -->
+    <div id="reject-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl">
+            <h3 class="text-xl font-black text-red-600 mb-2 uppercase tracking-tight">Reject Scan Data</h3>
+            <p class="text-xs text-slate-500 mb-6 font-bold uppercase">This request will be sent to the local clinic and ATC.</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Reason for Rejection</label>
+                    <select id="reject-reason" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none">
+                        <option>Insufficient Resolution / Blurry</option>
+                        <option>Incorrect Positioning / Artifacts</option>
+                        <option>File Corrupted / Unreadable</option>
+                        <option>Additional View Needed</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Specialist Instructions</label>
+                    <textarea id="reject-instruction" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none h-32" placeholder="e.g. Please re-capture CBCT ensuring patient tongue is in neutral posture..."></textarea>
+                </div>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button onclick="closeModal('reject-modal')" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-black text-xs uppercase">Cancel</button>
+                <button onclick="confirmReject()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-red-700 transition">Send Rejection</button>
             </div>
         </div>
     </div>
@@ -376,245 +309,170 @@
     <script>
         let currentLang = 'en';
         let isRecording = false;
-
-        const mockReferredCases = [
-            { id: 'TW-001', practitioner: 'Dr. Ryan Chiang (Harmony Clinic)', data: [1, 1, 1, 1, 0, 0], status: 'Ready' },
-            { id: 'TW-002', practitioner: 'Dr. Clement Lin (Harmony Clinic)', data: [1, 1, 1, 1, 1, 1], status: 'Ready' },
-            { id: 'TW-003', practitioner: 'Dr. Sarah Lin (Bright Dental)', data: [1, 1, 1, 0, 0, 0], status: 'Incomplete' },
-            { id: 'TW-004', practitioner: 'Dr. Kevin Chen (Kevin Dental)', data: [1, 0, 1, 1, 0, 0], status: 'Incomplete' },
-            { id: 'TW-005', practitioner: 'Dr. Mei-Ling Wu (Apex Care)', data: [1, 1, 1, 1, 1, 1], status: 'Ready' },
-            { id: 'TW-006', practitioner: 'Dr. Robert Wang (Zenith Clinic)', data: [0, 0, 1, 1, 0, 0], status: 'Incomplete' },
-            { id: 'TW-007', practitioner: 'Dr. Linda Su (Family Ortho)', data: [1, 1, 0, 1, 1, 1], status: 'Ready' },
-            { id: 'TW-008', practitioner: 'Dr. Alice Chang (Alice Dental)', data: [1, 1, 1, 1, 1, 0], status: 'Incomplete' },
-            { id: 'TW-009', practitioner: 'Dr. Jason Liu (Harmony Clinic)', data: [1, 1, 1, 1, 1, 1], status: 'Ready' },
-            { id: 'TW-010', practitioner: 'Dr. Peter Tseng (Taipei Center)', data: [1, 0, 1, 0, 1, 0], status: 'Incomplete' },
-            { id: 'TW-011', practitioner: 'Dr. Emily Yang (Care First)', data: [1, 1, 1, 1, 0, 1], status: 'Ready' },
-            { id: 'TW-012', practitioner: 'Dr. David Hsu (Hsu Ortho)', data: [1, 1, 1, 1, 1, 1], status: 'Ready' }
-        ];
+        let activeRejectScan = null;
 
         const translations = {
-            'en': {
-                'header_title': 'Professional Consultant Dashboard',
-                'logout_link': '← Log Out / Portal',
-                'pdpa_banner_title': 'PDPA Compliance & Pseudonymization Enforced',
-                'pdpa_banner_text_1': 'All cases displayed are **pseudonymized** (Client ID only) to protect identity.',
-                'pdpa_banner_text_2': 'Access requires: (1) Written Patient Consent, (2) Executed DPA.',
-                'search_title': 'Referred Case Tracker',
-                'search_placeholder': 'Search by ID or practitioner...',
-                'btn_search': 'Search Cases',
-                'col_id': 'Client ID',
-                'col_doc_clinic': 'Referring Doctor / Clinic',
-                'col_ceph': 'Lateral Ceph for S+ Tracing',
-                'col_schwarz': 'Models for Schwartz Analysis',
-                'col_photos': 'Dental+Facial Photos',
-                'col_cbct': 'CBCT Imaging',
-                'col_rx': 'RX to STA Lab',
-                'col_sta': 'STA Delivery Date',
-                'col_status': 'Action',
-                'case_details_title': 'Case Review: Client ID',
-                'btn_submit_opinion_header': 'Submit Professional Opinion',
-                'nav_case_title': 'Case File Navigation',
-                'case_tab_diagnostics': 'Diagnostic Inputs',
-                'case_tab_progress': 'Progress Tracker',
-                'case_tab_history': 'Consultation History',
-                'diagnostics_title': 'Shared Diagnostic Inputs',
-                'cbct_title': 'CB CT Scan (Airway)',
-                'intraoral_title': '3D Intra-Oral Scan (Teeth)',
-                'ceph_title': 'Lateral Cephalometric Analysis',
-                'analysis_ready': 'Analysis ready',
-                'btn_view_case': 'Review Case →',
-                'viewing_photos': 'Viewing photos from',
-                'btn_submit_final': 'Submit Final Opinion',
-                'btn_cancel': 'Cancel',
-                'toggle_text': '中文',
-                'report_title': 'Initial Consultation Assessment',
-                'lab_title': 'Treatment Protocol Design'
+            en: {
+                header_title: "AMD Specialist Dashboard",
+                registry_title: "Expert Review Queue",
+                col_id: "Case ID", col_ceph: "S+ Trace", col_schwarz: "Schwartz", col_cbct: "CBCT", col_ageing: "Queue / Total Age"
             },
-            'zh': {
-                'header_title': '專業顧問儀表板',
-                'logout_link': '← 登出 / 入口網站',
-                'pdpa_banner_title': 'PDPA 合規與假名化強制執行',
-                'pdpa_banner_text_1': '所有顯示的病例均已**假名化**（僅顯示 ID）以保護身份。',
-                'pdpa_banner_text_2': '訪問要求: (1) 患者書面同意, (2) 已簽署 DPA。',
-                'search_title': '病例轉介追蹤總表',
-                'search_placeholder': '搜尋 ID 或執業醫師...',
-                'btn_search': '搜尋',
-                'col_id': '客戶 ID',
-                'col_doc_clinic': '轉介醫師 / 診所',
-                'col_ceph': '側位頭影 S+ 追蹤',
-                'col_schwarz': '模型 (Schwartz 分析)',
-                'col_photos': '牙齒+面部照片',
-                'col_cbct': 'CBCT 影像',
-                'col_rx': '技工單 (STA Lab)',
-                'col_sta': 'STA 交付日期',
-                'col_status': '操作',
-                'case_details_title': '病例審閱: 客戶 ID',
-                'btn_submit_opinion_header': '提交專業意見',
-                'case_tab_diagnostics': '診斷輸入',
-                'case_tab_progress': '進度追踪器',
-                'case_tab_history': '會診歷史記錄',
-                'diagnostics_title': '共享診斷輸入',
-                'cbct_title': '錐束CT掃描 (氣道)',
-                'intraoral_title': '3D 口內掃描 (牙齒)',
-                'ceph_title': '側位頭影測量分析',
-                'analysis_ready': '分析已準備就緒',
-                'btn_view_case': '審閱病例 →',
-                'viewing_photos': '查看照片來自',
-                'btn_submit_final': '提交最終意見',
-                'btn_cancel': '取消',
-                'toggle_text': 'English',
-                'report_title': '初步會診評估',
-                'lab_title': '治療方案設計'
+            zh: {
+                header_title: "AMD 遠程專科醫生門戶",
+                registry_title: "專家審核隊列",
+                col_id: "病例 ID", col_ceph: "S+ 追踪", col_schwarz: "模型分析", col_cbct: "氣道掃描", col_ageing: "隊列時程"
             }
         };
 
-        function renderTracker() {
+        const mockCases = [
+            { id: "TW-001", doctor: "Dr. Ryan Chiang", clinic: "Harmony Taipei", data: [1, 1, 1, 0], queueAge: "2d", totalAge: "12d", sharedVideos: [{date:"Jan 12", transcript: "Molar pressure noted."}] },
+            { id: "TW-014", doctor: "Dr. Peter Tseng", clinic: "Legacy Airway", data: [1, 0, 1, 0], queueAge: "4d", totalAge: "8d", sharedVideos: [] },
+            { id: "TW-004", doctor: "Dr. Sarah Lin", clinic: "Bright Dental", data: [1, 1, 1, 1], queueAge: "1d", totalAge: "142d", sharedVideos: [] },
+            { id: "TW-011", doctor: "Dr. Kevin Chen", clinic: "Kevin Dental", data: [1, 0, 1, 0], queueAge: "3d", totalAge: "22d", sharedVideos: [] }
+        ];
+
+        function renderQueue() {
             const body = document.getElementById('case-tracker-body');
-            if (!body) return;
-            body.innerHTML = mockReferredCases.map(c => `
-                <tr class="hover:bg-gray-50 cursor-pointer transition-colors" onclick="viewCase('${c.id}')">
-                    <td class="p-4 font-bold text-gray-800">ID: ${c.id}</td>
-                    <td class="p-4 text-[10px] font-bold text-gray-500 uppercase tracking-tight">${c.practitioner}</td>
-                    ${c.data.map(val => `
-                        <td class="text-center p-4">
-                            <i class="fa-solid ${val ? 'fa-circle-check text-blue-500' : 'fa-circle text-gray-200'} text-lg"></i>
-                        </td>
-                    `).join('')}
-                    <td class="p-4 text-right pr-4">
-                        <span class="text-[10px] font-black text-blue-600 uppercase underline">${translations[currentLang].btn_view_case}</span>
+            if(!body) return;
+            body.innerHTML = mockCases.map(c => `
+                <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="selectCase('${c.id}')">
+                    <td class="px-6 py-4 font-black text-slate-800 text-xs">${c.id}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-slate-800 text-xs">${c.doctor}</span>
+                            <span class="text-[9px] font-black text-slate-400 uppercase">${c.clinic}</span>
+                        </div>
+                    </td>
+                    <td class="text-center px-4 py-4"><i class="fa-solid ${c.data[0] ? 'fa-circle-check text-indigo-500' : 'fa-circle text-slate-100'}"></i></td>
+                    <td class="text-center px-4 py-4"><i class="fa-solid ${c.data[2] ? 'fa-circle-check text-indigo-500' : 'fa-circle text-slate-100'}"></i></td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex flex-col items-end">
+                            <span class="text-xs font-black text-indigo-600">${c.queueAge} in Queue</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase">(${c.totalAge} Total)</span>
+                        </div>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
-        }
-
-        function updateText() {
-            const data = translations[currentLang];
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (data[key]) el.textContent = data[key];
-            });
-            document.getElementById('header-title').textContent = data.header_title;
-            document.getElementById('lang-toggle').textContent = data.toggle_text;
-            renderTracker();
-        }
-
-        function switchCaseTab(tabId) {
-            document.querySelectorAll('.case-tab-content').forEach(c => c.classList.add('hidden'));
-            const targetTab = document.getElementById('tab-' + tabId);
-            if (targetTab) targetTab.classList.remove('hidden');
-            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        function selectCase(id) {
+            const c = mockCases.find(x => x.id === id);
+            if(!c) return;
             
-            let btnId = '';
-            if(tabId === 'case-diagnostics') btnId = 'btn-tab-diag';
-            else if(tabId === 'case-report') btnId = 'btn-tab-report';
-            else if(tabId === 'case-lab') btnId = 'btn-tab-lab';
-            else if(tabId === 'case-progress') btnId = 'btn-tab-prog';
-            else if(tabId === 'case-history') btnId = 'btn-tab-hist';
+            const detailId = document.getElementById('detail-id');
+            if(detailId) detailId.innerText = c.id;
             
-            const activeBtn = document.getElementById(btnId);
-            if (activeBtn) activeBtn.classList.add('active');
+            const scanGrid = document.getElementById('scan-grid');
+            if(scanGrid) {
+                const scans = [
+                    { name: "Lateral Ceph S+", status: "Verified", date: "Jan 10", icon: "fa-x-ray" },
+                    { name: "CBCT Airway Vol", status: "Verified", date: "Jan 10", icon: "fa-cube" },
+                    { name: "Schwartz Model", status: "Verified", date: "Jan 11", icon: "fa-teeth" },
+                    { name: "Dental Photos", status: "Needs Attention", date: "Jan 11", icon: "fa-camera" }
+                ];
+                scanGrid.innerHTML = scans.map(s => `
+                    <div class="scan-card">
+                        <div class="scan-preview-placeholder">
+                            <i class="fa-solid ${s.icon} text-slate-300 text-4xl"></i>
+                            <div class="absolute top-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[8px] font-bold rounded uppercase">${s.name}</div>
+                        </div>
+                        <div class="p-3 border-t">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[9px] font-black text-slate-400 uppercase">${s.date} Capture</span>
+                                <span class="text-[8px] font-black uppercase px-1.5 py-0.5 rounded ${s.status === 'Verified' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${s.status}</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="flex-1 py-1.5 bg-slate-50 text-slate-700 text-[9px] font-black rounded uppercase border hover:bg-white">View Full</button>
+                                <button onclick="openRejectModal('${s.name}')" class="px-3 py-1.5 bg-red-50 text-red-600 text-[9px] font-black rounded uppercase hover:bg-red-100">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const vList = document.getElementById('video-review-list');
+            if(vList) {
+                vList.innerHTML = c.sharedVideos.length ? c.sharedVideos.map(v => `
+                    <div class="p-4 bg-slate-50 border rounded-xl flex gap-6">
+                        <div class="w-32 aspect-video bg-slate-900 rounded flex items-center justify-center"><i class="fa-solid fa-play text-white opacity-30"></i></div>
+                        <div class="flex-1">
+                            <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Shared by ATC (${v.date})</p>
+                            <p class="text-sm italic text-slate-600 mb-3">"${v.transcript}"</p>
+                            <textarea class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs" placeholder="Expert Clinical Note..."></textarea>
+                        </div>
+                    </div>
+                `).join('') : '<div class="text-center py-8 text-slate-300 text-xs italic">No behavioral videos shared.</div>';
+            }
+
+            switchMainPane('case-review');
         }
 
-        function viewCase(caseId) {
-            document.getElementById('client-id-display').textContent = caseId;
-            document.getElementById('case-details-view').classList.remove('hidden');
-            switchCaseTab('case-diagnostics');
-            document.getElementById('case-details-view').scrollIntoView({ behavior: 'smooth' });
+        function openRejectModal(scanName) {
+            activeRejectScan = scanName;
+            document.getElementById('reject-modal').classList.remove('hidden');
         }
 
-        // --- NEW FEATURES: RECORDING & REPORTING ---
+        function confirmReject() {
+            const reason = document.getElementById('reject-reason').value;
+            alert(`Scan '${activeRejectScan}' rejected. Local AMD & ATC notified: ${reason}`);
+            closeModal('reject-modal');
+        }
 
-        function toggleRecording(context) {
-            const btn = context === 'report' ? document.getElementById('record-btn-report') : document.getElementById('record-btn-lab');
-            const status = context === 'report' ? document.getElementById('record-status') : document.getElementById('lab-record-status');
-            const icon = document.getElementById('record-btn-icon');
-
-            if (!isRecording) {
+        function toggleRecording() {
+            const btn = document.getElementById('record-btn');
+            if(!isRecording) {
                 isRecording = true;
-                btn.textContent = "Stop Recording";
-                btn.classList.add('bg-red-600');
-                if (status) status.textContent = "Recording Diagnosis...";
-                if (icon) icon.classList.add('recording-pulse');
-                
-                if (context === 'report') {
-                    document.getElementById('transcription-box').classList.remove('hidden');
-                }
+                btn.innerHTML = '<i class="fa-solid fa-stop mr-2"></i> Stop Assessment';
+                btn.classList.add('recording-pulse');
             } else {
                 isRecording = false;
-                btn.textContent = context === 'report' ? "Start Assessment Recording" : "Start New Recording";
-                btn.classList.remove('bg-red-600');
-                if (status) status.textContent = "Recording Transcribed";
-                if (icon) icon.classList.remove('recording-pulse');
+                btn.innerHTML = '<i class="fa-solid fa-microphone mr-2"></i> Record Assessment';
+                btn.classList.remove('recording-pulse');
             }
         }
 
-        function generateReport() {
-            const preview = document.getElementById('report-preview');
+        function generateAIPrescription() {
             const template = document.getElementById('report-template').value;
-            const study = document.getElementById('case-study').value;
-            const id = document.getElementById('client-id-display').textContent;
-
-            let content = `
-                <p><strong>Selected Template:</strong> ${template.toUpperCase()}</p>
-                <p><strong>Benchmark Study:</strong> ${study.toUpperCase()}</p>
-                <p><strong>Diagnostic Findings:</strong> Airway volume deficiency noted in CBCT. Lateral Ceph tracing indicates favorable growth vector for ${template} protocol.</p>
-                <p><strong>Expert Conclusion:</strong> Patient is a high-priority candidate for STA Phase 1.</p>
-            `;
-
-            document.getElementById('preview-content').innerHTML = content;
-            preview.classList.remove('hidden');
-            alert(`Diagnostic Report for ${id} generated using ${template} template.`);
+            const amdNotes = document.getElementById('amd-notes');
+            const clinicalSum = document.getElementById('clinical-summary');
+            if(amdNotes) amdNotes.value = `Expert Assessment Finalized using ${template.toUpperCase()} template. Case displays severe velopharyngeal restriction requiring rapid STA expansion. Monitor FMA closely.`;
+            if(clinicalSum) clinicalSum.value = "Target intermolar width: 44.5mm. Protocol: 2 turns (0.50mm) bi-weekly for 4 months. Verify nutrition support.";
+            alert("AI Agent mapping complete using selected template and benchmarks.");
         }
 
-        function downloadPPT() {
-            const id = document.getElementById('client-id-display').textContent;
-            alert(`Generating PPT Presentation for case ${id}. Download starting...`);
+        function pushToLab() { alert("Prescription and Design Specs authorized. Issued to Manufacturing Lab and local AMD."); }
+
+        function switchMainPane(id) {
+            const target = document.getElementById(`pane-${id}`);
+            if(!target) return;
+            document.querySelectorAll('.main-pane').forEach(p => p.classList.add('hidden'));
+            target.classList.remove('hidden');
+            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`nav-${id}`);
+            if(btn) btn.classList.add('active');
         }
 
-        function issueToLab() {
-            const id = document.getElementById('client-id-display').textContent;
-            alert(`Protocol for Case ${id} issued. Lab specs and Nutrition guidelines transmitted to Taiwan.`);
+        function switchDetailTab(id) {
+            const target = document.getElementById(`tab-${id}`);
+            if(!target) return;
+            document.querySelectorAll('.detail-tab').forEach(t => t.classList.add('hidden'));
+            target.classList.remove('hidden');
+            document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+            const clickedBtn = Array.from(document.querySelectorAll('.sub-nav-btn')).find(btn => btn.getAttribute('onclick')?.includes(`'${id}'`));
+            if(clickedBtn) clickedBtn.classList.add('active');
         }
 
-        // --- MODALS & SEARCH ---
-
-        function openSubmitModal() {
-            document.getElementById('opinion-modal').classList.remove('hidden');
-            document.getElementById('opinion-client-id').textContent = document.getElementById('client-id-display').textContent;
+        function toggleLanguage() { currentLang = currentLang === 'en' ? 'zh' : 'en'; updateText(); }
+        function updateText() {
+            const data = translations[currentLang];
+            document.querySelectorAll('[data-key]').forEach(el => { const k = el.getAttribute('data-key'); if(data[k]) el.textContent = data[k]; });
+            document.getElementById('lang-toggle').textContent = currentLang === 'en' ? '中文' : 'English';
+            renderQueue();
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        function submitOpinion() {
-            const id = document.getElementById('opinion-client-id').textContent;
-            alert("Professional design opinion submitted for case " + id);
-            closeModal('opinion-modal');
-        }
-
-        function searchCases() {
-            const searchTerm = document.getElementById('case-search').value.toLowerCase();
-            const rows = document.getElementById('case-tracker-body').getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                const text = rows[i].textContent.toLowerCase();
-                rows[i].style.display = text.includes(searchTerm) ? "" : "none";
-            }
-        }
-
-        function updateConsultantComparisonView(val) {
-            const grid = document.getElementById('photo-comparison-grid');
-            if (grid) {
-                grid.innerHTML = `<div class="p-4 bg-gray-50 border rounded-xl flex items-center justify-center h-48 text-[10px] font-black text-gray-300 uppercase tracking-widest text-center">Pseudonymized Data Phase ${val}<br>(Case Benchmarking Active)</div>`;
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', updateText);
+        window.onload = updateText;
     </script>
 </body>
 </html>
