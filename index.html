@@ -4,24 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMD Portal | The "Invisalign" for Airway Health</title>
+    <!-- Load Tailwind CSS CDN for modern, responsive styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .bg-gradient-amd { background-image: linear-gradient(to right bottom, #10b981, #06b6d4); }
-        .flow-step-icon { @apply flex items-center justify-center w-10 h-10 bg-sky-500 text-white rounded-full font-bold text-lg shadow-lg flex-shrink-0 absolute top-0 left-0; }
-        .flow-step-line { height: calc(100% - 10px); @apply w-px bg-sky-200 absolute left-5 top-5; }
-        .modal-fade-enter { opacity: 0; transform: scale(0.95); }
-        .modal-fade-enter-active { opacity: 1; transform: scale(1); transition: opacity 200ms ease-out, transform 200ms ease-out; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .bg-gradient-amd {
+            background-image: linear-gradient(to right bottom, #10b981, #06b6d4);
+        }
+        .flow-step-icon {
+            @apply flex items-center justify-center w-10 h-10 bg-sky-500 text-white rounded-full font-bold text-lg shadow-lg flex-shrink-0 absolute top-0 left-0;
+        }
+        .flow-step-line {
+            height: calc(100% - 40px); 
+            @apply w-px bg-sky-200 absolute left-5 top-5; 
+        }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
+        /* Dropdown stability improvements */
+        #dropdown-menu {
+            transition: opacity 0.2s, transform 0.2s;
+        }
     </style>
 </head>
 <body>
 
     <div class="min-h-screen flex flex-col p-4 relative">
-        <header class="w-full max-w-7xl mx-auto flex justify-between items-center py-4 px-2 sticky top-0 bg-f8fafc z-20">
+        <!-- Header: Language Toggle and Professional Login Dropdown -->
+        <header class="w-full max-w-7xl mx-auto flex justify-between items-center py-4 px-2 sticky top-0 bg-[#f8fafc]/90 backdrop-blur-sm z-50">
             <h1 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">
-                <svg width="32" height="32" viewBox="0 0 100 100" class="fill-sky-600">
+                <!-- Ecosystem Logo: Head/Airway focus -->
+                <svg width="36" height="36" viewBox="0 0 100 100" class="fill-sky-600">
                     <path d="M70,20 C60,10 40,10 30,20 C20,30 15,50 20,65 C22,70 25,75 30,78 C35,82 45,85 55,85 C65,85 75,80 80,70 C85,60 85,30 70,20 Z M50,15 C65,15 75,25 78,40 C80,50 80,65 72,78 C65,85 50,85 40,78 C35,74 30,65 30,50 C30,35 40,15 50,15 Z" opacity="0.4"/>
                     <path d="M45,45 Q50,40 55,45 Q60,50 55,65 Q50,75 45,65 Q40,55 45,45 Z" fill="#0ea5e9"/> 
                     <path d="M35,65 Q40,75 55,75 Q70,75 75,65" stroke="#0ea5e9" stroke-width="4" fill="none" stroke-linecap="round"/> 
@@ -31,74 +56,242 @@
 
             <div class="flex items-center space-x-4">
                 <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-teal-600 border border-teal-600 hover:bg-teal-50 font-semibold shadow-md text-sm">中文</button>
-                <div class="relative" onmouseleave="this.querySelector('#dropdown-menu').classList.add('hidden')">
-                    <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="py-2 px-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 text-sm shadow">
-                        Practitioner Access
+                
+                <!-- Fixed Dropdown: Click-to-Toggle for better UX -->
+                <div class="relative">
+                    <button id="professionals-dropdown-btn" onclick="toggleDropdown(event)" class="py-2.5 px-5 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition shadow-lg text-sm flex items-center gap-2">
+                        <span data-key="professionals_dropdown_text">Practitioner Access</span>
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
                     </button>
-                    <div id="dropdown-menu" class="absolute right-0 mt-2 w-64 origin-top-right bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 hidden z-50">
-                        <div class="py-2 flex flex-col">
-                            <a href="PractitionerDashboard.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-stethoscope w-4"></i> AMD (Practitioner)</a>
-                            <a href="ATCDashboard.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-user-group w-4"></i> ATC (Coordination)</a>
-                            <a href="ProfessionalConsultantDashboard.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-brain w-4"></i> Remote Specialist</a>
-                            <a href="ImagingPartnerPortal.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-camera w-4"></i> Imaging Partner</a>
-                            <a href="RadiologistPortal.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-check-double w-4"></i> Radiologist Review</a>
-                            <a href="STADesignLab.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-pen-nib w-4"></i> STA Design Lab</a>
-                            <a href="STALab.html" class="px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b flex items-center gap-3"><i class="fa-solid fa-cubes w-4"></i> STA Manufacturing</a>
-                            <a href="ControlTowerDashboard.html" class="px-4 py-3 text-xs font-bold text-slate-900 bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-satellite-dish w-4"></i> Control Tower (MSO)</a>
+                    
+                    <div id="dropdown-menu" class="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 hidden z-50 overflow-hidden transform origin-top-right">
+                        <div class="py-1">
+                            <a href="PractitionerDashboard.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-teal-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center"><i class="fa-solid fa-stethoscope"></i></div>
+                                <span>AMD Practitioner</span>
+                            </a>
+                            <a href="ATCDashboard.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-purple-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center"><i class="fa-solid fa-user-group"></i></div>
+                                <span>Patient Success (ATC)</span>
+                            </a>
+                            <a href="ProfessionalConsultantDashboard.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center"><i class="fa-solid fa-brain"></i></div>
+                                <span>Remote Specialist</span>
+                            </a>
+                            <a href="ImagingPartnerPortal.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-cyan-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-600 flex items-center justify-center"><i class="fa-solid fa-camera"></i></div>
+                                <span>Imaging Partner</span>
+                            </a>
+                            <a href="RadiologistPortal.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-indigo-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-check-double"></i></div>
+                                <span>Radiologist Review</span>
+                            </a>
+                            <a href="STADesignLab.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-blue-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-pen-nib"></i></div>
+                                <span>STA Design Lab</span>
+                            </a>
+                            <a href="STALab.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-orange-50 border-b border-slate-50 transition">
+                                <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center"><i class="fa-solid fa-cubes"></i></div>
+                                <span>STA Manufacturing</span>
+                            </a>
+                            <a href="ControlTowerDashboard.html" class="flex items-center gap-3 px-4 py-3 text-xs font-black text-white bg-slate-800 hover:bg-slate-900 transition">
+                                <div class="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center shadow-lg shadow-teal-500/20"><i class="fa-solid fa-satellite-dish"></i></div>
+                                <span>Control Tower (MSO)</span>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </header>
 
+        <!-- Main Content Area -->
         <main class="w-full max-w-7xl mx-auto flex-grow pt-8">
+
+            <!-- Hero Section from Business Plan -->
             <section class="text-center mb-16 max-w-4xl mx-auto">
-                <h2 class="text-5xl font-black text-slate-900 tracking-tight leading-tight">Resolving <span class="text-sky-600">Impaired Mouth Syndrome</span>.</h2>
-                <p class="mt-6 text-xl text-slate-600 font-medium">The "Invisalign" for Airway Health. Coordinated clinical care from local AMDs and remote Specialists.</p>
+                <h2 class="text-5xl font-black text-gray-900 sm:text-6xl tracking-tight leading-tight" data-key="main_headline">
+                    The <span class="text-sky-600">"Invisalign"</span> for Airway Health.
+                </h2>
+                <p class="mt-6 text-xl text-gray-700 font-medium" data-key="main_mission">
+                    Bridging the systemic gap between Medical Doctors and Dentists. We resolve "Impaired Mouth Syndrome" (IMS) through proprietary clinical protocols and remote expert oversight.
+                </p>
+                <div class="mt-8 p-5 bg-amber-50 rounded-2xl border border-amber-200 inline-block shadow-sm">
+                    <p class="text-sm text-amber-800 font-bold italic" data-key="tiger_cage_quote">
+                        "The Mouth is the Cage, and the Tongue is the Tiger. When the cage is too small, the airway is compromised."
+                    </p>
+                </div>
             </section>
 
             <div class="lg:grid lg:grid-cols-2 gap-12 items-start">
-                <div class="bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
-                    <h3 class="text-2xl font-black text-sky-600 mb-10">The Path to Structural Wellness</h3>
-                    <div class="flow-container relative pl-4">
-                        <div class="flow-step-line"></div>
-                        <div class="relative mb-10 flex gap-6">
-                            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-black shadow-lg">1</div>
-                            <div><p class="font-black text-slate-800">Admission</p><p class="text-sm text-slate-500">Enroll and secure your diagnostic assessment.</p></div>
-                        </div>
-                        <div class="relative mb-10 flex gap-6">
-                            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-black shadow-lg">2</div>
-                            <div><p class="font-black text-slate-800">Data Collection</p><p class="text-sm text-slate-500">Visit imaging labs for your "Vitals Package."</p></div>
-                        </div>
-                        <div class="relative mb-10 flex gap-6">
-                            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-black shadow-lg">3</div>
-                            <div><p class="font-black text-slate-800">The Reveal</p><p class="text-sm text-slate-500">Visualization of your structural diagnosis.</p></div>
-                        </div>
-                        <div class="relative mb-10 flex gap-6">
-                            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-black shadow-lg">4</div>
-                            <div><p class="font-black text-slate-800">Delivery</p><p class="text-sm text-slate-500">Receive your engineered STA appliance.</p></div>
-                        </div>
-                        <div class="relative mb-10 flex gap-6">
-                            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-black shadow-lg">5</div>
-                            <div><p class="font-black text-slate-800">Tracking</p><p class="text-sm text-slate-500">18-month guided growth prescription.</p></div>
-                        </div>
-                        <div class="relative flex gap-6">
-                            <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-black shadow-lg">6</div>
-                            <div><p class="font-black text-slate-800">Empowerment</p><p class="text-sm text-slate-500">Final health optimization achieved.</p></div>
-                        </div>
-                    </div>
-                </div>
+                
+                <!-- LEFT: Patient Journey Flowchart -->
+                <section class="bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-black text-gray-800 mb-10 text-sky-600" data-key="flow_title">The Standardized Journey</h3>
+                    
+                    <div class="flow-container pl-4 pb-4 relative">
+                        <div class="flow-step-line"></div> 
 
-                <div class="flex flex-col items-center">
-                    <div class="bg-white p-10 rounded-2xl shadow-2xl border-t-8 border-sky-500 w-full max-w-sm text-center">
-                        <i class="fa-solid fa-user-astronaut text-6xl text-sky-500 mb-6"></i>
-                        <h3 class="text-3xl font-black text-slate-800 mb-2">Patient Access</h3>
-                        <p class="text-slate-500 mb-8 font-medium">Manage your Airway Prescription and track your anatomical milestones.</p>
-                        <a href="ClientDashboard.html" class="block w-full py-4 bg-sky-600 text-white font-black rounded-xl shadow-xl hover:bg-sky-700 transition uppercase tracking-widest text-xs">Enter Portal</a>
+                        <!-- Step 1: Admission -->
+                        <div class="flow-step relative mb-12">
+                            <div class="flow-step-icon">1</div>
+                            <div class="pl-14">
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_1_bold">Admission</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_1_desc">Enroll on the platform and secure your diagnostic assessment with a local certified AMD.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Data Collection -->
+                        <div class="flow-step relative mb-12">
+                            <div class="flow-step-icon">2</div>
+                            <div class="pl-14">
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_2_bold">Data Collection</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_2_desc">Establish your "Vitals Package" with 3D CBCT, X-rays, and Intraoral scans at a preferred lab.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: The Reveal -->
+                        <div class="flow-step relative mb-12">
+                            <div class="flow-step-icon">3</div>
+                            <div class="pl-14">
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_3_bold">The Reveal</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_3_desc">See your structural diagnosis and receive your personalized Airway Prescription blueprint.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Design & Delivery -->
+                        <div class="flow-step relative mb-12">
+                            <div class="flow-step-icon">4</div>
+                            <div class="pl-14">
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_4_bold">Design & Delivery</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_4_desc">Remote Specialists finalize your device design. Your custom STA appliance is fabricated and delivered.</p>
+                            </div>
+                        </div>
+                         
+                        <!-- Step 5: The Long Tail -->
+                        <div class="flow-step relative mb-12">
+                            <div class="flow-step-icon">5</div>
+                            <div class="pl-14">
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_5_bold">Guided Growth</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_5_desc">Track your 12-24 month anatomical progress with bi-weekly adjustments and secure team chat.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Empowerment -->
+                        <div class="flow-step relative">
+                            <div class="flow-step-icon bg-green-500">6</div>
+                            <div class="pl-14">
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_6_bold">Empowerment</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_6_desc">Achieve structural health optimization. Move from reactive sick-care to proactive longevity.</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
+
+                <!-- RIGHT: Client Portal Access -->
+                <section class="flex flex-col items-center justify-center">
+                    <div class="bg-white p-10 rounded-3xl shadow-2xl border-t-8 border-sky-500 w-full max-w-sm text-center">
+                        <div class="text-7xl text-sky-500 mb-6"><i class="fa-solid fa-user-astronaut"></i></div>
+                        <h3 class="text-3xl font-black text-gray-800 mb-3" data-key="client_card_title">Patient Access</h3>
+                        <p class="text-gray-500 mb-8 font-medium leading-relaxed" data-key="client_card_desc">
+                            Begin your journey, track your "Tiger vs. Cage" progress, and access your records.
+                        </p>
+                        <a href="ClientDashboard.html" class="block w-full py-4 px-6 bg-sky-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-sky-700 transition shadow-xl shadow-sky-200">
+                            <span data-key="client_card_button">Enter My Journey Portal</span>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-12 bg-slate-100 p-6 rounded-2xl border border-slate-200 w-full max-w-sm flex items-center justify-between shadow-sm">
+                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest" data-key="clinic_upload_title">Secure Vitals Package Upload</div>
+                        <a href="ImagingPartnerPortal.html" class="py-2 px-4 bg-white border border-slate-300 text-slate-800 font-bold rounded-xl hover:bg-slate-50 transition text-[10px] uppercase">Upload Hub</a>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
+
+    <script>
+        let currentLang = 'en'; 
+
+        const translations = {
+            'en': {
+                'header_title': 'AMD Portal',
+                'main_headline': 'The "Invisalign" for Airway Health.',
+                'main_mission': 'Solving "Impaired Mouth Syndrome" (IMS) through proprietary clinical protocols. We bridge the gap between dental intervention and medical health optimization.',
+                'tiger_cage_quote': '"The Mouth is the Cage, and the Tongue is the Tiger. When the cage is too small, the airway is compromised."',
+                'flow_title': 'The Standardized Journey',
+                'flow_step_1_bold': 'Admission',
+                'flow_step_1_desc': 'Enroll on the platform and pay your diagnostic fee to select your local certified AMD practitioner.',
+                'flow_step_2_bold': 'Data Collection',
+                'flow_step_2_desc': 'Visit a preferred imaging lab for CBCT, X-rays, and scans to establish your "Vitals Package."',
+                'flow_step_3_bold': 'The Reveal',
+                'flow_step_3_desc': 'See your "Tiger vs. Cage" visualization and receive your personalized Airway Prescription from your Doctor.',
+                'flow_step_4_bold': 'Design & Delivery',
+                'flow_step_4_desc': 'Specialists finalize your clinical blueprint, and your custom STA appliance is fabricated and delivered.',
+                'flow_step_5_bold': 'Guided Growth',
+                'flow_step_5_desc': 'Over 12-24 months, attend bi-weekly adjustments and track your anatomical progress via the app.',
+                'flow_step_6_bold': 'Empowerment',
+                'flow_step_6_desc': 'Achieve structural health optimization and move from chronic fatigue to systemic wellness.',
+                'client_card_title': 'Patient Access',
+                'client_card_desc': 'Begin your journey, track your "Tiger vs. Cage" progress, and access your records.',
+                'client_card_button': 'Enter My Journey Portal',
+                'professionals_dropdown_text': 'Practitioner Access',
+                'clinic_upload_title': 'Secure Vitals Package Upload',
+                'toggle_text': '中文'
+            },
+            'zh': {
+                'header_title': 'AMD 入口網站',
+                'main_headline': '氣道健康的「隱適美」。',
+                'main_mission': '透過專有的臨床協議解決「整體口腔功能障礙綜合徵」(IMS)。我們彌合了牙科干預與醫療健康優化之間的差距。',
+                'tiger_cage_quote': '「口腔是籠子，舌頭是老虎。當籠子太小時，氣道就會受損。」',
+                'flow_title': '標準化健康旅程',
+                'flow_step_1_bold': '入組',
+                'flow_step_1_desc': '在平台上註冊並支付診斷費，選擇您當地的認證 AMD 執業醫師。',
+                'flow_step_2_bold': '數據收集',
+                'flow_step_2_desc': '前往首選影像實驗室進行 CBCT、X 光和掃描，建立您的「生命特徵包」。',
+                'flow_step_3_bold': '真相揭曉',
+                'flow_step_3_desc': '查看您的「老虎對抗籠子」可視化影像，並從您的醫生那裡接收個性化的「氣道處方」。',
+                'flow_step_4_bold': '設計與交付',
+                'flow_step_4_desc': '專家敲定您的臨床藍圖，您的定制 STA 矯治器將被製造並運送到您的診所。',
+                'flow_step_5_bold': '引導成長',
+                'flow_step_5_desc': '在 12-24 個月的時間裡，參加每兩週一次的調整，並透過 App 追蹤您的解剖學進展。',
+                'flow_step_6_bold': '賦能健康',
+                'flow_step_6_desc': '實現結構性健康優化，從慢性疲勞轉向系統性健康。',
+                'client_card_title': '患者入口',
+                'client_card_desc': '開始您的旅程，追踪「老虎與籠子」進度，並查看您的健康記錄。',
+                'client_card_button': '進入個人旅程門戶',
+                'professionals_dropdown_text': '執業醫師登入',
+                'clinic_upload_title': '安全生命特徵包上傳',
+                'toggle_text': 'English'
+            }
+        };
+
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function() {
+            document.getElementById('dropdown-menu').classList.add('hidden');
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateText();
+        }
+
+        function updateText() {
+            const data = translations[currentLang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const k = el.getAttribute('data-key');
+                if (data[k]) el.innerText = data[k];
+            });
+            document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
+            document.documentElement.setAttribute('lang', currentLang);
+        }
+
+        window.onload = updateText;
+    </script>
 </body>
 </html>
