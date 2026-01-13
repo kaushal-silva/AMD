@@ -3,36 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Portal | Airway Mouth Doctor Solutions</title>
+    <title>AMD Portal | The "Invisalign" for Airway Health</title>
     <!-- Load Tailwind CSS CDN for modern, responsive styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Use Inter font family for a clean, professional look -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Light off-white/blue background */
+            background-color: #f8fafc;
         }
         .bg-gradient-amd {
-            /* A soothing blue-green gradient theme for health and airway */
             background-image: linear-gradient(to right bottom, #10b981, #06b6d4);
-        }
-        .flow-step {
-            @apply mb-6; /* Removed flex items-center */
-        }
-        .flow-step-content {
-            @apply pl-14; /* Add padding to align text with icon */
         }
         .flow-step-icon {
             @apply flex items-center justify-center w-10 h-10 bg-sky-500 text-white rounded-full font-bold text-lg shadow-lg flex-shrink-0 absolute top-0 left-0;
         }
         .flow-step-line {
-            /* Adjusted height to use a fixed pixel value so it correctly connects all 6 steps regardless of varying content height */
             height: calc(100% - 10px); 
-            @apply w-px bg-sky-300 absolute left-5 top-5; /* Adjusted top for alignment */
-        }
-        .flow-container {
-            @apply relative;
+            @apply w-px bg-sky-200 absolute left-5 top-5; 
         }
         /* Custom modal animation */
         .modal-fade-enter {
@@ -48,155 +38,140 @@
 </head>
 <body>
 
-    <!-- Main Application Container -->
     <div class="min-h-screen flex flex-col p-4 relative">
 
-        <!-- Header: Language Toggle and Professional Login Dropdown -->
+        <!-- Header -->
         <header class="w-full max-w-7xl mx-auto flex justify-between items-center py-4 px-2 sticky top-0 bg-f8fafc z-20">
-            <h1 class="text-2xl font-extrabold text-gray-900">
-                <span class="bg-gradient-amd bg-clip-text text-transparent">AMD</span>
+            <h1 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">
+                <svg width="32" height="32" viewBox="0 0 100 100" class="fill-sky-600">
+                    <path d="M70,20 C60,10 40,10 30,20 C20,30 15,50 20,65 C22,70 25,75 30,78 C35,82 45,85 55,85 C65,85 75,80 80,70 C85,60 85,30 70,20 Z M50,15 C65,15 75,25 78,40 C80,50 80,65 72,78 C65,85 50,85 40,78 C35,74 30,65 30,50 C30,35 40,15 50,15 Z" opacity="0.4"/>
+                    <path d="M45,45 Q50,40 55,45 Q60,50 55,65 Q50,75 45,65 Q40,55 45,45 Z" fill="#0ea5e9"/> 
+                    <path d="M35,65 Q40,75 55,75 Q70,75 75,65" stroke="#0ea5e9" stroke-width="4" fill="none" stroke-linecap="round"/> 
+                 </svg>
+                <span class="bg-gradient-amd bg-clip-text text-transparent">AMD Portal</span>
             </h1>
 
             <div class="flex items-center space-x-4">
-                <!-- Language Toggle Button -->
-                <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-teal-600 border border-teal-600 hover:bg-teal-50 transition duration-150 font-semibold shadow-md text-sm">
-                    <!-- Text updated by JavaScript -->
-                </button>
+                <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-teal-600 border border-teal-600 hover:bg-teal-50 transition duration-150 font-semibold shadow-md text-sm"></button>
 
                 <!-- Professional Login Dropdown -->
                 <div class="relative" onmouseleave="closeDropdown()">
                     <button id="professionals-dropdown-btn" onclick="toggleDropdown()" class="py-2 px-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-150 text-sm shadow">
                         <span data-key="professionals_dropdown_text">Professionals Login</span>
                     </button>
-                    <div id="professionals-dropdown-menu" class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="professionals-dropdown-btn">
+                    <div id="professionals-dropdown-menu" class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
                         <div class="py-1" role="none">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Health Professional', 'PractitionerDashboard.html', event)" data-key="hp_dropdown_link">Health Practitioner</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('AMC', 'AMCDashboard.html', event)" data-key="amc_dropdown_link">AMC (Admin)</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Consultant', 'ProfessionalConsultantDashboard.html', event)" data-key="consultant_dropdown_link">Professional Consultant</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('ATC', 'ATCDashboard.html', event)" data-key="atc_dropdown_link">ATC (Patient Success)</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50" role="menuitem" onclick="directLogin('Consultant', 'ProfessionalConsultantDashboard.html', event)" data-key="consultant_dropdown_link">Remote Specialist</a>
                         </div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <main class="w-full max-w-7xl mx-auto flex-grow pt-4">
 
-            <!-- Informative Section -->
+            <!-- Hero Section -->
             <section class="text-center mb-16 max-w-4xl mx-auto">
                 <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl tracking-tight" data-key="main_headline">
-                    Resolving <span class="text-sky-600">Impaired Mouth Syndrome (IMS)</span> Holistically.
+                    The <span class="text-sky-600">"Invisalign"</span> for Airway Health.
                 </h2>
-                <p class="mt-4 text-lg text-gray-700" data-key="main_mission">
-                    Our platform is the sole gateway in Taiwan to receive treatment and consultation from the patent-holding specialist, **Dr. Felix (USA)**, in collaboration with a network of certified local Taiwanese dentists.
+                <p class="mt-4 text-lg text-gray-700 font-medium" data-key="main_mission">
+                    Solving "Impaired Mouth Syndrome" (IMS) through proprietary clinical protocols. We bridge the gap between dental intervention and medical health optimization.
                 </p>
-                <p class="mt-2 text-lg text-gray-500" data-key="main_promise">
-                    We provide a single, coordinated platform to manage your personalized journey toward improved breathing, posture, and holistic health.
-                </p>
+                <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-200 inline-block">
+                    <p class="text-sm text-amber-800 font-bold" data-key="tiger_cage_quote">"The Mouth is the Cage, and the Tongue is the Tiger. When the cage is too small, the airway suffers."</p>
+                </div>
             </section>
 
             <div class="lg:grid lg:grid-cols-2 gap-12 items-start">
                 
-                <!-- LEFT COLUMN: Patient Journey Flowchart (UPDATED CONTENT) -->
+                <!-- Left: Patient Journey -->
                 <section class="section-card bg-white p-8 rounded-xl shadow-lg">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="flow_title">The Personalized Path to Your Best Health</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="flow_title">Your Journey to Airway Health</h3>
                     
-                    <!-- Flowchart Image -->
-                    <div class="mb-8 text-center">
-                        <img 
-                            src="images/index/PatientFlowChart.png" 
-                            alt="6-Step Patient Journey Flowchart: Enroll, Select Expert, Diagnostics, Confirm Diagnosis, Prescribe Solution, Full Support" 
-                            class="w-full h-auto max-w-lg mx-auto rounded-lg shadow-md"
-                            onerror="this.onerror=null;this.src='https://placehold.co/600x200/c7f2f2/06b6d4?text=Patient+Flowchart';"
-                        >
-                    </div>
-
-                    <div class="flow-container pl-4 pb-4">
-                        <!-- Vertical Line (Stretches from after the first icon to before the last step) -->
+                    <div class="flow-container pl-4 pb-4 relative">
                         <div class="flow-step-line"></div> 
 
-                        <!-- Step 1 -->
-                        <div class="flow-step relative">
+                        <!-- Steps based on Business Plan VI. Patient Journey -->
+                        <div class="flow-step relative mb-8">
                             <div class="flow-step-icon">1</div>
-                            <div class="flow-step-content" data-key="flow_step_1">
-                                <p class="font-extrabold text-gray-800" data-key="flow_step_1_bold">Enroll and Access</p>
-                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_1_desc">Sign up on our dedicated platform to officially enroll and gain immediate access to your personalized treatment planning tools.</p>
+                            <div class="pl-14" data-key="flow_step_1">
+                                <p class="font-extrabold text-gray-800" data-key="flow_step_1_bold">Admission</p>
+                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_1_desc">Enroll on the platform and pay your diagnostic fee to select your local certified AMD practitioner.</p>
                             </div>
                         </div>
 
-                        <!-- Step 2 -->
-                        <div class="flow-step relative">
+                        <div class="flow-step relative mb-8">
                             <div class="flow-step-icon">2</div>
-                            <div class="flow-step-content" data-key="flow_step_2">
-                                <p class="font-extrabold text-gray-800" data-key="flow_step_2_bold">Select Your Expert</p>
-                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_2_desc">Choose a local Taiwanese dentist from our network who will serve as your treatment leader and clinical guide throughout your journey.</p>
+                            <div class="pl-14" data-key="flow_step_2">
+                                <p class="font-extrabold text-gray-800" data-key="flow_step_2_bold">Data Collection</p>
+                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_2_desc">Visit a preferred imaging lab for CBCT, X-rays, and blood work to establish your "Vitals Package."</p>
                             </div>
                         </div>
                         
-                        <!-- Step 3 -->
-                        <div class="flow-step relative">
+                        <div class="flow-step relative mb-8">
                             <div class="flow-step-icon">3</div>
-                            <div class="flow-step-content" data-key="flow_step_3">
-                                <p class="font-extrabold text-gray-800" data-key="flow_step_3_bold">Initiate Diagnostics</p>
-                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_3_desc">Receive clear referrals and precise details for the initial scans required to establish your comprehensive medical diagnosis.</p>
+                            <div class="pl-14" data-key="flow_step_3">
+                                <p class="font-extrabold text-gray-800" data-key="flow_step_3_bold">The Reveal</p>
+                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_3_desc">See your "Tiger vs. Cage" visualization and receive your personalized Airway Prescription from your Doctor.</p>
                             </div>
                         </div>
                         
-                        <!-- Step 4 -->
-                        <div class="flow-step relative">
+                        <div class="flow-step relative mb-8">
                             <div class="flow-step-icon">4</div>
-                            <div class="flow-step-content" data-key="flow_step_4">
-                                <p class="font-extrabold text-gray-800" data-key="flow_step_4_bold">Confirm Your Diagnosis</p>
-                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_4_desc">Attend an in-person consultation with your dentist. Here, your local expert and our Airway Mouth Doctor (Dr. Felix) will confirm your IMS diagnosis (Integrated Mouth System) and collaboratively determine the precise treatment protocol you need, or confirm if treatment is not currently required.</p>
+                            <div class="pl-14" data-key="flow_step_4">
+                                <p class="font-extrabold text-gray-800" data-key="flow_step_4_bold">Design & Delivery</p>
+                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_4_desc">Specialists finalize your clinical blueprint, and your custom STA appliance is fabricated and shipped to your clinic.</p>
                             </div>
                         </div>
                          
-                        <!-- Step 5 -->
-                        <div class="flow-step relative">
+                        <div class="flow-step relative mb-8">
                             <div class="flow-step-icon">5</div>
-                            <div class="flow-step-content" data-key="flow_step_5">
-                                <p class="font-extrabold text-gray-800" data-key="flow_step_5_bold">Custom Solution Prescribed</p>
-                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_5_desc">Upon diagnosis confirmation, you will receive your individually engineered Start Thriving Appliance™ and an accompanying nutritional regimen—the foundational elements for your therapeutic success.</p>
+                            <div class="pl-14" data-key="flow_step_5">
+                                <p class="font-extrabold text-gray-800" data-key="flow_step_5_bold">The Long Tail</p>
+                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_5_desc">Over 12-24 months, attend bi-weekly adjustments and track your anatomical progress via the app.</p>
                             </div>
                         </div>
 
-                        <!-- Step 6 (Final Step - line should end before here) -->
                         <div class="flow-step relative">
-                            <div class="flow-step-icon">6</div>
-                            <div class="flow-step-content" data-key="flow_step_6">
-                                <p class="font-extrabold text-gray-800" data-key="flow_step_6_bold">Full Clinical Support</p>
-                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_6_desc">Throughout your treatment, you will work closely with your Doctor, specialized Airway Mouth Coordinator, and clinic team to ensure systematic progress toward your measurable health objectives.</p>
+                            <div class="flow-step-icon bg-green-500">6</div>
+                            <div class="pl-14" data-key="flow_step_6">
+                                <p class="font-extrabold text-gray-800" data-key="flow_step_6_bold">Empowerment</p>
+                                <p class="text-sm text-gray-700 mt-1" data-key="flow_step_6_desc">Achieve structural health optimization and move from chronic fatigue to systemic wellness.</p>
                             </div>
                         </div>
                         
                     </div>
                 </section>
 
-                <!-- RIGHT COLUMN: Client Login (Big and Central) -->
+                <!-- Right: Login -->
                 <section class="flex flex-col items-center justify-center p-8 lg:p-0">
                     <div id="client-login-card" class="card-shadow bg-white p-8 rounded-xl border-t-4 border-sky-500 flex flex-col items-center text-center w-full max-w-sm">
-                        <div class="text-6xl text-sky-500 mb-4" role="img" aria-label="Person icon">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <div class="text-6xl text-sky-500 mb-4">
+                            <i class="fa-solid fa-user-astronaut"></i>
                         </div>
-                        <h3 class="text-3xl font-bold text-gray-800 mb-2" data-key="client_card_title">Client / Patient Access</h3>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-2" data-key="client_card_title">Patient Access</h3>
                         <p class="text-gray-500 mb-6" data-key="client_card_desc">
-                            Begin your journey, sign in, or view your records and progress.
+                            Access your "Airway Prescription," track progress, and communicate with your care team.
                         </p>
-                        <button class="w-full py-3 px-6 bg-sky-600 text-white font-extrabold text-lg rounded-lg hover:bg-sky-700 transition duration-150" onclick="openLoginModal('Client')">
-                            <span data-key="client_card_button">Start My Treatment Journey</span>
+                        <button class="w-full py-3 px-6 bg-sky-600 text-white font-extrabold text-lg rounded-lg hover:bg-sky-700 transition duration-150 shadow-xl" onclick="openLoginModal('Client')">
+                            <span data-key="client_card_button">Enter My Journey</span>
                         </button>
                     </div>
                 </section>
             </div>
             
-            <!-- NEW SECTION: Independent Clinic File Upload -->
+            <!-- File Upload -->
             <section class="w-full max-w-6xl mx-auto mt-16">
                 <div class="bg-gray-100 p-6 rounded-xl border border-gray-300 flex flex-col md:flex-row items-center justify-between shadow-md">
                     <div class="text-lg font-semibold text-gray-700 mb-4 md:mb-0" data-key="clinic_upload_title">
-                        Independent Clinic: Secure Scan Upload (INV File)
+                        Preferred Imaging Partner: Secure Vitals Package Upload
                     </div>
-                    <button class="py-2 px-4 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150 text-sm w-full md:w-auto" onclick="openUploadModal()">
-                        <span data-key="clinic_upload_button">Upload Patient INV File</span>
+                    <button class="py-2 px-6 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 transition w-full md:w-auto text-sm" onclick="openUploadModal()">
+                        <span data-key="clinic_upload_button">Secure Upload Center</span>
                     </button>
                 </div>
             </section>
@@ -204,219 +179,105 @@
         </main>
     </div>
 
-    <!-- Login Modal Structure (Shared for Client/Patient only) -->
-    <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <!-- Modal Content -->
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
         <div id="modal-content-container" class="bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl relative modal-fade-enter">
-            <!-- Close Button -->
-            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2 text-center"></h3>
             <p id="modal-subtitle" class="text-sm text-gray-500 mb-6 text-center"></p>
-
-            <!-- Tab/Toggle for Sign In / Sign Up -->
             <div class="flex justify-center mb-8 bg-gray-100 p-1 rounded-lg">
-                <button id="tab-signin" onclick="setMode('signin')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 hover:text-gray-900 transition duration-150"></button>
-                <button id="tab-signup" onclick="setMode('signup')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 hover:text-gray-900 transition duration-150"></button>
+                <button id="tab-signin" onclick="setMode('signin')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 transition"></button>
+                <button id="tab-signup" onclick="setMode('signup')" class="py-2 px-4 w-1/2 rounded-lg font-semibold text-gray-700 transition"></button>
             </div>
-
-            <!-- Authentication Options -->
             <div class="space-y-4">
-                <!-- Email/Password Mock -->
-                <button id="auth-email" onclick="simulateLogin('email')" class="w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-150">
-                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-8 12a9 9 0 110-18 9 9 0 010 18z"/></svg>
-                    <span id="auth-email-text" class="text-gray-700 font-medium"></span>
-                </button>
-
-                <!-- Line Mock (Using a simple icon and a brand color) -->
-                <button id="auth-line" onclick="simulateLogin('line')" class="w-full flex items-center justify-center p-3 bg-[#00C300] text-white font-semibold rounded-lg hover:bg-[#00A000] transition duration-150">
-                    <svg class="w-5 h-5 mr-2" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#FFF"/><path fill="#00C300" d="M12.91 14.509h18.179v1.94h-18.179zM12.91 21.018h18.179v1.94h-18.179zM12.91 27.527h18.179v1.94h-18.179zM12.91 34.036h18.179v1.94h-18.179z"/></svg>
-                    <span id="auth-line-text"></span>
-                </button>
+                <button onclick="simulateLogin('email')" class="w-full flex items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition"><i class="fa-solid fa-envelope mr-2"></i> <span id="auth-email-text"></span></button>
+                <button onclick="simulateLogin('line')" class="w-full flex items-center justify-center p-3 bg-[#00C300] text-white font-bold rounded-lg hover:bg-[#00A000] transition"><i class="fa-brands fa-line mr-2 text-xl"></i> <span id="auth-line-text"></span></button>
             </div>
         </div>
     </div>
 
-    <!-- NEW MODAL: Clinic INV File Upload -->
-    <div id="upload-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <!-- Modal Content -->
-        <div id="upload-modal-content" class="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl relative modal-fade-enter">
-            <button onclick="closeModal('upload-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-
-            <h3 class="text-2xl font-bold text-teal-600 mb-4" data-key="upload_modal_title">Secure INV File Upload</h3>
-            
-            <form id="clinic-upload-form" class="space-y-4">
-                
-                <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p class="font-bold text-red-700 text-sm mb-1" data-key="upload_note_heading">Security Note:</p>
-                    <p class="text-xs text-red-600" data-key="upload_note_text">The file will be stored encrypted under the Patient ID until authorized for access by the patient, who will be notified upon receipt.</p>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1" data-key="patient_code_label">Unique Patient Code (e.g., AMDTW001)</label>
-                    <input type="text" id="patient-code" placeholder="8 alphanumeric characters" class="w-full p-2 border border-gray-300 rounded-lg" required pattern="[A-Z0-9]{8}" maxlength="8">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1" data-key="file_upload_label">INV File Upload (.inv, .dicom, etc.)</label>
-                    <input type="file" id="inv-file" class="w-full p-2 border border-gray-300 rounded-lg" accept=".inv,.dcm,.dicom" required>
-                </div>
-                
-                <hr class="border-gray-200">
-
-                <p class="text-sm font-medium text-gray-700" data-key="clinic_details_optional">Clinic Details (Optional)</p>
-
-                <div>
-                    <input type="text" id="clinic-name" placeholder="Clinic Name" class="w-full p-2 border border-gray-300 rounded-lg">
-                </div>
-                <div>
-                    <input type="email" id="clinic-email" placeholder="Clinic Email Address" class="w-full p-2 border border-gray-300 rounded-lg">
-                </div>
-                
-                <div class="flex justify-end space-x-4 pt-2">
-                    <button type="button" onclick="closeModal('upload-modal')" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400" data-key="btn_cancel">Cancel</button>
-                    <button type="submit" class="py-2 px-4 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold" data-key="btn_submit_upload">Submit Secure Upload</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Message Box for Login Simulation -->
-    <div id="message-box" class="fixed bottom-4 right-4 bg-white border-l-4 border-teal-500 text-gray-800 p-4 rounded-lg shadow-xl hidden transition-opacity duration-300" role="alert">
+    <div id="message-box" class="fixed bottom-4 right-4 bg-white border-l-4 border-teal-500 text-gray-800 p-4 rounded-lg shadow-xl hidden transition-all duration-300">
         <p id="message-text" class="font-semibold"></p>
     </div>
 
-    <!-- JavaScript for translations and simulated login action -->
     <script>
-        // --- Global Constants (FIXED: Declared only once) ---
-        const currentLang = 'en'; // Default language
-        const monthsCompleted = 6;
-        const totalPrescriptionMonths = 24;
-        const percentageCompleted = Math.round((monthsCompleted / totalPrescriptionMonths) * 100);
+        let currentLang = 'en'; 
+        let currentMode = 'signin';
 
-        // --- Appliance Timeline Logic (Mock Data) ---
-        const applianceAdjustments = [
-            { month: 0, setKey: 'state_m0_set', expansion: '0.0mm', date: '2025/09/20', noteKey: 'note_m0', clinicalDate: '2025/09/20', clinicalNoteKey: 'note_clinical_m0' },
-            { month: 2, setKey: 'state_m2_set', expansion: '1.0 Turns / 0.38mm', date: '2025/11/20', noteKey: 'note_m2', clinicalDate: '2025/11/15', clinicalNoteKey: 'note_clinical_m2' },
-            { month: 4, setKey: 'state_m4_set', expansion: '1.5 Turns / 0.45mm', date: '2026/01/01', noteKey: 'note_m4', clinicalDate: '2025/12/28', clinicalNoteKey: 'note_clinical_m4' },
-            { month: 6, setKey: 'state_m6_set', expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', noteKey: 'note_m6', clinicalDate: '2026/03/15', clinicalNoteKey: 'note_clinical_m6' }
-        ];
-
-        // --- Translation Data Structure (FIXED: Moved to top level) ---
         const translations = {
             'en': {
-                'portal_title_h1': 'AMD Portal',
-                'portal_title_h2': 'Airway Mouth Doctor Holistic Health',
-                'main_headline': 'Resolving Impaired Mouth Syndrome (IMS) Holistically.',
-                'main_mission': 'Our platform is the sole gateway in Taiwan to receive treatment and consultation from the patent-holding specialist, Dr. Felix (USA), in collaboration with a network of certified local Taiwanese dentists.',
-                'main_promise': 'We provide a single, coordinated platform to manage your personalized journey toward improved breathing, posture, and holistic health.',
-                
-                'flow_title': 'The Personalized Path to Your Best Health', 
-                
-                // Bold/Desc structure for flow
-                'flow_step_1_bold': 'Enroll and Access',
-                'flow_step_1_desc': 'Sign up on our dedicated platform to officially enroll and gain immediate access to your personalized treatment planning tools.',
-                'flow_step_2_bold': 'Select Your Expert',
-                'flow_step_2_desc': 'Choose a local Taiwanese dentist from our network who will serve as your treatment leader and clinical guide throughout your journey.',
-                'flow_step_3_bold': 'Initiate Diagnostics',
-                'flow_step_3_desc': 'Receive clear referrals and precise details for the initial scans required to establish your comprehensive medical diagnosis.',
-                'flow_step_4_bold': 'Confirm Your Diagnosis',
-                'flow_step_4_desc': 'Attend an in-person consultation with your dentist. Here, your local expert and our Airway Mouth Doctor (Dr. Felix) will thoroughly analyze your condition. They will confirm your IMS diagnosis (Integrated Mouth System) and collaboratively determine the precise treatment protocol you need, or confirm if treatment is not currently required.',
-                'flow_step_5_bold': 'Custom Solution Prescribed',
-                'flow_step_5_desc': 'Upon diagnosis confirmation, you will receive your individually engineered Start Thriving Appliance™ and an accompanying nutritional regimen—the foundational elements for your therapeutic success.',
-                'flow_step_6_bold': 'Full Clinical Support',
-                'flow_step_6_desc': 'Throughout your treatment, you will work closely with your Doctor, specialized Airway Mouth Coordinator, and clinic team to ensure systematic progress toward your measurable health objectives.',
-
-                'client_card_title': 'Client / Patient Access',
-                'client_card_desc': 'Begin your journey, sign in, or view your records and progress.',
-                'client_card_button': 'Start My Treatment Journey',
-                
-                'professionals_dropdown_text': 'Professionals Login',
-                'hp_dropdown_link': 'Health Practitioner (Dentist/Doctor)',
-                'amc_dropdown_link': 'AMC (Admin)', 
-                'consultant_dropdown_link': 'Professional Consultant (Specialist)',
-
-                'clinic_upload_title': 'Independent Clinic: Secure Scan Upload (INV File)',
-                'clinic_upload_button': 'Upload Patient INV File',
-                'upload_modal_title': 'Secure INV File Upload',
-                'upload_note_heading': 'Security Note:',
-                'upload_note_text': 'The file will be stored encrypted under the Patient ID until authorized for access by the patient, who will be notified upon receipt.',
-                'patient_code_label': 'Unique Patient Code (e.g., AMDTW001)',
-                'file_upload_label': 'INV File Upload (.inv, .dicom, etc.)',
-                'clinic_details_optional': 'Clinic Details (Optional)',
-                'btn_cancel': 'Cancel',
-                'btn_submit_upload': 'Submit Secure Upload',
-
+                'header_title': 'AMD Portal',
+                'main_headline': 'The "Invisalign" for Airway Health.',
+                'main_mission': 'Solving "Impaired Mouth Syndrome" (IMS) through proprietary clinical protocols. We bridge the gap between dental intervention and medical health optimization.',
+                'tiger_cage_quote': '"The Mouth is the Cage, and the Tongue is the Tiger. When the cage is too small, the airway suffers."',
+                'flow_title': 'Your Journey to Airway Health',
+                'flow_step_1_bold': 'Admission',
+                'flow_step_1_desc': 'Enroll on the platform and pay your diagnostic fee to select your local certified AMD practitioner.',
+                'flow_step_2_bold': 'Data Collection',
+                'flow_step_2_desc': 'Visit a preferred imaging lab for CBCT, X-rays, and blood work to establish your "Vitals Package."',
+                'flow_step_3_bold': 'The Reveal',
+                'flow_step_3_desc': 'See your "Tiger vs. Cage" visualization and receive your personalized Airway Prescription from your Doctor.',
+                'flow_step_4_bold': 'Design & Delivery',
+                'flow_step_4_desc': 'Specialists finalize your clinical blueprint, and your custom STA appliance is fabricated and shipped to your clinic.',
+                'flow_step_5_bold': 'The Long Tail',
+                'flow_step_5_desc': 'Over 12-24 months, attend bi-weekly adjustments and track your anatomical progress via the app.',
+                'flow_step_6_bold': 'Empowerment',
+                'flow_step_6_desc': 'Achieve structural health optimization and move from chronic fatigue to systemic wellness.',
+                'client_card_title': 'Patient Access',
+                'client_card_desc': 'Access your "Airway Prescription," track progress, and communicate with your care team.',
+                'client_card_button': 'Enter My Journey',
+                'professionals_dropdown_text': 'Practitioner Login',
+                'hp_dropdown_link': 'Airway Mouth Doctor (AMD)',
+                'atc_dropdown_link': 'Patient Success Manager (ATC)',
+                'consultant_dropdown_link': 'Remote Specialist (Brain)',
+                'clinic_upload_title': 'Preferred Imaging Partner: Secure Vitals Package Upload',
+                'clinic_upload_button': 'Secure Upload Center',
                 'toggle_text': '中文',
-                'modal_sign_in_title': 'Sign In to continue',
-                'modal_sign_up_title': 'Create Your Account',
-                'modal_subtitle_client': 'Access your personalized treatment records.',
+                'modal_sign_in_title': 'Welcome Back',
+                'modal_sign_up_title': 'Start Your Journey',
+                'modal_subtitle_client': 'Login to view your clinical progress.',
                 'tab_sign_in': 'Sign In',
-                'tab_sign_up': 'Sign Up',
-                'auth_email_text': 'Continue with Email/Password',
+                'tab_sign_up': 'Join Now',
+                'auth_email_text': 'Continue with Email',
                 'auth_line_text': 'Continue with LINE'
             },
             'zh': {
-                // Traditional Chinese translations suitable for Taiwan
-                'portal_title_h1': 'AMD 入口網站',
-                'portal_title_h2': '口腔氣道醫生整體健康',
-                'main_headline': '全面解決整體口腔功能障礙綜合徵 (IMS)。',
-                'main_mission': '我們的平台是台灣唯一能與持有專利技術的專家 **Dr. Felix (美國)**，以及本地認證牙醫網絡合作，提供治療和諮詢的門戶。',
-                'main_promise': '我們提供一個統一協調的平台，管理您的個人化旅程，以實現改善呼吸、姿勢和整體健康。',
-                
-                'flow_title': '個性化最佳健康之路', 
-                
-                // Bold/Desc structure for flow
-                'flow_step_1_bold': '註冊與訪問',
-                'flow_step_1_desc': '在我們的專屬平台上註冊，正式加入並立即訪問您的個性化治療規劃工具。',
-                'flow_step_2_bold': '選擇您的專家',
-                'flow_step_2_desc': '從我們的網絡中選擇一位本地台灣牙醫，作為您的治療負責人和臨床指導，引導您完成整個旅程。',
-                'flow_step_3_bold': '啟動診斷',
-                'flow_step_3_desc': '接收明確的轉介單和精確的細節，以便進行建立您的全面醫療診斷所需的初步掃描。',
-                'flow_step_4_bold': '確認您的診斷',
-                'flow_step_4_desc': '與您的牙醫進行現場諮詢。在此，您的本地專家和我們的口腔氣道醫生（Dr. Felix）將徹底分析您的狀況。他們將確認您的 IMS 診斷（整合口腔系統），並協作確定您所需的精確治療方案，或確認目前是否不需要治療。',
-                'flow_step_5_bold': '處方定制方案',
-                'flow_step_5_desc': '一旦診斷確認，您將收到您個人設計的 Start Thriving Appliance™ 以及配套的營養方案—這是您治療成功的基礎要素。',
-                'flow_step_6_bold': '全面的臨床支持',
-                'flow_step_6_desc': '在整個治療過程中，您將與您的醫生、專業的口腔氣道協調員和診所團隊緊密合作，以確保朝著可衡量的健康目標系統地進展。',
-
-                'client_card_title': '客戶 / 患者訪問',
-                'client_card_desc': '開始您的旅程，登入或查看您的記錄和進度。',
-                'client_card_button': '開始我的治療旅程',
-                
-                'professionals_dropdown_text': '專業人士登入',
-                'hp_dropdown_link': '衛生專業人員 (牙醫/醫師)',
-                'amc_dropdown_link': 'AMC (管理)', 
-                'consultant_dropdown_link': '專業顧問 (專家)',
-
-                'clinic_upload_title': '獨立診所：安全掃描上傳 (INV 文件)',
-                'clinic_upload_button': '上傳患者 INV 文件',
-                'upload_modal_title': '安全 INV 文件上傳',
-                'upload_note_heading': '安全注意事項：',
-                'upload_note_text': '文件將以加密方式儲存在患者 ID 下，直到獲得患者授權訪問（患者將在收到通知）。',
-                'patient_code_label': '唯一患者代碼 (例如：AMDTW001)',
-                'file_upload_label': 'INV 文件上傳 (.inv, .dicom, 等)',
-                'clinic_details_optional': '診所詳細資訊 (可選)',
-                'btn_cancel': '取消',
-                'btn_submit_upload': '提交安全上傳',
-
+                'header_title': 'AMD 入口網站',
+                'main_headline': '氣道健康的「隱適美」。',
+                'main_mission': '透過專有的臨床協議解決「整體口腔功能障礙綜合徵」(IMS)。我們彌合了牙科干預與醫療健康優化之間的差距。',
+                'tiger_cage_quote': '「口腔是籠子，舌頭是老虎。當籠子太小時，氣道就會受損。」',
+                'flow_title': '您的氣道健康之旅',
+                'flow_step_1_bold': '入組',
+                'flow_step_1_desc': '在平台上註冊並支付診斷費，選擇您當地的認證 AMD 執業醫師。',
+                'flow_step_2_bold': '數據收集',
+                'flow_step_2_desc': '前往首選影像實驗室進行 CBCT、X 光和抽血，建立您的「生命特徵包」。',
+                'flow_step_3_bold': '真相揭曉',
+                'flow_step_3_desc': '查看您的「老虎對抗籠子」可視化影像，並從您的醫生那裡接收個性化的「氣道處方」。',
+                'flow_step_4_bold': '設計與交付',
+                'flow_step_4_desc': '專家敲定您的臨床藍圖，您的定制 STA 矯治器將被製造並運送到您的診所。',
+                'flow_step_5_bold': '長期追踪',
+                'flow_step_5_desc': '在 12-24 個月的時間裡，參加每兩週一次的調整，並透過 App 追蹤您的解剖學進展。',
+                'flow_step_6_bold': '賦能健康',
+                'flow_step_6_desc': '實現結構性健康優化，從慢性疲勞轉向系統性健康。',
+                'client_card_title': '患者入口',
+                'client_card_desc': '查看您的「氣道處方」、追踪進度，並與您的護理團隊溝通。',
+                'client_card_button': '進入我的旅程',
+                'professionals_dropdown_text': '執業醫師登入',
+                'hp_dropdown_link': '口腔氣道醫生 (AMD)',
+                'atc_dropdown_link': '患者成功經理 (ATC)',
+                'consultant_dropdown_link': '遠程專科醫生 (Brain)',
+                'clinic_upload_title': '首選影像夥伴：安全生命特徵包上傳',
+                'clinic_upload_button': '安全上傳中心',
                 'toggle_text': 'English',
-                'modal_sign_in_title': '登入以繼續',
-                'modal_sign_up_title': '創建您的帳戶',
-                'modal_subtitle_client': '訪問您的個人化治療記錄。',
+                'modal_sign_in_title': '歡迎回來',
+                'modal_sign_up_title': '開始您的旅程',
+                'modal_subtitle_client': '登入以查看您的臨床進度。',
                 'tab_sign_in': '登入',
-                'tab_sign_up': '註冊',
-                'auth_email_text': '使用電子郵件/密碼繼續',
+                'tab_sign_up': '立即加入',
+                'auth_email_text': '使用電子郵件繼續',
                 'auth_line_text': '使用 LINE 繼續'
             }
         };
-
-
-        // --- Core Functions (FIXED: Defined globally) ---
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
@@ -424,199 +285,75 @@
         }
 
         function toggleDropdown() {
-            const menu = document.getElementById('professionals-dropdown-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('professionals-dropdown-menu').classList.toggle('hidden');
         }
 
         function closeDropdown() {
-             const menu = document.getElementById('professionals-dropdown-menu');
-             setTimeout(() => {
-                 if (!menu.matches(':hover')) {
-                     menu.classList.add('hidden');
-                 }
-             }, 300);
-        }
-        
-        function openUploadModal() {
-            const modal = document.getElementById('upload-modal');
-            const modalContent = document.getElementById('upload-modal-content');
-            
-            // Clear inputs and set initial state
-            document.getElementById('clinic-upload-form').reset();
-            
-            modal.classList.remove('hidden');
             setTimeout(() => {
-                modalContent.classList.remove('modal-fade-enter');
-                modalContent.classList.add('modal-fade-enter-active');
-            }, 10);
-            
-             // Handle form submission inside the modal
-            document.getElementById('clinic-upload-form').onsubmit = function(event) {
-                event.preventDefault();
-                const patientCode = document.getElementById('patient-code').value;
-                const fileInput = document.getElementById('inv-file');
-                const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'N/A';
-
-
-                closeModal('upload-modal');
-                
-                const message = currentLang === 'en' ? 
-                    `Success! INV file '${fileName}' submitted for Patient ID ${patientCode}. The patient will be notified.` :
-                    `成功！ INV 文件 '${fileName}' 已提交給患者 ID ${patientCode}。患者將收到通知。`;
-                
-                showMessage(message, 'Clinic');
-            };
+                if (!document.getElementById('professionals-dropdown-menu').matches(':hover')) {
+                    document.getElementById('professionals-dropdown-menu').classList.add('hidden');
+                }
+            }, 300);
         }
 
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const modalContent = document.getElementById(modalId + '-content');
-            
-            if (!modal || !modalContent) return;
-
-            modalContent.classList.remove('modal-fade-enter-active');
-            modalContent.classList.add('modal-fade-enter');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-
-        function directLogin(userType, targetUrl, event) {
-            event.preventDefault();
-            closeDropdown();
-            simulateRedirect(userType, 'signin', targetUrl);
-        }
-
-        function openLoginModal(userType) {
-            currentUserType = userType;
+        function openLoginModal(type) {
             currentMode = 'signin';
-            
             const modal = document.getElementById('login-modal');
-            const modalContent = document.getElementById('modal-content-container');
-            
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('modal-fade-enter');
-                modalContent.classList.add('modal-fade-enter-active');
-            }, 10); 
-            
             setModalContent();
         }
-        
+
         function setMode(mode) {
             currentMode = mode;
             setModalContent();
         }
-        
+
         function setModalContent() {
-            const langData = translations[currentLang];
-            const isSignIn = currentMode === 'signin';
+            const data = translations[currentLang];
+            document.getElementById('modal-title').innerText = currentMode === 'signin' ? data.modal_sign_in_title : data.modal_sign_up_title;
+            document.getElementById('modal-subtitle').innerText = data.modal_subtitle_client;
+            document.getElementById('tab-signin').innerText = data.tab_sign_in;
+            document.getElementById('tab-signup').innerText = data.tab_sign_up;
+            document.getElementById('auth-email-text').innerText = data.auth_email_text;
+            document.getElementById('auth-line-text').innerText = data.auth_line_text;
             
-            document.getElementById('modal-title').textContent = isSignIn ? langData.modal_sign_in_title : langData.modal_sign_up_title;
-            document.getElementById('modal-subtitle').textContent = langData.modal_subtitle_client;
-
-            const tabSignIn = document.getElementById('tab-signin');
-            const tabSignUp = document.getElementById('tab-signup');
-            
-            tabSignIn.textContent = langData.tab_sign_in;
-            tabSignUp.textContent = langData.tab_sign_up;
-
-            const activeClasses = 'bg-white text-gray-900 shadow';
-            const inactiveClasses = 'bg-gray-100 text-gray-500 hover:bg-white';
-
-            if (isSignIn) {
-                tabSignIn.className = tabSignIn.className.replace(inactiveClasses, activeClasses);
-                tabSignUp.className = tabSignUp.className.replace(activeClasses, inactiveClasses);
-            } else {
-                tabSignIn.className = tabSignIn.className.replace(activeClasses, inactiveClasses);
-                tabSignUp.className = tabSignUp.className.replace(inactiveClasses, activeClasses);
-            }
-            
-            document.getElementById('auth-email-text').textContent = isSignIn ? langData.auth_email_text : langData.auth_email_text.replace('Continue', 'Sign Up');
-            document.getElementById('auth-line-text').textContent = isSignIn ? langData.auth_line_text : langData.auth_line_text.replace('Continue', 'Sign Up');
+            document.getElementById('tab-signin').className = `py-2 px-4 w-1/2 rounded-lg font-semibold transition ${currentMode === 'signin' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}`;
+            document.getElementById('tab-signup').className = `py-2 px-4 w-1/2 rounded-lg font-semibold transition ${currentMode === 'signup' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}`;
         }
 
-
-        function simulateLogin(authMethod) {
-            closeModal('login-modal');
-            const isSignUp = currentMode === 'signup';
-            let targetUrl = isSignUp ? 'ClientOnboarding.html' : 'ClientDashboard.html'; 
-            
-            simulateRedirect('Client', currentMode, targetUrl, authMethod);
+        function directLogin(user, url, e) {
+            e.preventDefault();
+            const msg = `Authenticating ${user}... Redirecting to ${url}`;
+            showMessage(msg);
+            setTimeout(() => window.location.href = url, 800);
         }
 
-        function simulateRedirect(userType, mode, targetUrl, authMethod = 'N/A') {
-            const actionText = mode === 'signup' ? translations[currentLang]['modal_sign_up_title'] : translations[currentLang]['modal_sign_in_title'];
-            const userTypeText = translations[currentLang][userType.toLowerCase() + '_dropdown_link'] || userType;
-            const methodText = authMethod !== 'N/A' ? (authMethod === 'email' ? (currentLang === 'en' ? 'Email/Password' : '電子郵件/密碼') : 'LINE') : '';
-            
-            const message = `${userTypeText} ${actionText} via ${methodText}. Redirecting to ${targetUrl}...`;
-            
-            showMessage(message, userType);
-
-            setTimeout(() => {
-                 window.location.href = targetUrl;
-            }, 500); 
+        function simulateLogin(method) {
+            const url = currentMode === 'signin' ? 'ClientDashboard.html' : 'ClientDashboard.html';
+            showMessage(`Connecting via ${method.toUpperCase()}...`);
+            setTimeout(() => window.location.href = url, 800);
         }
 
-        function showMessage(text, userType) {
-            const messageBox = document.getElementById('message-box');
-            const messageText = document.getElementById('message-text');
-            
-            messageText.textContent = text;
-            
-            let borderColorClass = 'border-teal-500'; 
-            if (userType === 'Client') borderColorClass = 'border-sky-500';
-            else if (userType === 'AMC') borderColorClass = 'border-indigo-500';
-            else if (userType === 'Consultant' || userType === 'Health Professional') borderColorClass = 'border-teal-500';
-            
-            messageBox.className = `fixed bottom-4 right-4 bg-white border-l-4 ${borderColorClass} text-gray-800 p-4 rounded-lg shadow-xl transition-opacity duration-300`;
-            messageBox.classList.remove('hidden');
-            messageBox.style.opacity = '1';
-
-            setTimeout(() => {
-                messageBox.style.opacity = '0';
-                setTimeout(() => {
-                    messageBox.classList.add('hidden');
-                }, 300); 
-            }, 4000);
+        function showMessage(txt) {
+            const box = document.getElementById('message-box');
+            document.getElementById('message-text').innerText = txt;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 3000);
         }
-
 
         function updateText() {
-            const langData = translations[currentLang];
-            
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                const boldKey = key + '_bold';
-                const descKey = key + '_desc';
-
-                if (langData[boldKey] && langData[descKey] && element.classList.contains('flow-step-content')) {
-                    element.innerHTML = `
-                        <p class="font-extrabold text-gray-800">${langData[boldKey]}</p>
-                        <p class="text-sm text-gray-700 mt-1">${langData[descKey]}</p>
-                    `;
-                } else if (langData[key]) {
-                    element.textContent = langData[key];
-                }
+            const data = translations[currentLang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const k = el.getAttribute('data-key');
+                if (data[k]) el.innerText = data[k];
             });
-
-            const toggleButton = document.getElementById('lang-toggle');
-            toggleButton.textContent = langData.toggle_text;
-
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = (currentLang === 'en' ? 'AMD Portal' : 'AMD 入口網站') + ' | Airway Mouth Doctor Solutions';
-            
-            if (!document.getElementById('login-modal').classList.contains('hidden')) {
-                setModalContent();
-            }
+            document.getElementById('lang-toggle').innerText = data.toggle_text;
         }
 
-        // Initialize the page with the default language
-        document.addEventListener('DOMContentLoaded', updateText);
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function openUploadModal() { alert("Secure Upload Center: Access Restricted to Certified Imaging Partners."); }
+
+        window.onload = updateText;
     </script>
 </body>
 </html>
