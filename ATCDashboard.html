@@ -63,6 +63,7 @@
         <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-4 lg:gap-8">
                 
+                <!-- ATC Navigation -->
                 <div class="lg:col-span-1 mb-8">
                     <div class="space-y-6 sticky top-24">
                         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
@@ -116,19 +117,13 @@
                         <div id="task-list-full" class="space-y-4"></div>
                     </div>
 
-                    <!-- Patients Registry Pane -->
-                    <div id="pane-patients" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="registry_title">Patient Registry</h2><div class="section-card"><div class="relative mb-6"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input type="text" id="patient-search" onkeyup="filterPatients()" placeholder="Search registry..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-purple-500"></div><div class="overflow-hidden border border-slate-100 rounded-lg"><table class="w-full text-left"><tbody id="patient-list-body" class="divide-y divide-slate-50"></tbody></table></div></div></div>
-                    
-                    <!-- Video Hub Pane -->
+                    <!-- Additional Panes -->
+                    <div id="pane-patients" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="registry_title">Patient Registry</h2><div class="section-card"><div class="relative mb-6"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input type="text" id="patient-search" onkeyup="filterPatients()" placeholder="Search registry..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-purple-500 transition-all"></div><div class="overflow-hidden border border-slate-100 rounded-lg"><table class="w-full text-left"><tbody id="patient-list-body" class="divide-y divide-slate-50"></tbody></table></div></div></div>
                     <div id="pane-videos" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="video_hub_title">Direct ATC Access Hub</h2><div class="grid grid-cols-1 gap-6" id="video-feed-list"></div></div>
-                    
-                    <!-- Intake Management Pane -->
                     <div id="pane-intake" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="nav_intake">Intake Management</h2><div class="grid grid-cols-1 gap-4" id="intake-queue-list"></div></div>
-                    
-                    <!-- Accounting Pane -->
                     <div id="pane-payments" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="nav_accounting">Accounting & Ledger</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="section-card border-l-4 border-green-500"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1" data-key="stat_total_revenue">Total Revenue (YTD)</p><p class="text-3xl font-black text-slate-800" id="acct-revenue">--</p></div><div class="section-card border-l-4 border-amber-500"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1" data-key="stat_pending_fees">Pending Fees</p><p class="text-3xl font-black text-slate-800" id="acct-pending">--</p></div></div></div>
 
-                    <!-- Patient Detail Workspace -->
+                    <!-- 7. Patient Detail Workspace -->
                     <div id="pane-client-detail" class="main-pane hidden space-y-6">
                         <div class="flex items-center justify-between gap-4">
                             <div class="flex items-center gap-4">
@@ -142,7 +137,8 @@
                             <div class="md:w-64 flex-shrink-0">
                                 <div class="bg-white p-3 rounded-xl border border-slate-100 space-y-1">
                                     <button class="sub-nav-btn active" onclick="switchDetailTab('clinical')"><i class="fa-solid fa-list-check w-4"></i> <span data-key="tab_clinical">Granular Progress</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> <span data-key="tab_diagnostics">Scans & Imprints</span></button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('questionnaire')"><i class="fa-solid fa-clipboard-question w-4"></i> <span data-key="tab_questionnaire">Patient Questionnaire</span></button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> <span data-key="tab_diagnostics">Scans, Analysis & Reports</span></button>
                                     <button class="sub-nav-btn" onclick="switchDetailTab('treatment')"><i class="fa-solid fa-screwdriver-wrench w-4"></i> <span data-key="tab_treatment">Treatment Plan</span></button>
                                     <button class="sub-nav-btn" onclick="switchDetailTab('coaching')"><i class="fa-solid fa-video w-4"></i> <span data-key="tab_coaching">Video Log</span></button>
                                     <button class="sub-nav-btn" onclick="switchDetailTab('records')"><i class="fa-solid fa-book-medical w-4"></i> <span data-key="tab_records">Clinic Records</span></button>
@@ -151,8 +147,47 @@
                             </div>
 
                             <div class="flex-1 min-w-0 space-y-6">
-                                <div id="tab-clinical" class="detail-tab space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-4" data-key="granular_status">Granular Workflow Status</h3><p class="text-[10px] font-black text-slate-400 uppercase mb-4">Total System Ageing: <span id="detail-total-ageing" class="text-purple-600 font-black">--</span></p><div id="detail-granular-timeline" class="space-y-8 mt-6"></div></div></div>
-                                <div id="tab-diagnostics" class="detail-tab hidden space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-4" data-key="uploaded_diagnostics">Uploaded Diagnostics</h3><div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="detail-scans-list"></div></div></div>
+                                <div id="tab-clinical" class="detail-tab space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-6" data-key="granular_status">Granular Workflow Status</h3><span class="text-[10px] font-black text-slate-400 uppercase">Total Ageing: <span id="detail-total-ageing" class="text-purple-600">--</span></span><div id="detail-granular-timeline" class="space-y-8 mt-6"></div></div></div>
+                                
+                                <!-- Questionnaire -->
+                                <div id="tab-questionnaire" class="detail-tab hidden space-y-6">
+                                    <div class="section-card bg-purple-50 border border-purple-100">
+                                        <h3 class="font-bold text-purple-800 mb-4" data-key="tab_questionnaire">Patient Submitted Questionnaire</h3>
+                                        <div class="space-y-4 text-sm text-slate-700">
+                                            <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Motivations</h4><p id="q-mot">--</p></div>
+                                            <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Pain Points</h4><p id="q-pain">--</p></div>
+                                            <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Medical History</h4><p id="q-hist">--</p></div>
+                                            <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Integrated MSQ Score</h4><p>Head/Neck: 14 | Cardio: 5 | Digestive: 2 | Brain: 18 (Severe)</p></div>
+                                        </div>
+                                        <button class="mt-4 px-4 py-2 bg-purple-600 text-white text-[10px] font-black rounded uppercase shadow-sm hover:bg-purple-700">Download Full PDF</button>
+                                    </div>
+                                </div>
+
+                                <!-- Scans, Analysis & Reports -->
+                                <div id="tab-diagnostics" class="detail-tab hidden space-y-6">
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-slate-800 mb-4" data-key="uploaded_diagnostics">Scans, Analysis & Reports</h3>
+                                        
+                                        <!-- Scans -->
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Clinical Scans</h4>
+                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="detail-scans-list"></div>
+                                        
+                                        <!-- Analysis -->
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Expert Analysis</h4>
+                                        <div class="p-3 bg-amber-50 border border-amber-100 rounded-lg mb-6">
+                                            <p class="text-xs text-amber-800 italic">"Structural analysis confirms airway volume deficiency. Treatment focuses on arch expansion."</p>
+                                        </div>
+
+                                        <!-- Reports -->
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Medical Reports</h4>
+                                        <div class="space-y-2">
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Blood Panel (CBC)</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Liver Function</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Kidney Function</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div id="tab-treatment" class="detail-tab hidden space-y-6">
                                     <div class="section-card bg-teal-50 border-l-4 border-teal-500"><h3 class="font-bold text-teal-800 mb-4" data-key="amd_prescription">AMD Prescription Summary</h3><div id="detail-treatment-summary" class="text-sm leading-relaxed text-slate-700"></div></div>
                                     <div class="section-card"><h3 class="font-bold text-slate-800 mb-4" data-key="active_growth">Active Growth Monitoring</h3><div id="detail-treatment-log" class="space-y-2"></div></div>
@@ -231,11 +266,12 @@
                 nav_intake: "Intake Management", nav_accounting: "Accounting", stat_active_cases: "My Active Cases", stat_pending_scans: "Pending Scans",
                 stat_video_messages: "New Video MSGs", followup_priority: "Follow-up Priority", master_case_tracker: "Master Case Tracker",
                 registry_title: "Patient Registry", video_hub_title: "Direct ATC Access Hub", coordination_tasks_title: "Coordination Tasks",
-                label_atc_ageing: "ATC Case Ageing", tab_clinical: "Granular Progress", tab_diagnostics: "Scans & Imprints",
-                tab_treatment: "Treatment Plan", tab_coaching: "Video Log", tab_records: "Clinic Records", tab_chat: "Case Chat",
+                label_atc_ageing: "ATC Case Ageing", tab_clinical: "Granular Progress", tab_diagnostics: "Scans, Analysis & Reports",
+                tab_treatment: "Treatment Plan", tab_coaching: "Video Log", tab_records: "Clinic Records", tab_chat: "Case Chat", tab_questionnaire: "Patient Questionnaire",
                 granular_status: "Granular Workflow Status", pipeline_progression: "Pipeline Progression", col_patient: "Patient",
                 col_intake: "Intake", col_diag: "Diag", col_spec: "Spec", col_cons: "Cons", col_mfg: "Mfg", col_log: "Log", col_ageing: "Ageing",
-                stat_total_revenue: "Total Revenue (YTD)", stat_pending_fees: "Pending Fees"
+                stat_total_revenue: "Total Revenue (YTD)", stat_pending_fees: "Pending Fees",
+                uploaded_diagnostics: "Scans, Analysis & Reports", amd_prescription: "AMD Prescription Summary", active_growth: "Active Growth Monitoring"
             },
             zh: {
                 header_title: "AMD ATC 儀表板", nav_assigned_practice: "分配診所", nav_portal_title: "ATC 門戶",
@@ -243,11 +279,12 @@
                 nav_intake: "入組管理", nav_accounting: "會計", stat_active_cases: "我的活躍病例", stat_pending_scans: "待處理掃描",
                 stat_video_messages: "新影片訊息", followup_priority: "優先跟進", master_case_tracker: "主要病例追踪",
                 registry_title: "患者登記表", video_hub_title: "ATC 直接存取中心", coordination_tasks_title: "協作任務",
-                label_atc_ageing: "ATC 病例時程", tab_clinical: "詳細進度", tab_diagnostics: "掃描與模型",
-                tab_treatment: "治療計劃", tab_coaching: "影片指導", tab_records: "診所記錄", tab_chat: "病例對話",
+                label_atc_ageing: "ATC 病例時程", tab_clinical: "詳細進度", tab_diagnostics: "掃描、分析與報告",
+                tab_treatment: "治療計劃", tab_coaching: "影片指導", tab_records: "診所記錄", tab_chat: "病例對話", tab_questionnaire: "患者問卷",
                 granular_status: "詳細工作流程狀態", pipeline_progression: "管道進展", col_patient: "患者",
                 col_intake: "入組", col_diag: "診斷", col_spec: "專科", col_cons: "諮詢", col_mfg: "製造", col_log: "物流", col_ageing: "時程",
-                stat_total_revenue: "總收入 (年累計)", stat_pending_fees: "待處理費用"
+                stat_total_revenue: "總收入 (年累計)", stat_pending_fees: "待處理費用",
+                uploaded_diagnostics: "掃描、分析與報告", amd_prescription: "AMD 處方摘要", active_growth: "主動成長監測"
             }
         };
 
@@ -259,26 +296,22 @@
 
         const mockPatients = [
             // Harmony
-            { clinic: 'harmony', name: "John Lee", id: "TW-001", totalDays: 42, currentStatus: "STA In Progress", phaseIndex: 4, phases: { intake: 5, diag: 12, spec: 8, cons: 4, mfg: 13, log: 0 }, motivation: "Eliminate fatigue.", pains: "Apnea, snoring.", granular: { "Intake": { status: "Complete", age: 5, steps: [{name: "Forms", done: true}, {name: "Scheduling", done: true}] } }, prescription: "STA 2.0 turns bi-weekly.", internalNotes: [{date: "Jan 10", author: "Dr. Ryan", text: "Trial turns successful."}], videos: [{id:'v1', date:'Jan 10', transcript:'Pressure noted.', shared:false}], chat: [] },
-            { clinic: 'harmony', name: "Mei-Ling Wu", id: "TW-002", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, cons: 0, mfg: 0, log: 0 }, motivation: "TMJ relief.", pains: "Clicking.", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'harmony', name: "Kevin Chen", id: "TW-003", totalDays: 28, currentStatus: "Ready for Specialist Referral", phaseIndex: 2, phases: { intake: 8, diag: 12, spec: 8, cons: 0, mfg: 0, log: 0 }, motivation: "Sleep quality.", pains: "Brain fog.", granular: { "Specialist": { status: "Active", age: 8, steps: [{name: "Vitals", done: true}] } }, prescription: "Push pending.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'harmony', name: "David Hsu", id: "TW-005", totalDays: 35, currentStatus: "Pending Payment", phaseIndex: 3, phases: { intake: 6, diag: 14, spec: 10, cons: 5, mfg: 0, log: 0 }, motivation: "Migraines.", pains: "Neck pain.", granular: { "Consultation": { status: "Active", age: 5, steps: [{name: "Finalized", done: true}] } }, prescription: "Unlock on pay.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'harmony', name: "Sarah Lin", id: "TW-006", totalDays: 520, currentStatus: "Offboarding", phaseIndex: 7, phases: { intake: 5, diag: 12, spec: 10, cons: 5, mfg: 20, log: 15, treat: 420, offb: 33 }, motivation: "Correction.", pains: "Mouth breathing.", granular: { "Final": { status: "Active", age: 33, steps: [{name: "Retainers", done: true}] } }, prescription: "Release.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'harmony', name: "Robert Wang", id: "TW-007", totalDays: 4, currentStatus: "Clinical Appointment Scheduled", phaseIndex: 0, phases: { intake: 4, diag: 0, spec: 0, cons: 0, mfg: 0, log: 0 }, motivation: "Posture.", pains: "Fatigue.", granular: { "Intake": { status: "Active", age: 4, steps: [{name: "Confirmed", done: true}] } }, prescription: "Scan on visit.", internalNotes: [], videos: [], chat: [] },
-            // Zen
-            { clinic: 'zen', name: "Alice Chang", id: "TW-004", totalDays: 240, currentStatus: "Treatment In Progress", phaseIndex: 6, phases: { intake: 10, diag: 15, spec: 12, cons: 10, mfg: 25, log: 20, treat: 148, offb: 0 }, motivation: "Anatomy fix.", pains: "Mouth breathing.", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Turns", done: true}] } }, prescription: "Maintain rate.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'zen', name: "Chen Wei-Ting", id: "TW-008", totalDays: 2, currentStatus: "Onboarding Complete", phaseIndex: 0, phases: { intake: 2, diag: 0, spec: 0, cons: 0, mfg: 0, log: 0 }, motivation: "Snoring.", pains: "Dry mouth.", granular: { "Intake": { status: "Active", age: 2, steps: [{name: "Digital Forms", done: true}] } }, prescription: "Assign exam.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'zen', name: "Huang Xiao-Mei", id: "TW-009", totalDays: 10, currentStatus: "Imaging In Progress", phaseIndex: 1, phases: { intake: 4, diag: 6, spec: 0, cons: 0, mfg: 0, log: 0 }, motivation: "Fatigue.", pains: "Brain fog.", granular: { "Diagnostics": { status: "Active", age: 6, steps: [{name: "CBCT", done: true}] } }, prescription: "Collect Ceph.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'zen', name: "Lin Da-Wei", id: "TW-010", totalDays: 30, currentStatus: "Specialist Report Finalized", phaseIndex: 3, phases: { intake: 5, diag: 10, spec: 10, cons: 5, mfg: 0, log: 0 }, motivation: "TMJ.", pains: "Clicking.", granular: { "Consultation": { status: "Active", age: 5, steps: [{name: "Report", done: true}] } }, prescription: "Share report.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'zen', name: "Sophie Chen", id: "TW-011", totalDays: 45, currentStatus: "RX in Lab", phaseIndex: 4, phases: { intake: 5, diag: 10, spec: 10, cons: 5, mfg: 15, log: 0 }, motivation: "Aesthetics.", pains: "Overbite.", granular: { "Manufacturing": { status: "Active", age: 15, steps: [{name: "RX Rec'd", done: true}] } }, prescription: "Fabricate.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'zen', name: "Eric Wu", id: "TW-012", totalDays: 60, currentStatus: "STA Shipped", phaseIndex: 5, phases: { intake: 5, diag: 10, spec: 10, cons: 5, mfg: 20, log: 10 }, motivation: "Energy.", pains: "Snoring.", granular: { "Logistics": { status: "Active", age: 10, steps: [{name: "Postage", done: true}] } }, prescription: "Track delivery.", internalNotes: [], videos: [], chat: [] },
-            // Legacy
-            { clinic: 'legacy', name: "Kaushal V.", id: "TW-013", totalDays: 120, currentStatus: "Treatment In Progress", phaseIndex: 6, phases: { intake: 5, diag: 10, spec: 10, cons: 5, mfg: 20, log: 10, treat: 60, offb: 0 }, motivation: "Compliance.", pains: "Apnea.", granular: { "Treatment": { status: "Active", age: 60, steps: [{name: "Turns", done: true}] } }, prescription: "Check arch.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'legacy', name: "Liam Wang", id: "TW-014", totalDays: 12, currentStatus: "Lab Images Rejected", phaseIndex: 1, phases: { intake: 4, diag: 8, spec: 0, cons: 0, mfg: 0, log: 0 }, motivation: "Relief.", pains: "Headaches.", granular: { "Diagnostics": { status: "Error", age: 8, steps: [{name: "Rescan", done: false}] } }, prescription: "Book rescan.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'legacy', name: "Olivia Chen", id: "TW-015", totalDays: 25, currentStatus: "Pending Specialist Consultation", phaseIndex: 2, phases: { intake: 5, diag: 12, spec: 8, cons: 0, mfg: 0, log: 0 }, motivation: "Posture.", pains: "Neck pain.", granular: { "Specialist": { status: "Active", age: 8, steps: [{name: "In Queue", done: true}] } }, prescription: "Wait report.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'legacy', name: "Mike Liu", id: "TW-016", totalDays: 50, currentStatus: "STA Quality Check WIP", phaseIndex: 4, phases: { intake: 5, diag: 10, spec: 10, cons: 5, mfg: 20, log: 0 }, motivation: "Breathing.", pains: "Mouth breathing.", granular: { "Manufacturing": { status: "Active", age: 20, steps: [{name: "QC", done: false}] } }, prescription: "Verify build.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'legacy', name: "Jessica Ho", id: "TW-017", totalDays: 55, currentStatus: "Pending STA Delivery", phaseIndex: 5, phases: { intake: 5, diag: 10, spec: 10, cons: 5, mfg: 20, log: 5 }, motivation: "Recovery.", pains: "Fatigue.", granular: { "Logistics": { status: "Active", age: 5, steps: [{name: "Transit", done: true}] } }, prescription: "Confirm arrival.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'legacy', name: "Ryan Tsai", id: "TW-018", totalDays: 3, currentStatus: "Onboarding Complete", phaseIndex: 0, phases: { intake: 3, diag: 0, spec: 0, cons: 0, mfg: 0, log: 0 }, motivation: "Prevention.", pains: "Morning fog.", granular: { "Intake": { status: "Active", age: 3, steps: [{name: "Forms", done: true}] } }, prescription: "Schedule CBCT.", internalNotes: [], videos: [], chat: [] }
+            { clinic: 'harmony', name: "John Lee", id: "TW-001", totalDays: 42, referred: true, currentStatus: "STA In Progress", phaseIndex: 4, 
+                motivation: "Eliminate fatigue.", pains: "Apnea, snoring.", qHist: "High Blood Pressure (Family)",
+                phases: { intake: 5, diag: 12, spec: 8, cons: 4, mfg: 13, log: 0, treat: 0, offb: 0 },
+                granular: {
+                    "Intake": { status: "Complete", age: 5, steps: [{name: "Forms", done: true}, {name: "Scheduling", done: true}, {name: "Confirmed", done: true}] },
+                    "Diagnostics": { status: "Complete", age: 12, steps: [{name: "CBCT Airway", done: true}, {name: "Lateral Ceph", done: true}, {name: "STL Models", done: true}] },
+                    "Specialist Review": { status: "Complete", age: 8, steps: [{name: "Vitals Check", done: true}, {name: "Doc Felix Refer", done: true}] },
+                    "Manufacturing": { status: "Active", age: 13, steps: [{name: "Order Rec'd", done: true}, {name: "3D Print", done: false, pending: "STA Lab"}, {name: "QC Review", done: false}] }
+                },
+                prescription: "Rapid expansion focus. 2.0 turns bi-weekly. Target intermolar width expansion: +4.5mm. Correct velopharyngeal restriction.",
+                internalNotes: [{date: "Jan 10, 2026", author: "Dr. Ryan Chiang", text: "Trial turns successful."}],
+                videos: [{ id: 'v1', date: 'Jan 10, 2026', transcript: "Pressure on molars noted.", shared: false }],
+                chat: [{ role: "atc", name: "Jane Chen", msg: "Hi John, confirming you're ready?" }, { role: "patient", name: "John Lee", msg: "Yes, ready." }]
+            },
+            { clinic: 'harmony', name: "Mei-Ling Wu", id: "TW-002", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, cons: 0, mfg: 0, log: 0, treat: 0, offb: 0 }, motivation: "TMJ relief.", pains: "Clicking.", qHist: "--", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Radiology Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], videos: [], chat: [] },
+            { clinic: 'zen', name: "Alice Chang", id: "TW-004", totalDays: 240, currentStatus: "Treatment In Progress", phaseIndex: 6, phases: { intake: 10, diag: 15, spec: 12, cons: 10, mfg: 25, log: 20, treat: 148, offb: 0 }, motivation: "Anatomy fix.", pains: "Mouth breathing.", qHist: "Asthma", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Turns", done: true}] } }, prescription: "Maintain rate.", internalNotes: [], videos: [], chat: [] }
         ];
 
         function switchMainPane(id) {
@@ -330,23 +363,28 @@
                                 ${data.steps.map(step => `<div class="p-2 border rounded-lg ${step.done ? 'bg-purple-50 border-purple-100' : 'bg-slate-50 border-slate-100'}"><div class="flex items-center gap-2"><i class="fa-solid ${step.done ? 'fa-circle-check text-purple-500' : 'fa-circle-notch fa-spin text-slate-300'} text-[10px]"></i><span class="text-[9px] font-bold ${step.done ? 'text-purple-700' : 'text-slate-400'}">${step.name}</span></div>${step.pending ? `<p class="text-[8px] mt-1 text-amber-600 font-bold uppercase">Pending: ${step.pending}</p>` : ''}</div>`).join('')}
                             </div>
                         </div>
-                    </div>`).join('') || '<p class="text-xs text-slate-400 italic">No detailed steps logged for this case.</p>';
+                    </div>`).join('') || '<p class="text-xs text-slate-400 italic">No detailed steps logged.</p>';
             }
 
             const treatSum = document.getElementById('detail-treatment-summary');
             if (treatSum) treatSum.innerHTML = `<p class="italic">"${p.prescription}"</p>`;
             
             const scansList = document.getElementById('detail-scans-list');
-            if (scansList) scansList.innerHTML = `<div class="scan-card"><i class="fa-solid fa-x-ray text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">CBCT Airway</span></div><div class="scan-card"><i class="fa-solid fa-teeth text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">STL Upper</span></div>`;
+            if (scansList) scansList.innerHTML = `<div class="scan-card"><i class="fa-solid fa-x-ray text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">CBCT Airway</span></div><div class="scan-card"><i class="fa-solid fa-teeth text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">STL Upper</span></div><div class="scan-card"><i class="fa-solid fa-x-ray text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">Lateral Ceph</span></div><div class="scan-card"><i class="fa-solid fa-camera text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">Photos</span></div>`;
             
             const internalNotes = document.getElementById('detail-internal-notes');
-            if (internalNotes) internalNotes.innerHTML = p.internalNotes.map(n => `<div class="p-3 bg-slate-50 rounded-lg mb-2"><div class="flex justify-between text-[9px] font-bold text-slate-400 mb-1"><span>${n.date}</span><span>${n.author}</span></div><p class="text-xs italic text-slate-600">"${n.text}"</p></div>`).join('') || '<p class="text-center text-slate-400 py-6 italic text-xs">No clinic records found.</p>';
+            if (internalNotes) internalNotes.innerHTML = p.internalNotes.map(n => `<div class="p-3 bg-slate-50 rounded-lg mb-2"><div class="flex justify-between text-[9px] font-bold text-slate-400 mb-1"><span>${n.date}</span><span>${n.author}</span></div><p class="text-xs italic text-slate-600">"${n.text}"</p></div>`).join('') || '<p class="text-center text-slate-400 py-6 italic text-xs">No records found.</p>';
             
             const chatMsgs = document.getElementById('chat-messages');
             if (chatMsgs) chatMsgs.innerHTML = p.chat?.map(m => `<div class="chat-bubble chat-${m.role}"><p class="text-[9px] font-black uppercase mb-1">${m.name}</p><p class="text-sm">${m.msg}</p></div>`).join('') || '<p class="text-center text-slate-300 py-12 italic">No active collaboration messages.</p>';
             
             const videoLog = document.getElementById('detail-video-list');
             if (videoLog) videoLog.innerHTML = p.videos.map(v => `<div class="p-3 border rounded-xl flex gap-4 bg-slate-50/30"><div class="w-24 aspect-video bg-slate-800 rounded-lg flex items-center justify-center"><i class="fa-solid fa-play text-white opacity-40 text-xs"></i></div><div class="flex-1"><p class="text-[10px] font-bold text-slate-400 uppercase">${v.date}</p><p class="text-xs text-slate-700 italic">"${v.transcript}"</p></div></div>`).join('') || '<p class="text-xs italic text-slate-400 py-4 text-center">No coaching videos submitted.</p>';
+
+            // Populate Questionnaire
+            const qMot = document.getElementById('q-mot'); if(qMot) qMot.innerText = p.motivation;
+            const qPain = document.getElementById('q-pain'); if(qPain) qPain.innerText = p.pains;
+            const qHist = document.getElementById('q-hist'); if(qHist) qHist.innerText = p.qHist;
 
             switchMainPane('client-detail');
         }
@@ -355,7 +393,7 @@
             const body = document.getElementById('tracker-body');
             const phaseKeys = ['intake', 'diag', 'spec', 'cons', 'mfg', 'log'];
             body.innerHTML = mockPatients.filter(p => p.clinic === currentClinic).map(p => {
-                const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || (p.phaseIndex >= 6 ? (p.phaseIndex === 6 ? p.phases.treat : p.phases.offb) : 0);
+                const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || 0;
                 return `<tr class="hover:bg-slate-50 cursor-pointer transition-colors group" onclick="selectPatient('${p.id}')">
                     <td class="px-6 py-4"><div class="flex flex-col"><span class="font-bold text-slate-800 text-xs">${p.name}</span><div class="tooltip-container"><span class="text-[9px] font-bold text-purple-600 uppercase group-hover:text-purple-700">${p.currentStatus}</span><span class="tooltip-text"><b>Trigger Status:</b><br>${statusMap[p.currentStatus]}</span></div></div></td>
                     ${phaseKeys.map((key, idx) => `<td class="text-center px-2 py-4"><span class="ageing-pill ${idx < p.phaseIndex ? 'ageing-done' : idx === p.phaseIndex ? 'ageing-active' : ''}">${p.phases[key]}d</span></td>`).join('')}
