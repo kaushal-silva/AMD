@@ -147,6 +147,9 @@
                             <button class="tab-button" onclick="switchTab('diagnostics')" data-key="tab_diagnostics">
                                 Scans, Analysis & Reports
                             </button>
+                            <button class="tab-button" onclick="switchTab('questionnaire')" data-key="tab_questionnaire">
+                                My Questionnaire
+                            </button>
                             <button class="tab-button" onclick="switchTab('progress')" data-key="tab_progress">
                                 Progress Tracker
                             </button>
@@ -210,62 +213,128 @@
                         </div>
                     </div>
 
-                    <!-- 2. Diagnostic Inputs Tab -->
+                    <!-- 2. Diagnostic Inputs Tab (Revised) -->
                     <div id="tab-diagnostics" class="tab-content space-y-8 hidden">
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="sec_diagnostics_title_new">Scans, Analysis & Reports</h2>
-                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h3 class="font-bold text-indigo-700" data-key="cbct_title">1. CB CT Scan (Airway)</h3>
-                                    <button class="text-xs text-indigo-500 hover:underline" data-key="btn_upload_new_scan">Upload New Scan</button>
-                                </div>
-                                <label for="cbct-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="cbct_history_label">View Historical Scan Data:</label>
-                                <select id="cbct-history-select" onchange="updateDiagnosticContent('cbct', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
-                                    <option value="0" data-key="scan_date_0">2025/12/10 (Initial)</option>
-                                    <option value="1" data-key="scan_date_1">2026/03/10 (Month 3 Follow-up)</option>
-                                </select>
-                                <div id="cbct-display">
-                                    <div class="font-semibold text-lg p-2 rounded-md mb-2 alert-red" id="mcs-status-display">
-                                        <span data-key="mcs_value">MCS: 285 mm²</span> <span data-key="mcs_status">(Critical!)</span>
+                            
+                            <!-- A. SCANS -->
+                            <div class="mb-8">
+                                <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-indigo-500 pl-3" data-key="sub_title_scans">Clinical Imaging & Scans</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- 1. CBCT -->
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-indigo-700 text-sm">CBCT Images</h4>
+                                            <p class="text-xs text-gray-500">3D Airway Volumetrics</p>
+                                        </div>
+                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
                                     </div>
-                                    <p class="text-xs text-gray-500" id="cbct-note-display" data-key="cbct_note">Doctor Note (10/12/2025): Significant restriction noted in velopharynx. Immediate intervention required.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_full_scan">View Full Scan / IMS Report</button>
+                                    <!-- 2. Lateral Ceph -->
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-indigo-700 text-sm">Lateral Ceph X-ray</h4>
+                                            <p class="text-xs text-gray-500">Skeletal Profiling</p>
+                                        </div>
+                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
+                                    </div>
+                                    <!-- 3. Intra-Oral -->
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-indigo-700 text-sm">3D Intra-Oral Scan</h4>
+                                            <p class="text-xs text-gray-500">Digital Teeth Imprint</p>
+                                        </div>
+                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
+                                    </div>
+                                    <!-- 4. Photos -->
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-indigo-700 text-sm">Clinical Photos</h4>
+                                            <p class="text-xs text-gray-500">Teeth / Jaw / Posture</p>
+                                        </div>
+                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                                <h3 class="font-bold text-indigo-700 mb-2" data-key="intraoral_title">2. 3D Intra-Oral Scan (Teeth)</h3>
-                                <label for="intraoral-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="analysis_history_label">View Historical Analysis:</label>
-                                <select id="intraoral-history-select" onchange="updateDiagnosticContent('intraoral', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
-                                    <option value="0" data-key="analysis_date_0">2025/12/10 (Initial)</option>
-                                    <option value="1" data-key="analysis_date_1">2026/06/10 (Mid-Treatment)</option>
-                                </select>
-                                <div id="intraoral-display">
-                                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-2 rounded-md mb-2">
-                                        <p class="text-xs font-semibold text-yellow-800" data-key="schwarz_status">Analysis ready</p>
+
+                            <!-- B. ANALYSIS -->
+                            <div class="mb-8">
+                                <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-amber-500 pl-3" data-key="sub_title_analysis">Expert Analysis</h3>
+                                <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
+                                    <p class="text-sm text-gray-800 mb-2"><strong>Sassouni Plus & Schwartz Analysis:</strong></p>
+                                    <p class="text-xs text-gray-600 leading-relaxed" data-key="analysis_desc">
+                                        Your specialist utilizes advanced cephalometric tracing (Sassouni Plus) to determine the precise skeletal relationship between your jaw and airway. The Schwartz analysis measures your dental arch width against your biological ideal, highlighting constriction that limits tongue space. Together, these form the blueprint for your "Cage" expansion.
+                                    </p>
+                                    <div class="mt-4 pt-4 border-t border-amber-200">
+                                        <button class="text-xs font-bold text-amber-700 hover:underline">Download Full Diagnostic Report (PDF)</button>
                                     </div>
-                                    <p class="text-xs text-gray-500" id="schwarz-note-display" data-key="schwarz_note">Analysis shows 5mm maxillary posterior crossbite correction needed.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_analysis_report">View Analysis & Report</button>
                                 </div>
                             </div>
-                            <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                                <h3 class="font-bold text-indigo-700 mb-2" data-key="ceph_title">3. Lateral Cephalometric Analysis</h3>
-                                <label for="ceph-history-select" class="block text-xs font-medium text-gray-600 mb-2" data-key="analysis_history_label">View Historical Analysis:</label>
-                                <select id="ceph-history-select" onchange="updateDiagnosticContent('ceph', this.value)" class="w-full p-2 border rounded-lg text-sm mb-3">
-                                    <option value="0" data-key="analysis_date_0">2025/12/10 (Initial)</option>
-                                    <option value="1" data-key="analysis_date_1">2026/06/10 (Mid-Treatment)</option>
-                                </select>
-                                <div id="ceph-display">
-                                    <div class="bg-green-50 border-l-4 border-green-500 p-2 rounded-md mb-2">
-                                        <p class="text-xs font-semibold text-green-800" data-key="sassouni_status">Analysis ready</p>
+
+                            <!-- C. REPORTS -->
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-teal-500 pl-3" data-key="sub_title_reports">Medical Lab Reports</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
+                                        <span class="text-sm font-medium text-gray-700">Blood Panel (Complete Blood Count)</span>
+                                        <span class="text-xs text-green-600 font-bold">Normal</span>
                                     </div>
-                                    <p class="text-xs text-gray-500" id="sassouni-note-display" data-key="sassouni_note">Informs appliance growth angles. Current FMA: 23°.</p>
-                                    <button class="mt-2 text-sm text-indigo-500 hover:underline" data-key="btn_view_report_angles">View Report & Angles</button>
+                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
+                                        <span class="text-sm font-medium text-gray-700">Liver Function Test</span>
+                                        <span class="text-xs text-green-600 font-bold">Normal</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
+                                        <span class="text-sm font-medium text-gray-700">Kidney Function Test</span>
+                                        <span class="text-xs text-green-600 font-bold">Normal</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 3. Progress Tracker Tab -->
+                    <!-- 3. My Questionnaire Tab (NEW) -->
+                    <div id="tab-questionnaire" class="tab-content space-y-8 hidden">
+                        <div class="section-card">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-purple-600" data-key="tab_questionnaire_title">My Symptom Assessment</h2>
+                            <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100">
+                                <p class="text-sm text-purple-900" data-key="questionnaire_summary">
+                                    This record reflects your baseline health status at the start of treatment (Date: 2025/11/15).
+                                </p>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <!-- Group 1 -->
+                                <div>
+                                    <h4 class="font-bold text-gray-700 mb-2">Head, Neck & ENT</h4>
+                                    <ul class="list-disc list-inside text-sm text-gray-600 pl-4">
+                                        <li>Headache/migraine: <span class="font-bold text-red-500">3 (Frequent)</span></li>
+                                        <li>Snoring/mouth breathing: <span class="font-bold text-red-500">4 (Severe)</span></li>
+                                        <li>TMJ clicking: <span class="font-bold text-orange-500">2 (Occasional)</span></li>
+                                    </ul>
+                                </div>
+                                <!-- Group 2 -->
+                                <div>
+                                    <h4 class="font-bold text-gray-700 mb-2">Brain & Emotions</h4>
+                                    <ul class="list-disc list-inside text-sm text-gray-600 pl-4">
+                                        <li>Fatigue/weakness: <span class="font-bold text-red-500">4 (Severe)</span></li>
+                                        <li>Brain fog: <span class="font-bold text-red-500">3 (Frequent)</span></li>
+                                        <li>Anxiety: <span class="font-bold text-green-600">1 (Mild)</span></li>
+                                    </ul>
+                                </div>
+                                <!-- Medical History -->
+                                <div>
+                                    <h4 class="font-bold text-gray-700 mb-2">Medical History Noted</h4>
+                                    <div class="flex gap-2 flex-wrap">
+                                        <span class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">High Blood Pressure (Family)</span>
+                                        <span class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">Thyroid Disorders (Self)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="mt-6 text-sm text-purple-600 font-bold hover:underline">View Full Questionnaire PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- 4. Progress Tracker Tab -->
                     <div id="tab-progress" class="tab-content space-y-8 hidden">
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_title">Progress Photo Timeline</h2>
@@ -314,7 +383,7 @@
                         </div>
                     </div>
 
-                    <!-- 4. Secure Group Chat Tab -->
+                    <!-- 5. Secure Group Chat Tab -->
                     <div id="tab-chat" class="tab-content space-y-8 hidden">
                          <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-blue-600" data-key="sec_chat_title">Secure Group Chat</h2>
@@ -400,12 +469,6 @@
             { month: 6, expansion: '2.0 Turns / 0.50mm', date: '2026/03/20', note: 'Active phase.' }
         ];
 
-        const diagnosticHistory = {
-            cbct: [{ id: '0', mcs: 'MCS: 285 mm²', statusKey: 'mcs_status_critical' }],
-            intraoral: [{ id: '0', statusKey: 'schwarz_status' }],
-            ceph: [{ id: '0', statusKey: 'sassouni_status' }]
-        };
-
         const translations = {
             'en': {
                 'header_title': 'AMD Client Dashboard',
@@ -415,6 +478,7 @@
                 'nav_title': 'Navigation',
                 'tab_my_plan': 'My Plan & Support',
                 'tab_diagnostics': 'Scans, Analysis & Reports',
+                'tab_questionnaire': 'My Questionnaire',
                 'tab_progress': 'Progress Tracker',
                 'tab_chat': 'Secure Group Chat',
                 'sec_goals_title_impact': 'Goals & Motivation',
@@ -437,12 +501,12 @@
                 'amc_coordinator_title': 'Assigned Coordinator: Jane Chen (AMC)',
                 'btn_arrange_appointment': 'Arrange AMC Appointment',
                 'sec_diagnostics_title_new': 'Scans, Analysis & Reports',
-                'cbct_title': '1. CB CT Scan (Airway)',
-                'cbct_history_label': 'View Historical Scan Data:',
-                'intraoral_title': '2. 3D Intra-Oral Scan (Teeth)',
-                'ceph_title': '3. Lateral Cephalometric Analysis',
-                'schwarz_status': 'Analysis ready',
-                'sassouni_status': 'Analysis ready',
+                'sub_title_scans': 'Clinical Imaging & Scans',
+                'sub_title_analysis': 'Expert Analysis',
+                'sub_title_reports': 'Medical Lab Reports',
+                'analysis_desc': 'Your specialist utilizes advanced cephalometric tracing (Sassouni Plus) to determine the precise skeletal relationship between your jaw and airway. The Schwartz analysis measures your dental arch width against your biological ideal.',
+                'tab_questionnaire_title': 'My Symptom Assessment',
+                'questionnaire_summary': 'This record reflects your baseline health status at the start of treatment (Date: 2025/11/15).',
                 'progress_title': 'Progress Photo Timeline',
                 'metric_jaw_size': 'Jaw Width Increase:',
                 'metric_airway': 'Airway Patency (MCS):',
@@ -467,6 +531,7 @@
                 'nav_title': '導航',
                 'tab_my_plan': '我的計劃與支持',
                 'tab_diagnostics': '掃描、分析與報告',
+                'tab_questionnaire': '我的問卷',
                 'tab_progress': '進度追踪器',
                 'tab_chat': '安全群組聊天',
                 'sec_goals_title_impact': '我的旅程：目標與動力',
@@ -489,12 +554,12 @@
                 'amc_coordinator_title': '指定協調員: Jane Chen (AMC)',
                 'btn_arrange_appointment': '安排 AMC 預約',
                 'sec_diagnostics_title_new': '掃描、分析與報告',
-                'cbct_title': '1. CB CT 掃描 (氣道)',
-                'cbct_history_label': '查看歷史掃描數據:',
-                'intraoral_title': '2. 3D 口內掃描 (牙齒)',
-                'ceph_title': '3. 側位頭影測量分析',
-                'schwarz_status': '分析已準備就緒',
-                'sassouni_status': '分析已準備就緒',
+                'sub_title_scans': '臨床影像與掃描',
+                'sub_title_analysis': '專家分析',
+                'sub_title_reports': '醫療檢驗報告',
+                'analysis_desc': '您的專家利用先進的頭影測量 (Sassouni Plus) 來確定您的顎骨和氣道之間的精確骨骼關係。Schwartz 分析測量您的牙弓寬度與生物理想值的差距。',
+                'tab_questionnaire_title': '我的症狀評估',
+                'questionnaire_summary': '此記錄反映了您在治療開始時（日期：2025/11/15）的基準健康狀況。',
                 'progress_title': '進度照片追踪器',
                 'metric_jaw_size': '下巴寬度增加:',
                 'metric_airway': '氣道暢通度 (MCS):',
