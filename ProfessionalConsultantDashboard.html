@@ -16,24 +16,23 @@
         .nav-button:hover { background-color: #f1f5f9; color: #1e293b; }
         .nav-button.active { background-color: #f1f5f9; color: #1e293b; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border-right: 3px solid #1e293b; }
 
-        .tracker-header { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; vertical-align: middle; }
+        .tracker-header { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; }
         .ageing-pill { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700; display: inline-block; }
+        .ageing-done { background-color: #f1f5f9; color: #94a3b8; }
         .ageing-active { background-color: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; }
         
         .sub-nav-btn { padding: 0.6rem 1rem; font-size: 0.8rem; font-weight: 600; color: #64748b; border-radius: 0.5rem; transition: all 0.2s; display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border-left: 3px solid transparent; }
         .sub-nav-btn:hover { background-color: #f8fafc; color: #1e293b; }
         .sub-nav-btn.active { background-color: #f8fafc; color: #1e293b; border-left: 3px solid #1e293b; font-weight: 700; }
 
-        .scan-card { background: #ffffff; border-radius: 0.75rem; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.2s; }
-        .scan-card:hover { border-color: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .scan-preview-placeholder { aspect-ratio: 4/3; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; }
+        .chat-bubble { padding: 0.75rem 1rem; border-radius: 1rem; max-width: 85%; font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.75rem; }
+        .chat-amd { background-color: #ecfdf5; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #d1fae5; }
+        .chat-specialist { background-color: #f1f5f9; align-self: flex-end; border-bottom-right-radius: 0; border: 1px solid #cbd5e1; }
 
+        .scan-card { background: #ffffff; border-radius: 0.75rem; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .scan-card:hover { border-color: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .recording-pulse { animation: pulse-red 1.5s infinite; }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -64,7 +63,7 @@
                 <i class="fa-solid fa-user-shield text-blue-600 text-xl"></i>
                 <div>
                     <p class="text-[10px] font-black text-blue-800 uppercase tracking-widest">Pseudonymization Enforced</p>
-                    <p class="text-xs text-blue-700 font-medium leading-relaxed">International Data Transfer Protocols Active. Remote access is restricted to anonymized Case IDs. Practitioner PII has been scrubbed.</p>
+                    <p class="text-xs text-blue-700 font-medium">Remote access is restricted to anonymized Case IDs. International data transfer protocols are active.</p>
                 </div>
             </div>
 
@@ -100,9 +99,9 @@
                                         <tr>
                                             <th class="tracker-header text-left pl-6" data-key="col_id">Case ID</th>
                                             <th class="tracker-header text-left">Referring Dr / Clinic</th>
-                                            <th class="tracker-header text-center">S+</th>
-                                            <th class="tracker-header text-center">CBCT</th>
-                                            <th class="tracker-header text-right pr-6" data-key="col_ageing">Queue / Total Age</th>
+                                            <th class="tracker-header text-center">Payment Status</th>
+                                            <th class="tracker-header text-center">Scan Status</th>
+                                            <th class="tracker-header text-right pr-6" data-key="col_ageing">Queue Age</th>
                                         </tr>
                                     </thead>
                                     <tbody id="case-tracker-body" class="bg-white divide-y divide-slate-100 text-sm"></tbody>
@@ -111,7 +110,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. Review Archive (Previously Historical) -->
+                    <!-- 2. Review Archive (Historical) -->
                     <div id="pane-archive" class="main-pane hidden space-y-6">
                         <h2 class="text-2xl font-black text-slate-800 tracking-tight">Review Archive</h2>
                         <div class="section-card border-slate-100">
@@ -119,9 +118,8 @@
                                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                                 <input type="text" placeholder="Search historical Case IDs..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm">
                             </div>
-                            <div class="text-center py-20 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                                <i class="fa-solid fa-clock-rotate-left text-slate-300 text-4xl mb-4"></i>
-                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">No finalized reviews in archive yet</p>
+                            <div class="space-y-3" id="archive-list">
+                                <!-- Populated by JS -->
                             </div>
                         </div>
                     </div>
@@ -136,35 +134,73 @@
                                 <div>
                                     <h2 id="detail-id" class="text-2xl font-black text-slate-900 leading-none mb-1">--</h2>
                                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                        Assigned Priority: <span class="text-red-600 font-bold">Urgent Review</span>
+                                        Status: <span class="text-amber-600 font-bold" id="detail-status">--</span>
                                     </p>
                                 </div>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="pushToLab()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-[10px] font-black rounded-lg uppercase tracking-widest shadow-lg hover:bg-amber-400 transition transform active:scale-95">Finalize Airway Prescription</button>
                             </div>
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="md:w-64 flex-shrink-0">
                                 <div class="bg-white p-3 rounded-xl border border-slate-100 space-y-1">
-                                    <button class="sub-nav-btn active" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> Vitals Package</button>
+                                    <button class="sub-nav-btn active" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> Scans, Analysis & Reports</button>
                                     <button class="sub-nav-btn" onclick="switchDetailTab('prescription')"><i class="fa-solid fa-file-signature w-4"></i> Airway Prescription</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('analysis')"><i class="fa-solid fa-chart-pie w-4"></i> Expert Analysis</button>
                                     <button class="sub-nav-btn" onclick="switchDetailTab('design')"><i class="fa-solid fa-compass-drafting w-4"></i> Design Specifications</button>
                                     <button class="sub-nav-btn" onclick="switchDetailTab('videos')"><i class="fa-solid fa-video w-4"></i> Coaching Review</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('spec-chat')"><i class="fa-solid fa-user-secret w-4"></i> Clinical Collaboration</button>
                                 </div>
                             </div>
 
                             <div class="flex-1 min-w-0 space-y-6">
-                                <!-- Vitals Package (Redesigned for better readability) -->
+                                <!-- Vitals Package -->
                                 <div id="tab-diagnostics" class="detail-tab space-y-6">
                                     <div class="section-card">
-                                        <div class="flex justify-between items-center mb-6">
-                                            <h3 class="font-bold text-slate-800 uppercase text-xs tracking-widest">Clinical Vitals Verification</h3>
-                                            <span class="text-[9px] font-black text-slate-400 uppercase">Pseudonymized Scan Access</span>
+                                        <h3 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest">Scans, Analysis & Reports</h3>
+                                        
+                                        <!-- Scans -->
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Clinical Imaging</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="scan-grid"></div>
+
+                                        <!-- Reports -->
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Medical Reports</h4>
+                                        <div class="space-y-2">
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Blood Panel (CBC) - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Liver Function - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
                                         </div>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="scan-grid">
-                                            <!-- Scan cards with approve/reject -->
+                                    </div>
+                                </div>
+                                
+                                <!-- Expert Analysis Tab (New) -->
+                                <div id="tab-analysis" class="detail-tab hidden space-y-6">
+                                    <div class="section-card border-t-8 border-cyan-500">
+                                        <div class="flex justify-between items-center mb-6">
+                                             <h3 class="font-bold text-slate-800 uppercase text-xs">Analysis Workflows</h3>
+                                             <div class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase hidden" id="payment-verified-badge">Payment Verified</div>
+                                        </div>
+                                        
+                                        <div class="space-y-4">
+                                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center">
+                                                <div>
+                                                    <p class="font-bold text-sm text-slate-800">Sassouni Plus Analysis</p>
+                                                    <p class="text-xs text-slate-500">Status: <span class="font-bold" id="sassouni-status">Pending Request</span></p>
+                                                </div>
+                                                <button onclick="requestAnalysis('Sassouni')" class="px-3 py-1.5 bg-cyan-600 text-white text-[10px] font-bold rounded uppercase shadow hover:bg-cyan-700">Request Analysis</button>
+                                            </div>
+                                            
+                                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center">
+                                                <div>
+                                                    <p class="font-bold text-sm text-slate-800">Schwartz Model Analysis</p>
+                                                    <p class="text-xs text-slate-500">Status: <span class="font-bold" id="schwartz-status">Pending Request</span></p>
+                                                </div>
+                                                <button onclick="requestAnalysis('Schwartz')" class="px-3 py-1.5 bg-cyan-600 text-white text-[10px] font-bold rounded uppercase shadow hover:bg-cyan-700">Request Analysis</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-6 p-4 bg-yellow-50 border border-yellow-100 rounded-xl hidden" id="analysis-results">
+                                            <h4 class="font-bold text-xs text-yellow-800 mb-2 uppercase">Analysis Results Received</h4>
+                                            <p class="text-xs text-slate-700 mb-1"><strong>Sassouni:</strong> Class II Skeletal, high FMA (28°). </p>
+                                            <p class="text-xs text-slate-700"><strong>Schwartz:</strong> Maxillary transverse deficiency of 6mm at first molars.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -175,52 +211,42 @@
                                         <div class="flex justify-between items-center mb-6">
                                             <h3 class="font-bold text-slate-800 uppercase text-xs">Expert Assessment (Voice-to-AI)</h3>
                                             <div class="flex gap-2">
-                                                <button onclick="toggleRecording()" id="record-btn" class="px-4 py-1.5 bg-red-600 text-white text-[10px] font-black rounded-lg uppercase shadow-lg transition hover:scale-105"><i class="fa-solid fa-microphone mr-2"></i> Record Assessment</button>
+                                                <button onclick="toggleRecording()" id="record-btn" class="px-4 py-1.5 bg-red-600 text-white text-[10px] font-black rounded-lg uppercase shadow-lg transition hover:scale-105"><i class="fa-solid fa-microphone mr-2"></i> Record</button>
                                                 <button onclick="generateAIPrescription()" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black rounded-lg uppercase shadow-lg transition hover:bg-indigo-700">Run AI Agent</button>
                                             </div>
                                         </div>
                                         
+                                        <!-- Search Past Cases -->
+                                        <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Search Past Cases by Symptom (Benchmark)</label>
+                                            <div class="flex gap-2">
+                                                <input type="text" placeholder="e.g. 'Erectile dysfunction', 'Back ache', 'poor sleep'" class="flex-1 p-2 border rounded-lg text-xs">
+                                                <button class="px-3 py-2 bg-slate-600 text-white rounded-lg text-xs font-bold uppercase hover:bg-slate-700">Search</button>
+                                            </div>
+                                            <div class="mt-3 flex gap-2 overflow-x-auto no-scrollbar">
+                                                <span class="px-2 py-1 bg-white border rounded text-[9px] font-bold text-slate-500 cursor-pointer hover:border-indigo-400">TW-402 (Sleep)</span>
+                                                <span class="px-2 py-1 bg-white border rounded text-[9px] font-bold text-slate-500 cursor-pointer hover:border-indigo-400">TW-105 (Back Ache)</span>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div class="space-y-2"><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Select Report Template</label><select id="report-template" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-500"><option value="airway">Template 1: Airway Volume Deficiency</option><option value="arch">Template 2: Maxillary Arch Constriction</option></select></div>
                                             <div class="space-y-2">
-                                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Select Report Template</label>
-                                                <select id="report-template" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-500">
-                                                    <option value="airway">Template 1: Airway Volume Deficiency focus</option>
-                                                    <option value="arch">Template 2: Maxillary Arch Constriction focus</option>
-                                                    <option value="total">Template 3: Holistic Health focus</option>
-                                                </select>
-                                            </div>
-                                            <div class="space-y-2">
-                                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Benchmark Past Similar Cases</label>
-                                                <div class="bg-slate-50 border border-slate-200 rounded-xl p-2 h-24 overflow-y-auto space-y-2 no-scrollbar">
-                                                    <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
-                                                        <input type="checkbox" class="h-3 w-3 text-indigo-600" checked>
-                                                        <span class="text-[10px] font-bold text-slate-600 uppercase">Case TW-402 (High Arch Expansion)</span>
-                                                    </label>
-                                                    <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
-                                                        <input type="checkbox" class="h-3 w-3 text-indigo-600">
-                                                        <span class="text-[10px] font-bold text-slate-600 uppercase">Case TW-122 (OSA Resolution)</span>
-                                                    </label>
-                                                    <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-white rounded transition">
-                                                        <input type="checkbox" class="h-3 w-3 text-indigo-600" checked>
-                                                        <span class="text-[10px] font-bold text-slate-600 uppercase">Case TW-088 (Posture Correction)</span>
-                                                    </label>
-                                                </div>
+                                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Selected Benchmarks</label>
+                                                <div class="p-3 bg-white border border-slate-200 rounded-xl text-xs text-indigo-600 font-bold">Case TW-402</div>
                                             </div>
                                         </div>
 
-                                        <div id="ai-draft-box" class="p-4 bg-slate-50 border border-slate-100 rounded-xl mb-6">
-                                            <p class="text-[9px] font-black text-indigo-600 uppercase mb-2">AI Whisper Transcript</p>
-                                            <p id="transcript-text" class="text-sm italic text-slate-600 leading-relaxed">"Analysis indicates critical velopharyngeal narrowing...Intermolar width currently 40.0mm. Recommend rapid expansion protocol..."</p>
-                                        </div>
-
+                                        <div id="ai-draft-box" class="p-4 bg-slate-50 border border-slate-100 rounded-xl mb-6"><p class="text-[9px] font-black text-indigo-600 uppercase mb-2">AI Whisper Transcript</p><p id="transcript-text" class="text-sm italic text-slate-600 leading-relaxed">"Analysis indicates critical velopharyngeal narrowing...Intermolar width currently 40.0mm."</p></div>
+                                        
                                         <div class="space-y-4">
-                                            <div>
-                                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Case Notes for local AMD</label>
-                                                <textarea id="amd-notes" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none" rows="3" placeholder="Clinical context..."></textarea>
-                                            </div>
-                                            <div>
-                                                <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Clinical Milestone Summary</label>
-                                                <textarea id="clinical-summary" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none" rows="3" placeholder="Target intermolar width, anatomy goals..."></textarea>
+                                            <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Case Notes for local AMD</label><textarea id="amd-notes" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none" rows="3"></textarea></div>
+                                            <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Clinical Milestone Summary</label><textarea id="clinical-summary" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none" rows="3"></textarea></div>
+                                            
+                                            <!-- Nutrition Plan -->
+                                            <div class="bg-green-50/50 p-4 rounded-xl border border-green-100">
+                                                <label class="text-[10px] font-black text-green-700 uppercase mb-2 block">Prescribed Nutrition Plan</label>
+                                                <textarea id="nutrition-plan" class="w-full p-4 bg-white border border-green-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="Specify supplements (Bone Broth, Magnesium) and dietary restrictions..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -229,45 +255,33 @@
                                 <!-- Design Specs -->
                                 <div id="tab-design" class="detail-tab hidden space-y-6">
                                     <div class="section-card border-t-8 border-amber-500">
-                                        <div class="flex justify-between items-center mb-6">
-                                            <h3 class="font-bold text-slate-800 uppercase text-xs">STA Lab Fabrication Details</h3>
-                                            <button onclick="pushToLab()" class="px-4 py-2 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase shadow-lg hover:bg-black transition">
-                                                <i class="fa-solid fa-truck-ramp-box mr-2"></i> Send Design to STA Lab
-                                            </button>
-                                        </div>
+                                        <div class="flex justify-between items-center mb-6"><h3 class="font-bold text-slate-800 uppercase text-xs">STA Lab Fabrication Details</h3><button onclick="pushToLab()" class="bg-slate-900 text-white px-4 py-2 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-black transition shadow-lg">Issue Design Specs to Lab</button></div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label class="text-[10px] font-black text-amber-600 uppercase mb-1 block">Appliance Setting Protocol</label>
-                                                    <input type="text" id="design-protocol" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold" value="2 Turns / Bi-weekly (0.50mm)">
-                                                </div>
-                                                <div>
-                                                    <label class="text-[10px] font-black text-teal-600 uppercase mb-1 block">Bio-Support Requirements</label>
-                                                    <textarea id="design-bio" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm italic" rows="3" placeholder="e.g. Mandatory bone broth loading phase..."></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="space-y-4">
-                                                <p class="text-[10px] font-black text-slate-400 uppercase">Attachments for Lab</p>
-                                                <div class="grid grid-cols-2 gap-3">
-                                                    <div class="scan-card gap-1 border-amber-100 bg-amber-50/30 text-center py-6">
-                                                        <i class="fa-solid fa-file-invoice text-amber-400 text-xl"></i><br>
-                                                        <span class="text-[8px] font-black uppercase text-amber-500">S+ Trace</span>
-                                                    </div>
-                                                    <div class="scan-card gap-1 border-amber-100 bg-amber-50/30 text-center py-6">
-                                                        <i class="fa-solid fa-layer-group text-amber-400 text-xl"></i><br>
-                                                        <span class="text-[8px] font-black uppercase text-amber-500">Overlay</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <div class="space-y-4"><div><label class="text-[10px] font-black text-amber-600 uppercase mb-1 block">Appliance Setting Protocol</label><input type="text" id="design-protocol" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold" value="2 Turns / Bi-weekly (0.50mm)"></div><div><label class="text-[10px] font-black text-teal-600 uppercase mb-1 block">Bio-Support Requirements</label><textarea id="design-bio" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm italic" rows="3" placeholder="e.g. Mandatory bone broth loading phase..."></textarea></div></div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Coaching Review -->
+                                <!-- Coaching Review (View Only) -->
                                 <div id="tab-videos" class="detail-tab hidden space-y-6">
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-slate-800 mb-4 uppercase text-xs">ATC Shared Progress Review</h3>
-                                        <div id="video-review-list" class="space-y-4"></div>
+                                    <div class="section-card"><h3 class="font-bold text-slate-800 mb-4 uppercase text-xs">ATC Shared Progress Review</h3><div id="video-review-list" class="space-y-4"></div></div>
+                                </div>
+
+                                <!-- Clinical Collaboration (AMD-Spec Only) -->
+                                <div id="tab-spec-chat" class="detail-tab hidden space-y-6">
+                                    <div class="section-card flex flex-col h-[500px] border-l-4 border-slate-500">
+                                        <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                            <h3 class="font-bold text-slate-800 uppercase text-xs">Private Clinical Collaboration</h3>
+                                            <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold uppercase"><i class="fa-solid fa-lock mr-1"></i> AMD + Specialist Only</span>
+                                        </div>
+                                        <div class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col no-scrollbar">
+                                            <div class="chat-bubble chat-amd"><p class="text-[9px] font-black uppercase mb-1">Dr. Ryan</p><p class="text-sm">Verified molar rotation. No interference.</p></div>
+                                            <div class="chat-bubble chat-specialist"><p class="text-[9px] font-black uppercase mb-1">You</p><p class="text-sm">Acknowledged. Proceed with expansion.</p></div>
+                                        </div>
+                                        <div class="mt-4 flex gap-2 pt-4 border-t">
+                                            <input type="text" placeholder="Private message to AMD..." class="flex-1 px-4 py-2 border rounded-xl outline-none text-sm">
+                                            <button class="bg-slate-700 text-white px-4 rounded-xl"><i class="fa-solid fa-paper-plane"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -279,30 +293,14 @@
         </main>
     </div>
 
-    <!-- Reject Scan Modal -->
+    <!-- Reject Modal -->
     <div id="reject-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
         <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl">
             <h3 class="text-xl font-black text-red-600 mb-2 uppercase tracking-tight">Reject Scan Data</h3>
-            <p class="text-xs text-slate-500 mb-6 font-bold uppercase">This request will be sent to the local clinic and ATC.</p>
             <div class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Reason for Rejection</label>
-                    <select id="reject-reason" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none">
-                        <option>Insufficient Resolution / Blurry</option>
-                        <option>Incorrect Positioning / Artifacts</option>
-                        <option>File Corrupted / Unreadable</option>
-                        <option>Additional View Needed</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Specialist Instructions</label>
-                    <textarea id="reject-instruction" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none h-32" placeholder="e.g. Please re-capture CBCT ensuring patient tongue is in neutral posture..."></textarea>
-                </div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Rejection Instruction</label><textarea id="reject-instruction" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none h-32" placeholder="e.g. Blurry resolution. Please re-capture CBCT..."></textarea></div>
             </div>
-            <div class="flex gap-4 mt-8">
-                <button onclick="closeModal('reject-modal')" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-black text-xs uppercase">Cancel</button>
-                <button onclick="confirmReject()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-red-700 transition">Send Rejection</button>
-            </div>
+            <div class="flex gap-4 mt-8"><button onclick="closeModal('reject-modal')" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-black text-xs uppercase">Cancel</button><button onclick="confirmReject()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-red-700 transition">Send Rejection</button></div>
         </div>
     </div>
 
@@ -312,23 +310,19 @@
         let activeRejectScan = null;
 
         const translations = {
-            en: {
-                header_title: "AMD Specialist Dashboard",
-                registry_title: "Expert Review Queue",
-                col_id: "Case ID", col_ceph: "S+ Trace", col_schwarz: "Schwartz", col_cbct: "CBCT", col_ageing: "Queue / Total Age"
-            },
-            zh: {
-                header_title: "AMD 遠程專科醫生門戶",
-                registry_title: "專家審核隊列",
-                col_id: "病例 ID", col_ceph: "S+ 追踪", col_schwarz: "模型分析", col_cbct: "氣道掃描", col_ageing: "隊列時程"
-            }
+            en: { header_title: "AMD Specialist Dashboard", registry_title: "Expert Analysis Queue", col_id: "Case ID", col_ceph: "S+ Trace", col_schwarz: "Schwartz", col_cbct: "CBCT", col_ageing: "Queue / Total Age" },
+            zh: { header_title: "AMD 遠程專科醫生門戶", registry_title: "專家審核隊列", col_id: "病例 ID", col_ceph: "S+ 追踪", col_schwarz: "模型分析", col_cbct: "氣道掃描", col_ageing: "隊列時程" }
         };
 
         const mockCases = [
-            { id: "TW-001", doctor: "Dr. Ryan Chiang", clinic: "Harmony Taipei", data: [1, 1, 1, 0], queueAge: "2d", totalAge: "12d", sharedVideos: [{date:"Jan 12", transcript: "Molar pressure noted."}] },
-            { id: "TW-014", doctor: "Dr. Peter Tseng", clinic: "Legacy Airway", data: [1, 0, 1, 0], queueAge: "4d", totalAge: "8d", sharedVideos: [] },
-            { id: "TW-004", doctor: "Dr. Sarah Lin", clinic: "Bright Dental", data: [1, 1, 1, 1], queueAge: "1d", totalAge: "142d", sharedVideos: [] },
-            { id: "TW-011", doctor: "Dr. Kevin Chen", clinic: "Kevin Dental", data: [1, 0, 1, 0], queueAge: "3d", totalAge: "22d", sharedVideos: [] }
+            { id: "TW-001", doctor: "Dr. Ryan Chiang", clinic: "Harmony Taipei", data: [1, 1, 1, 0], queueAge: "2d", totalAge: "12d", payment: "Paid", motivation: "Fatigue Elimination", pains: "Apnea, Snoring", sharedVideos: [{date:"Jan 12", transcript: "Molar pressure noted."}] },
+            { id: "TW-014", doctor: "Dr. Peter Tseng", clinic: "Legacy Airway", data: [1, 0, 1, 0], queueAge: "4d", totalAge: "8d", payment: "Pending", motivation: "Headaches", pains: "Migraines", sharedVideos: [] },
+            { id: "TW-004", doctor: "Dr. Sarah Lin", clinic: "Bright Dental", data: [1, 1, 1, 1], queueAge: "1d", totalAge: "142d", payment: "Paid", motivation: "Structure", pains: "Mouth breathing", sharedVideos: [] }
+        ];
+
+        const archivedCases = [
+            { id: "TW-008", date: "Dec 2025", clinic: "Zen Dental", result: "Protocol Issued" },
+            { id: "TW-011", date: "Nov 2025", clinic: "Legacy Airway", result: "Protocol Issued" }
         ];
 
         function renderQueue() {
@@ -337,57 +331,44 @@
             body.innerHTML = mockCases.map(c => `
                 <tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="selectCase('${c.id}')">
                     <td class="px-6 py-4 font-black text-slate-800 text-xs">${c.id}</td>
-                    <td class="px-6 py-4">
-                        <div class="flex flex-col">
-                            <span class="font-bold text-slate-800 text-xs">${c.doctor}</span>
-                            <span class="text-[9px] font-black text-slate-400 uppercase">${c.clinic}</span>
-                        </div>
-                    </td>
-                    <td class="text-center px-4 py-4"><i class="fa-solid ${c.data[0] ? 'fa-circle-check text-indigo-500' : 'fa-circle text-slate-100'}"></i></td>
-                    <td class="text-center px-4 py-4"><i class="fa-solid ${c.data[2] ? 'fa-circle-check text-indigo-500' : 'fa-circle text-slate-100'}"></i></td>
-                    <td class="px-6 py-4 text-right">
-                        <div class="flex flex-col items-end">
-                            <span class="text-xs font-black text-indigo-600">${c.queueAge} in Queue</span>
-                            <span class="text-[9px] font-bold text-slate-400 uppercase">(${c.totalAge} Total)</span>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+                    <td class="px-6 py-4"><span class="font-bold text-slate-800 text-xs">${c.doctor}</span><br><span class="text-[9px] font-black text-slate-400 uppercase">${c.clinic}</span></td>
+                    <td class="text-center px-4 py-4 text-xs font-bold ${c.payment === 'Paid' ? 'text-green-600' : 'text-amber-500'}">${c.payment}</td>
+                    <td class="text-center px-4 py-4"><span class="text-[9px] font-bold text-slate-500">Review Ready</span></td>
+                    <td class="px-6 py-4 text-right"><span class="text-xs font-black text-indigo-600">${c.queueAge} / ${c.totalAge}</span></td>
+                </tr>`).join('');
+            
+            const arch = document.getElementById('archive-list');
+            if(arch) arch.innerHTML = archivedCases.map(a => `<div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center"><div><p class="font-bold text-slate-800 text-sm">${a.id}</p><p class="text-[10px] text-slate-500 uppercase">${a.clinic} • ${a.date}</p></div><button class="text-xs font-bold text-slate-600 hover:text-slate-900 underline">View Record</button></div>`).join('');
         }
 
         function selectCase(id) {
             const c = mockCases.find(x => x.id === id);
             if(!c) return;
-            
             const detailId = document.getElementById('detail-id');
             if(detailId) detailId.innerText = c.id;
             
+            const detailStatus = document.getElementById('detail-status');
+            if(detailStatus) detailStatus.innerHTML = c.payment === 'Paid' ? '<span class="text-green-600">Payment Verified</span>' : '<span class="text-amber-600">Payment Pending</span>';
+
+            if(c.payment === 'Paid') {
+                const badge = document.getElementById('payment-verified-badge');
+                if(badge) badge.classList.remove('hidden');
+            }
+
             const scanGrid = document.getElementById('scan-grid');
             if(scanGrid) {
                 const scans = [
-                    { name: "Lateral Ceph S+", status: "Verified", date: "Jan 10", icon: "fa-x-ray" },
-                    { name: "CBCT Airway Vol", status: "Verified", date: "Jan 10", icon: "fa-cube" },
-                    { name: "Schwartz Model", status: "Verified", date: "Jan 11", icon: "fa-teeth" },
-                    { name: "Dental Photos", status: "Needs Attention", date: "Jan 11", icon: "fa-camera" }
+                    { name: "Lateral Ceph X-Ray", status: "Verified", icon: "fa-x-ray", date: "2025/12/10" }, 
+                    { name: "CBCT Airway Images", status: "Verified", icon: "fa-cube", date: "2025/12/10" }, 
+                    { name: "3D Intra-Oral Scan", status: "Verified", icon: "fa-teeth", date: "2025/12/10" }, 
+                    { name: "Clinical Photos", status: "Verified", icon: "fa-camera", date: "2025/12/10" }
                 ];
                 scanGrid.innerHTML = scans.map(s => `
                     <div class="scan-card">
-                        <div class="scan-preview-placeholder">
-                            <i class="fa-solid ${s.icon} text-slate-300 text-4xl"></i>
-                            <div class="absolute top-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[8px] font-bold rounded uppercase">${s.name}</div>
-                        </div>
-                        <div class="p-3 border-t">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-[9px] font-black text-slate-400 uppercase">${s.date} Capture</span>
-                                <span class="text-[8px] font-black uppercase px-1.5 py-0.5 rounded ${s.status === 'Verified' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${s.status}</span>
-                            </div>
-                            <div class="flex gap-2">
-                                <button class="flex-1 py-1.5 bg-slate-50 text-slate-700 text-[9px] font-black rounded uppercase border hover:bg-white">View Full</button>
-                                <button onclick="openRejectModal('${s.name}')" class="px-3 py-1.5 bg-red-50 text-red-600 text-[9px] font-black rounded uppercase hover:bg-red-100">Reject</button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+                        <div class="p-3 border-b flex justify-between items-center bg-slate-50"><span class="text-[9px] font-black uppercase text-slate-500">Capture: ${s.date}</span><select class="text-[8px] border bg-white rounded"><option>Current</option><option>History</option></select></div>
+                        <div class="scan-preview-placeholder"><i class="fa-solid ${s.icon} text-slate-300 text-4xl"></i><div class="absolute top-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[8px] font-bold rounded uppercase">${s.name}</div></div>
+                        <div class="p-3 border-t flex gap-2"><button class="flex-1 py-1.5 bg-slate-50 text-[9px] font-black rounded uppercase border hover:bg-white">View</button><button onclick="openRejectModal('${s.name}')" class="px-3 py-1.5 bg-red-50 text-red-600 text-[9px] font-black rounded uppercase">Reject</button></div>
+                    </div>`).join('');
             }
 
             const vList = document.getElementById('video-review-list');
@@ -398,7 +379,7 @@
                         <div class="flex-1">
                             <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Shared by ATC (${v.date})</p>
                             <p class="text-sm italic text-slate-600 mb-3">"${v.transcript}"</p>
-                            <textarea class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs" placeholder="Expert Clinical Note..."></textarea>
+                            <div class="text-xs text-slate-400 italic">View Only - Reply via Private Chat</div>
                         </div>
                     </div>
                 `).join('') : '<div class="text-center py-8 text-slate-300 text-xs italic">No behavioral videos shared.</div>';
@@ -406,41 +387,36 @@
 
             switchMainPane('case-review');
         }
-
-        function openRejectModal(scanName) {
-            activeRejectScan = scanName;
-            document.getElementById('reject-modal').classList.remove('hidden');
-        }
-
-        function confirmReject() {
-            const reason = document.getElementById('reject-reason').value;
-            alert(`Scan '${activeRejectScan}' rejected. Local AMD & ATC notified: ${reason}`);
-            closeModal('reject-modal');
-        }
-
-        function toggleRecording() {
-            const btn = document.getElementById('record-btn');
-            if(!isRecording) {
-                isRecording = true;
-                btn.innerHTML = '<i class="fa-solid fa-stop mr-2"></i> Stop Assessment';
-                btn.classList.add('recording-pulse');
-            } else {
-                isRecording = false;
-                btn.innerHTML = '<i class="fa-solid fa-microphone mr-2"></i> Record Assessment';
-                btn.classList.remove('recording-pulse');
-            }
+        
+        function requestAnalysis(type) {
+            alert(`Request for ${type} Analysis sent to partner lab.`);
+            document.getElementById(`${type.toLowerCase()}-status`).innerText = "Processing (Sent)";
+            document.getElementById(`${type.toLowerCase()}-status`).classList.add('text-amber-600');
+            
+            // Mock receiving results
+            setTimeout(() => {
+                document.getElementById('analysis-results').classList.remove('hidden');
+                document.getElementById(`${type.toLowerCase()}-status`).innerText = "Complete";
+                document.getElementById(`${type.toLowerCase()}-status`).classList.replace('text-amber-600', 'text-green-600');
+            }, 1500);
         }
 
         function generateAIPrescription() {
             const template = document.getElementById('report-template').value;
-            const amdNotes = document.getElementById('amd-notes');
-            const clinicalSum = document.getElementById('clinical-summary');
-            if(amdNotes) amdNotes.value = `Expert Assessment Finalized using ${template.toUpperCase()} template. Case displays severe velopharyngeal restriction requiring rapid STA expansion. Monitor FMA closely.`;
-            if(clinicalSum) clinicalSum.value = "Target intermolar width: 44.5mm. Protocol: 2 turns (0.50mm) bi-weekly for 4 months. Verify nutrition support.";
-            alert("AI Agent mapping complete using selected template and benchmarks.");
+            const nutrition = document.getElementById('nutrition-plan').value || "Bone broth daily.";
+            document.getElementById('amd-notes').value = `Expert Assessment Finalized (${template.toUpperCase()}). Nutrition: ${nutrition}. Case displays velopharyngeal restriction.`;
+            document.getElementById('clinical-summary').value = "Target intermolar width: 44.5mm. Bi-weekly turns: 2 turns (0.50mm).";
+            alert("AI Agent (Claude) mapping assessment notes to template.");
         }
 
-        function pushToLab() { alert("Prescription and Design Specs authorized. Issued to Manufacturing Lab and local AMD."); }
+        function toggleRecording() {
+            const btn = document.getElementById('record-btn');
+            isRecording = !isRecording;
+            btn.innerHTML = isRecording ? '<i class="fa-solid fa-stop mr-2"></i> Stop' : '<i class="fa-solid fa-microphone mr-2"></i> Record Assessment';
+            btn.classList.toggle('recording-pulse', isRecording);
+        }
+
+        function pushToLab() { alert("Design Specs authorized. Issued to Manufacturing Lab."); }
 
         function switchMainPane(id) {
             const target = document.getElementById(`pane-${id}`);
@@ -471,6 +447,8 @@
         }
 
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function confirmReject() { alert("Scan rejected. AMD & ATC notified."); closeModal('reject-modal'); }
+        function openRejectModal(name) { activeRejectScan = name; document.getElementById('reject-modal').classList.remove('hidden'); }
 
         window.onload = updateText;
     </script>
