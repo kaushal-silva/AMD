@@ -141,20 +141,24 @@
                     <div class="bg-white p-4 rounded-xl shadow-lg lg:sticky lg:top-8">
                         <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2" data-key="nav_title">Navigation</h3>
                         <nav class="flex flex-col space-y-2">
-                            <button class="tab-button active" onclick="switchTab('my-plan')" data-key="tab_my_plan">
+                            <button id="nav-my-plan" class="tab-button active" onclick="switchTab('my-plan')" data-key="tab_my_plan">
                                 My Plan & Support
                             </button>
-                            <button class="tab-button" onclick="switchTab('diagnostics')" data-key="tab_diagnostics">
+                            <button id="nav-diagnostics" class="tab-button" onclick="switchTab('diagnostics')" data-key="tab_diagnostics">
                                 Scans, Analysis & Reports
                             </button>
-                            <button class="tab-button" onclick="switchTab('questionnaire')" data-key="tab_questionnaire">
+                            <button id="nav-questionnaire" class="tab-button" onclick="switchTab('questionnaire')" data-key="tab_questionnaire">
                                 My Questionnaire
                             </button>
-                            <button class="tab-button" onclick="switchTab('progress')" data-key="tab_progress">
+                             <button id="nav-atc-access" class="tab-button" onclick="switchTab('atc-access')" data-key="tab_atc_access">
+                                ATC Access
+                            </button>
+                            <button id="nav-progress" class="tab-button" onclick="switchTab('progress')" data-key="tab_progress">
                                 Progress Tracker
                             </button>
-                            <button class="tab-button" onclick="switchTab('chat')" data-key="tab_chat">
-                                Secure Group Chat
+                            <button id="nav-chat" class="tab-button flex justify-between items-center" onclick="switchTab('chat')" data-key="tab_chat">
+                                <span>Secure Group Chat</span>
+                                <span id="chat-badge" class="w-2.5 h-2.5 bg-red-500 rounded-full hidden"></span>
                             </button>
                         </nav>
                     </div>
@@ -217,188 +221,141 @@
                     <div id="tab-diagnostics" class="tab-content space-y-8 hidden">
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-indigo-600" data-key="sec_diagnostics_title_new">Scans, Analysis & Reports</h2>
-                            
                             <!-- A. SCANS -->
                             <div class="mb-8">
                                 <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-indigo-500 pl-3" data-key="sub_title_scans">Clinical Imaging & Scans</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- 1. CBCT -->
-                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
-                                        <div>
-                                            <h4 class="font-bold text-indigo-700 text-sm">CBCT Images</h4>
-                                            <p class="text-xs text-gray-500">3D Airway Volumetrics</p>
-                                        </div>
-                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
-                                    </div>
-                                    <!-- 2. Lateral Ceph -->
-                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
-                                        <div>
-                                            <h4 class="font-bold text-indigo-700 text-sm">Lateral Ceph X-ray</h4>
-                                            <p class="text-xs text-gray-500">Skeletal Profiling</p>
-                                        </div>
-                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
-                                    </div>
-                                    <!-- 3. Intra-Oral -->
-                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
-                                        <div>
-                                            <h4 class="font-bold text-indigo-700 text-sm">3D Intra-Oral Scan</h4>
-                                            <p class="text-xs text-gray-500">Digital Teeth Imprint</p>
-                                        </div>
-                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
-                                    </div>
-                                    <!-- 4. Photos -->
-                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between">
-                                        <div>
-                                            <h4 class="font-bold text-indigo-700 text-sm">Clinical Photos</h4>
-                                            <p class="text-xs text-gray-500">Teeth / Jaw / Posture</p>
-                                        </div>
-                                        <button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button>
-                                    </div>
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between"><div><h4 class="font-bold text-indigo-700 text-sm">CBCT Images</h4><p class="text-xs text-gray-500">3D Airway Volumetrics</p></div><button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button></div>
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between"><div><h4 class="font-bold text-indigo-700 text-sm">Lateral Ceph X-ray</h4><p class="text-xs text-gray-500">Skeletal Profiling</p></div><button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button></div>
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between"><div><h4 class="font-bold text-indigo-700 text-sm">3D Intra-Oral Scan</h4><p class="text-xs text-gray-500">Digital Teeth Imprint</p></div><button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button></div>
+                                    <div class="border p-4 rounded-lg bg-gray-50 flex items-center justify-between"><div><h4 class="font-bold text-indigo-700 text-sm">Clinical Photos</h4><p class="text-xs text-gray-500">Teeth / Jaw / Posture</p></div><button class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded hover:bg-indigo-200 font-bold">View</button></div>
                                 </div>
                             </div>
-
                             <!-- B. ANALYSIS -->
                             <div class="mb-8">
                                 <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-amber-500 pl-3" data-key="sub_title_analysis">Expert Analysis</h3>
                                 <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
-                                    <p class="text-sm text-gray-800 mb-2"><strong>Sassouni Plus & Schwartz Analysis:</strong></p>
-                                    <p class="text-xs text-gray-600 leading-relaxed" data-key="analysis_desc">
-                                        Your specialist utilizes advanced cephalometric tracing (Sassouni Plus) to determine the precise skeletal relationship between your jaw and airway. The Schwartz analysis measures your dental arch width against your biological ideal, highlighting constriction that limits tongue space. Together, these form the blueprint for your "Cage" expansion.
-                                    </p>
-                                    <div class="mt-4 pt-4 border-t border-amber-200">
-                                        <button class="text-xs font-bold text-amber-700 hover:underline">Download Full Diagnostic Report (PDF)</button>
-                                    </div>
+                                    <p class="text-sm text-gray-800 mb-2"><strong>Analysis Summary:</strong></p>
+                                    <p class="text-xs text-gray-600 leading-relaxed" data-key="analysis_desc">Your specialist has completed a comprehensive structural analysis. The results indicate a constricted airway and underdeveloped dental arches. The recommended treatment plan focuses on expanding the dental arches to improve airway volume and tongue posture.</p>
+                                    <div class="mt-4 pt-4 border-t border-amber-200"><button class="text-xs font-bold text-amber-700 hover:underline">Download Summary Report (PDF)</button></div>
                                 </div>
                             </div>
-
                             <!-- C. REPORTS -->
                             <div>
                                 <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-teal-500 pl-3" data-key="sub_title_reports">Medical Lab Reports</h3>
                                 <div class="space-y-2">
-                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
-                                        <span class="text-sm font-medium text-gray-700">Blood Panel (Complete Blood Count)</span>
-                                        <span class="text-xs text-green-600 font-bold">Normal</span>
-                                    </div>
-                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
-                                        <span class="text-sm font-medium text-gray-700">Liver Function Test</span>
-                                        <span class="text-xs text-green-600 font-bold">Normal</span>
-                                    </div>
-                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
-                                        <span class="text-sm font-medium text-gray-700">Kidney Function Test</span>
-                                        <span class="text-xs text-green-600 font-bold">Normal</span>
-                                    </div>
+                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50"><span class="text-sm font-medium text-gray-700">Blood Panel (Complete Blood Count) - 2025/11/10</span><button class="text-xs text-teal-600 font-bold hover:underline">Download</button></div>
+                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50"><span class="text-sm font-medium text-gray-700">Liver Function Test - 2025/11/10</span><button class="text-xs text-teal-600 font-bold hover:underline">Download</button></div>
+                                    <div class="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50"><span class="text-sm font-medium text-gray-700">Kidney Function Test - 2025/11/10</span><button class="text-xs text-teal-600 font-bold hover:underline">Download</button></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 3. My Questionnaire Tab (NEW) -->
+                    <!-- 3. My Questionnaire Tab -->
                     <div id="tab-questionnaire" class="tab-content space-y-8 hidden">
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-purple-600" data-key="tab_questionnaire_title">My Symptom Assessment</h2>
-                            <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100">
-                                <p class="text-sm text-purple-900" data-key="questionnaire_summary">
-                                    This record reflects your baseline health status at the start of treatment (Date: 2025/11/15).
-                                </p>
-                            </div>
-                            
+                            <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-100"><p class="text-sm text-purple-900" data-key="questionnaire_summary">This record reflects your baseline health status at the start of treatment (Date: 2025/11/15).</p></div>
                             <div class="space-y-6">
-                                <!-- Group 1 -->
-                                <div>
-                                    <h4 class="font-bold text-gray-700 mb-2">Head, Neck & ENT</h4>
-                                    <ul class="list-disc list-inside text-sm text-gray-600 pl-4">
-                                        <li>Headache/migraine: <span class="font-bold text-red-500">3 (Frequent)</span></li>
-                                        <li>Snoring/mouth breathing: <span class="font-bold text-red-500">4 (Severe)</span></li>
-                                        <li>TMJ clicking: <span class="font-bold text-orange-500">2 (Occasional)</span></li>
-                                    </ul>
-                                </div>
-                                <!-- Group 2 -->
-                                <div>
-                                    <h4 class="font-bold text-gray-700 mb-2">Brain & Emotions</h4>
-                                    <ul class="list-disc list-inside text-sm text-gray-600 pl-4">
-                                        <li>Fatigue/weakness: <span class="font-bold text-red-500">4 (Severe)</span></li>
-                                        <li>Brain fog: <span class="font-bold text-red-500">3 (Frequent)</span></li>
-                                        <li>Anxiety: <span class="font-bold text-green-600">1 (Mild)</span></li>
-                                    </ul>
-                                </div>
-                                <!-- Medical History -->
-                                <div>
-                                    <h4 class="font-bold text-gray-700 mb-2">Medical History Noted</h4>
-                                    <div class="flex gap-2 flex-wrap">
-                                        <span class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">High Blood Pressure (Family)</span>
-                                        <span class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">Thyroid Disorders (Self)</span>
-                                    </div>
-                                </div>
+                                <div><h4 class="font-bold text-gray-700 mb-2">Head, Neck & ENT</h4><ul class="list-disc list-inside text-sm text-gray-600 pl-4"><li>Headache/migraine: <span class="font-bold text-red-500">3 (Frequent)</span></li><li>Snoring/mouth breathing: <span class="font-bold text-red-500">4 (Severe)</span></li><li>TMJ clicking: <span class="font-bold text-orange-500">2 (Occasional)</span></li></ul></div>
+                                <div><h4 class="font-bold text-gray-700 mb-2">Brain & Emotions</h4><ul class="list-disc list-inside text-sm text-gray-600 pl-4"><li>Fatigue/weakness: <span class="font-bold text-red-500">4 (Severe)</span></li><li>Brain fog: <span class="font-bold text-red-500">3 (Frequent)</span></li><li>Anxiety: <span class="font-bold text-green-600">1 (Mild)</span></li></ul></div>
+                                <div><h4 class="font-bold text-gray-700 mb-2">Medical History Noted</h4><div class="flex gap-2 flex-wrap"><span class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">High Blood Pressure (Family)</span><span class="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">Thyroid Disorders (Self)</span></div></div>
                             </div>
                             <button class="mt-6 text-sm text-purple-600 font-bold hover:underline">View Full Questionnaire PDF</button>
                         </div>
                     </div>
 
-                    <!-- 4. Progress Tracker Tab -->
+                    <!-- 4. ATC Access Tab (NEW) -->
+                    <div id="tab-atc-access" class="tab-content space-y-8 hidden">
+                        <div class="section-card">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-pink-600" data-key="atc_access_title">ATC Interaction Hub</h2>
+                            
+                            <!-- Video Updates -->
+                            <div class="mb-8">
+                                <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-pink-500 pl-3">Video Coaching Updates</h3>
+                                <p class="text-sm text-gray-600 mb-4">Record short progress videos or ask questions for your Airway Treatment Coordinator.</p>
+                                <div class="bg-pink-50 border border-pink-100 rounded-lg p-6 flex flex-col items-center justify-center text-center border-dashed border-2 mb-4">
+                                    <i class="fa-solid fa-video text-3xl text-pink-400 mb-2"></i>
+                                    <p class="text-sm font-bold text-pink-700 mb-2">Record or Upload Video</p>
+                                    <textarea class="w-full p-2 border rounded-lg text-sm mb-3" placeholder="Add a text note to your video..."></textarea>
+                                    <button class="px-4 py-2 bg-pink-600 text-white rounded-lg text-sm font-bold shadow-md hover:bg-pink-700">Send Update to ATC</button>
+                                </div>
+                                
+                                <!-- Historical Video Logs -->
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-700 mb-2">Video History</h4>
+                                    <div class="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-2 bg-gray-50">
+                                        <div class="p-2 bg-white border rounded text-xs flex justify-between"><span>2025/12/01 - "Check my expansion"</span><span class="text-green-600 font-bold">Reviewed</span></div>
+                                        <div class="p-2 bg-white border rounded text-xs flex justify-between"><span>2025/11/15 - "Initial fitting question"</span><span class="text-green-600 font-bold">Reviewed</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nutrition & Lifestyle -->
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-700 mb-4 border-l-4 border-green-500 pl-3">Nutrition & Lifestyle Log</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="bg-white border rounded-lg p-4">
+                                        <h4 class="font-bold text-gray-700 text-sm mb-2">Daily Nutrition Log</h4>
+                                        <textarea class="w-full p-2 border rounded-lg text-sm mb-2 h-24" placeholder="What did you eat today? Supplements taken?"></textarea>
+                                        <button class="w-full py-2 bg-green-100 text-green-700 rounded-lg text-xs font-bold hover:bg-green-200">Save Log</button>
+                                    </div>
+                                    <div class="bg-white border rounded-lg p-4">
+                                        <h4 class="font-bold text-gray-700 text-sm mb-2">Log History</h4>
+                                        <div class="space-y-2 max-h-24 overflow-y-auto">
+                                             <div class="text-xs text-gray-600 border-b pb-1">2025/12/02: Bone broth + Omega 3 taken.</div>
+                                             <div class="text-xs text-gray-600 border-b pb-1">2025/12/01: Green smoothie, avoided sugar.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 5. Progress Tracker Tab -->
                     <div id="tab-progress" class="tab-content space-y-8 hidden">
                         <div class="section-card">
                             <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2 text-sky-600" data-key="progress_title">Progress Photo Timeline</h2>
-                            
                             <!-- Integrated Progress Metrics -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                <div class="metric-card border-l-4 border-yellow-500">
-                                    <p class="text-xs text-gray-500" data-key="metric_jaw_size">Jaw Width Increase (Intermolar):</p>
-                                    <p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-jaw-current">42.5mm</span></p>
-                                    <p class="text-xs text-gray-600" data-key="metric_start_target">Start: 40.0mm | Target: 45.0mm</p>
-                                </div>
-                                <div class="metric-card border-l-4 border-teal-500">
-                                    <p class="text-xs text-gray-500" data-key="metric_airway">Airway Patency (MCS):</p>
-                                    <p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-airway-current">305 mm²</span></p>
-                                    <p class="text-xs text-gray-600" data-key="metric_start_target_airway">Start: 285 mm² | Target: >320 mm²</p>
-                                </div>
-                                <div class="metric-card border-l-4 border-indigo-500">
-                                    <p class="text-xs text-gray-500" data-key="metric_sleep_score">Sleep Symptom Score (MSQ):</p>
-                                    <p class="text-lg font-bold text-green-600 mt-1"><span id="metric-sleep-current">18 <span class="text-sm text-gray-500" data-key="score_change_text">(↓ -7)</span></span></p>
-                                    <p class="text-xs text-gray-600" data-key="metric_start_target_sleep">Start: 25 | Target: < 5</p>
-                                </div>
+                                <div class="metric-card border-l-4 border-yellow-500"><p class="text-xs text-gray-500" data-key="metric_jaw_size">Jaw Width Increase (Intermolar):</p><p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-jaw-current">42.5mm</span></p><p class="text-xs text-gray-600" data-key="metric_start_target">Start: 40.0mm | Target: 45.0mm</p></div>
+                                <div class="metric-card border-l-4 border-teal-500"><p class="text-xs text-gray-500" data-key="metric_airway">Airway Patency (MCS):</p><p class="text-lg font-bold text-gray-800 mt-1"><span id="metric-airway-current">305 mm²</span></p><p class="text-xs text-gray-600" data-key="metric_start_target_airway">Start: 285 mm² | Target: >320 mm²</p></div>
+                                <div class="metric-card border-l-4 border-indigo-500"><p class="text-xs text-gray-500" data-key="metric_sleep_score">Sleep Symptom Score (MSQ):</p><p class="text-lg font-bold text-green-600 mt-1"><span id="metric-sleep-current">18 <span class="text-sm text-gray-500" data-key="score_change_text">(↓ -7)</span></span></p><p class="text-xs text-gray-600" data-key="metric_start_target_sleep">Start: 25 | Target: < 5</p></div>
                             </div>
-
-                            <!-- SHARE YOUR JOURNEY BANNER -->
-                            <div class="share-banner p-6 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-4 mb-8 shadow-lg">
-                                <div>
-                                    <h3 class="text-xl font-bold mb-1" data-key="advocate_title">You are an Airway Advocate.</h3>
-                                    <p class="text-sm opacity-90" data-key="advocate_desc">Share your progress with the community and inspire the revolution.</p>
-                                </div>
-                                <button onclick="openShareModal()" class="px-8 py-3 bg-white text-sky-600 rounded-xl font-black text-xs uppercase shadow-xl hover:scale-105 transition-all">
-                                    <i class="fa-solid fa-share-nodes mr-2"></i> <span data-key="advocate_btn">Share Your Journey</span>
-                                </button>
-                            </div>
-
+                            <div class="share-banner p-6 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-4 mb-8 shadow-lg"><div><h3 class="text-xl font-bold mb-1" data-key="advocate_title">You are an Airway Advocate.</h3><p class="text-sm opacity-90" data-key="advocate_desc">Share your progress with the community and inspire the revolution.</p></div><button onclick="openShareModal()" class="px-8 py-3 bg-white text-sky-600 rounded-xl font-black text-xs uppercase shadow-xl hover:scale-105 transition-all"><i class="fa-solid fa-share-nodes mr-2"></i> <span data-key="advocate_btn">Share Your Journey</span></button></div>
                             <p class="text-sm text-gray-500 mb-4" data-key="progress_subtitle">Track your jaw and posture changes over the 18-month growth prescription period.</p>
                             <h3 class="font-bold text-gray-700 mb-4" data-key="comparison_view_title">Historical Comparison View</h3>
-                            <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <label for="comparison-slider" id="comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label>
-                                <input type="range" min="0" max="4" value="0" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="comparison-slider" oninput="updateComparisonView(this.value)">
-                                <div class="flex justify-between text-xs mt-1 text-gray-500">
-                                    <span data-key="comp_c0">Initial</span><span data-key="comp_c1">Month 3</span><span data-key="comp_c2">Month 6</span><span data-key="comp_c3">Month 12</span><span data-key="comp_c4">Current</span>
-                                </div>
-                            </div>
+                            <div class="bg-gray-100 p-4 rounded-lg mb-4"><label for="comparison-slider" id="comparison-label" class="block text-sm font-medium text-gray-700 mb-2" data-key="viewing_photos">Viewing photos from: Month 6 Check</label><input type="range" min="0" max="4" value="0" step="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" id="comparison-slider" oninput="updateComparisonView(this.value)"><div class="flex justify-between text-xs mt-1 text-gray-500"><span data-key="comp_c0">Initial</span><span data-key="comp_c1">Month 3</span><span data-key="comp_c2">Month 6</span><span data-key="comp_c3">Month 12</span><span data-key="comp_c4">Current</span></div></div>
                             <div id="photo-comparison-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
                             <button class="mt-6 w-full py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 text-sm font-medium" data-key="upload_photo">Upload New Progress Photo</button>
                         </div>
                     </div>
 
-                    <!-- 5. Secure Group Chat Tab -->
+                    <!-- 6. Secure Group Chat Tab -->
                     <div id="tab-chat" class="tab-content space-y-8 hidden">
                          <div class="section-card">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2 text-blue-600" data-key="sec_chat_title">Secure Group Chat</h2>
+                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                <h2 class="text-2xl font-semibold text-gray-800 text-blue-600" data-key="sec_chat_title">Secure Group Chat</h2>
+                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Participants: Patient, ATC, AMD</span>
+                            </div>
                             <div class="h-80 overflow-y-auto p-4 border rounded-lg bg-gray-50 flex flex-col space-y-3">
                                 <div class="p-3 rounded-xl max-w-[80%] chat-doctor shadow-sm">
-                                    <p class="text-xs font-semibold text-teal-800">Dr. Smith</p>
+                                    <p class="text-xs font-semibold text-teal-800">Dr. Smith (AMD)</p>
                                     <p class="text-sm text-gray-800 mt-1">Hello, I have reviewed your latest CBCT. Please ensure consistent wear-time.</p>
+                                </div>
+                                <div class="p-3 rounded-xl max-w-[80%] chat-amc shadow-sm">
+                                    <p class="text-xs font-semibold text-indigo-800">Jane (ATC)</p>
+                                    <p class="text-sm text-gray-800 mt-1">Great job on the nutrition log this week! Keep up the bone broth.</p>
                                 </div>
                                 <div class="p-3 rounded-xl max-w-[80%] bg-blue-100 shadow-sm self-end">
                                     <p class="text-xs font-semibold text-blue-800">You</p>
-                                    <p class="text-sm text-gray-800 mt-1">Understood, Dr. Smith.</p>
+                                    <p class="text-sm text-gray-800 mt-1">Understood, thanks team.</p>
                                 </div>
                             </div>
                             <div class="mt-4 flex space-x-2">
-                                <input type="text" class="flex-grow p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your message...">
+                                <input type="text" class="flex-grow p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your message to the care team...">
                                 <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium" data-key="btn_send">Send</button>
                             </div>
                         </div>
@@ -418,38 +375,17 @@
             
             <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4" data-key="select_platforms">1. Select Platforms</p>
             <div class="grid grid-cols-4 gap-4 mb-8">
-                <div class="platform-btn" onclick="togglePlatform(this, 'ig')">
-                    <i class="fa-brands fa-instagram text-2xl text-pink-600 mb-1"></i>
-                    <span class="text-[10px] font-bold uppercase">Instagram</span>
-                </div>
-                <div class="platform-btn" onclick="togglePlatform(this, 'tt')">
-                    <i class="fa-brands fa-tiktok text-2xl text-slate-900 mb-1"></i>
-                    <span class="text-[10px] font-bold uppercase">TikTok</span>
-                </div>
-                <div class="platform-btn" onclick="togglePlatform(this, 'fb')">
-                    <i class="fa-brands fa-facebook text-2xl text-blue-600 mb-1"></i>
-                    <span class="text-[10px] font-bold uppercase">Facebook</span>
-                </div>
-                <div class="platform-btn" onclick="togglePlatform(this, 'ln')">
-                    <i class="fa-brands fa-line text-2xl text-green-500 mb-1"></i>
-                    <span class="text-[10px] font-bold uppercase">Line</span>
-                </div>
+                <div class="platform-btn" onclick="togglePlatform(this, 'ig')"><i class="fa-brands fa-instagram text-2xl text-pink-600 mb-1"></i><span class="text-[10px] font-bold uppercase">Instagram</span></div>
+                <div class="platform-btn" onclick="togglePlatform(this, 'tt')"><i class="fa-brands fa-tiktok text-2xl text-slate-900 mb-1"></i><span class="text-[10px] font-bold uppercase">TikTok</span></div>
+                <div class="platform-btn" onclick="togglePlatform(this, 'fb')"><i class="fa-brands fa-facebook text-2xl text-blue-600 mb-1"></i><span class="text-[10px] font-bold uppercase">Facebook</span></div>
+                <div class="platform-btn" onclick="togglePlatform(this, 'ln')"><i class="fa-brands fa-line text-2xl text-green-500 mb-1"></i><span class="text-[10px] font-bold uppercase">Line</span></div>
             </div>
 
             <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4" data-key="select_metrics">2. Select Metrics to Share</p>
             <div class="space-y-3 mb-8">
-                <label class="flex items-center gap-3 p-3 border rounded-xl hover:bg-slate-50 cursor-pointer">
-                    <input type="checkbox" checked class="h-4 w-4 text-sky-600 rounded">
-                    <span class="text-xs font-semibold text-slate-700" data-key="metric_jaw_label">Jaw Width Expansion (+2.5mm)</span>
-                </label>
-                <label class="flex items-center gap-3 p-3 border rounded-xl hover:bg-slate-50 cursor-pointer">
-                    <input type="checkbox" checked class="h-4 w-4 text-sky-600 rounded">
-                    <span class="text-xs font-semibold text-slate-700" data-key="metric_airway_label">Airway Volume Gain (+20mm²)</span>
-                </label>
-                <label class="flex items-center gap-3 p-3 border rounded-xl hover:bg-slate-50 cursor-pointer">
-                    <input type="checkbox" class="h-4 w-4 text-sky-600 rounded">
-                    <span class="text-xs font-semibold text-slate-700" data-key="metric_photos_label">Progress Photos (Profile Change)</span>
-                </label>
+                <label class="flex items-center gap-3 p-3 border rounded-xl hover:bg-slate-50 cursor-pointer"><input type="checkbox" checked class="h-4 w-4 text-sky-600 rounded"><span class="text-xs font-semibold text-slate-700" data-key="metric_jaw_label">Jaw Width Expansion (+2.5mm)</span></label>
+                <label class="flex items-center gap-3 p-3 border rounded-xl hover:bg-slate-50 cursor-pointer"><input type="checkbox" checked class="h-4 w-4 text-sky-600 rounded"><span class="text-xs font-semibold text-slate-700" data-key="metric_airway_label">Airway Volume Gain (+20mm²)</span></label>
+                <label class="flex items-center gap-3 p-3 border rounded-xl hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="h-4 w-4 text-sky-600 rounded"><span class="text-xs font-semibold text-slate-700" data-key="metric_photos_label">Progress Photos (Profile Change)</span></label>
             </div>
 
             <button onclick="handleShare()" class="w-full py-4 bg-sky-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-sky-700 transition-all">
@@ -479,6 +415,7 @@
                 'tab_my_plan': 'My Plan & Support',
                 'tab_diagnostics': 'Scans, Analysis & Reports',
                 'tab_questionnaire': 'My Questionnaire',
+                'tab_atc_access': 'ATC Access',
                 'tab_progress': 'Progress Tracker',
                 'tab_chat': 'Secure Group Chat',
                 'sec_goals_title_impact': 'Goals & Motivation',
@@ -504,9 +441,10 @@
                 'sub_title_scans': 'Clinical Imaging & Scans',
                 'sub_title_analysis': 'Expert Analysis',
                 'sub_title_reports': 'Medical Lab Reports',
-                'analysis_desc': 'Your specialist utilizes advanced cephalometric tracing (Sassouni Plus) to determine the precise skeletal relationship between your jaw and airway. The Schwartz analysis measures your dental arch width against your biological ideal.',
+                'analysis_desc': 'Your specialist has completed a comprehensive structural analysis. The results indicate a constricted airway and underdeveloped dental arches. The recommended treatment plan focuses on expanding the dental arches to improve airway volume and tongue posture.',
                 'tab_questionnaire_title': 'My Symptom Assessment',
                 'questionnaire_summary': 'This record reflects your baseline health status at the start of treatment (Date: 2025/11/15).',
+                'atc_access_title': 'ATC Interaction Hub',
                 'progress_title': 'Progress Photo Timeline',
                 'metric_jaw_size': 'Jaw Width Increase:',
                 'metric_airway': 'Airway Patency (MCS):',
@@ -521,6 +459,8 @@
                 'metric_airway_label': 'Airway Volume Gain (+20mm²)',
                 'metric_photos_label': 'Progress Photos (Profile Change)',
                 'final_share_btn': 'Generate & Share Milestone',
+                'sec_chat_title': 'Secure Group Chat',
+                'btn_send': 'Send',
                 'toggle_text': '中文'
             },
             'zh': {
@@ -532,6 +472,7 @@
                 'tab_my_plan': '我的計劃與支持',
                 'tab_diagnostics': '掃描、分析與報告',
                 'tab_questionnaire': '我的問卷',
+                'tab_atc_access': 'ATC 互動中心',
                 'tab_progress': '進度追踪器',
                 'tab_chat': '安全群組聊天',
                 'sec_goals_title_impact': '我的旅程：目標與動力',
@@ -560,6 +501,7 @@
                 'analysis_desc': '您的專家利用先進的頭影測量 (Sassouni Plus) 來確定您的顎骨和氣道之間的精確骨骼關係。Schwartz 分析測量您的牙弓寬度與生物理想值的差距。',
                 'tab_questionnaire_title': '我的症狀評估',
                 'questionnaire_summary': '此記錄反映了您在治療開始時（日期：2025/11/15）的基準健康狀況。',
+                'atc_access_title': 'ATC 互動中心',
                 'progress_title': '進度照片追踪器',
                 'metric_jaw_size': '下巴寬度增加:',
                 'metric_airway': '氣道暢通度 (MCS):',
@@ -574,6 +516,8 @@
                 'metric_airway_label': '氣道容量增加 (+20mm²)',
                 'metric_photos_label': '進度照片 (側面輪廓變化)',
                 'final_share_btn': '生成並分享里程碑',
+                'sec_chat_title': '安全群組聊天',
+                'btn_send': '發送',
                 'toggle_text': 'English'
             }
         };
@@ -586,8 +530,30 @@
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+            
+            const navBtn = document.getElementById('nav-' + tabId);
+            if (navBtn) {
+                navBtn.classList.add('active');
+            }
+            
+            // Notification logic
+            if (tabId === 'chat') {
+                const badge = document.getElementById('chat-badge');
+                if (badge) badge.classList.add('hidden');
+            }
+        }
+        
+        function checkNotification() {
+             // Mock notification after 3 seconds
+             setTimeout(() => {
+                 const badge = document.getElementById('chat-badge');
+                 if(badge) badge.classList.remove('hidden');
+             }, 3000);
         }
 
         function openShareModal() {
@@ -616,7 +582,10 @@
             document.getElementById('lang-toggle').textContent = data.toggle_text;
         }
 
-        document.addEventListener('DOMContentLoaded', updateText);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateText();
+            checkNotification();
+        });
     </script>
 </body>
 </html>
