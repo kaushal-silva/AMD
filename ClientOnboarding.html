@@ -3,883 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD Client Onboarding</title>
+    <title>AMD Client Onboarding | Start Your Journey</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .step-container {
-            min-height: 500px;
-        }
-        .step-indicator {
-            @apply flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm;
-        }
-        .step-indicator.active {
-            @apply bg-sky-500 text-white;
-        }
-        .step-indicator.complete {
-            @apply bg-teal-500 text-white;
-        }
-        .step-indicator.pending {
-            @apply bg-gray-300 text-gray-700;
-        }
-        .rating-input {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: #e0e0e0;
-            outline: none;
-            opacity: 0.7;
-            transition: opacity .15s;
-        }
-        .rating-input::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #0ea5e9;
-            cursor: pointer;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-        /* Mock QR Code Styling */
-        #qr-code-mock {
-            background-color: #fff;
-            padding: 1rem;
-            border: 2px solid #06b6d4;
-        }
-        /* Custom wrapper for checkboxes */
-        .checkbox-group {
-             @apply flex flex-wrap gap-x-4 gap-y-2 border p-3 rounded-lg bg-white shadow-sm;
-        }
-        .checkbox-label {
-             @apply flex items-center text-sm text-gray-700 cursor-pointer hover:text-sky-600;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .step-indicator { @apply flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm transition-all; }
+        .step-indicator.active { @apply bg-sky-500 text-white ring-4 ring-sky-100; }
+        .step-indicator.complete { @apply bg-teal-500 text-white; }
+        .step-indicator.pending { @apply bg-gray-200 text-gray-400; }
+        .rating-input { -webkit-appearance: none; appearance: none; height: 6px; background: #e2e8f0; border-radius: 99px; outline: none; }
+        .rating-input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #0ea5e9; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .matrix-row:nth-child(even) { background-color: #f8fafc; }
+        .section-header { @apply text-xs font-black uppercase tracking-widest border-b pb-2 mb-4 text-slate-500; }
+        .q-label { @apply text-sm font-bold text-slate-700 mb-1 block; }
     </style>
 </head>
 <body>
 
-    <!-- Onboarding Page Container -->
-    <div class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
-
-        <!-- Header -->
-        <header class="w-full max-w-6xl flex justify-between items-center mb-6">
-            <h1 id="onboard-title" class="text-3xl font-extrabold text-gray-900" data-key="title">Client Onboarding: Start Your Journey</h1>
-            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-sky-600 border border-sky-600 hover:bg-sky-50 transition duration-150 font-semibold shadow-md text-sm">
-                <!-- Text updated by JavaScript -->
-            </button>
+    <div class="min-h-screen flex flex-col items-center p-4 md:p-8">
+        <header class="w-full max-w-5xl flex justify-between items-center mb-8">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-seedling text-teal-500 text-3xl"></i>
+                <h1 class="text-2xl font-black text-slate-800">Enrollment Portal</h1>
+            </div>
+            <button id="lang-toggle" onclick="toggleLanguage()" class="py-2 px-4 rounded-full bg-white text-sky-600 border border-sky-200 font-bold shadow-sm text-xs">中文</button>
         </header>
 
-        <!-- Progress Stepper -->
-        <div class="w-full max-w-6xl bg-white p-4 rounded-xl shadow-lg mb-8">
-            <div class="flex justify-between items-center">
-                <div class="flex flex-col items-center">
+        <!-- Stepper -->
+        <div class="w-full max-w-5xl bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8">
+            <div class="flex justify-between items-center px-4 md:px-20">
+                <div class="flex flex-col items-center gap-2">
                     <div id="step-1-icon" class="step-indicator active">1</div>
-                    <p class="text-xs mt-1 text-gray-700" data-key="step_1_name">Basic Info & Assessment</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400">Assessment</p>
                 </div>
-                <div class="flex-grow h-px bg-gray-300 mx-2"></div>
-                <div class="flex flex-col items-center">
+                <div class="flex-grow h-px bg-slate-100 mx-4"></div>
+                <div class="flex flex-col items-center gap-2">
                     <div id="step-2-icon" class="step-indicator pending">2</div>
-                    <p class="text-xs mt-1 text-gray-700" data-key="step_2_name">Referral and Dentist Selection</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400">Referral</p>
                 </div>
-                <div class="flex-grow h-px bg-gray-300 mx-2"></div>
-                <div class="flex flex-col items-center">
+                <div class="flex-grow h-px bg-slate-100 mx-4"></div>
+                <div class="flex flex-col items-center gap-2">
                     <div id="step-3-icon" class="step-indicator pending">3</div>
-                    <p class="text-xs mt-1 text-gray-700" data-key="step_3_name">Optional Photo Upload</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400">Photos</p>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content Area with Steps -->
-        <main class="w-full max-w-4xl bg-white p-8 rounded-xl shadow-lg step-container">
+        <main class="w-full max-w-4xl bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-slate-100 min-h-[600px]">
             
-            <!-- Step 1: Basic Info & Full Assessment -->
-            <div id="step-1" class="current-step">
-                <h2 class="text-2xl font-bold text-sky-600 mb-6" data-key="sec_basic_info_title">1. Basic Info & Assessment</h2>
-                
-                <form id="full-assessment-form" class="space-y-8">
-                    
-                    <!-- Section: Personal Information and Purpose of Visit -->
-                    <div class="border p-4 rounded-lg bg-gray-50 space-y-4">
-                        <h3 class="text-xl font-bold text-gray-700 mb-4" data-key="sec_personal_info">Personal Information and Purpose of Visit</h3>
+            <!-- Step 1: Comprehensive Questionnaire -->
+            <div id="step-1" class="space-y-12">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2">Oral-Airway Symptom Assessment</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed">Complete Intake Form (113+ Points). Please answer all sections.</p>
+                </div>
+
+                <!-- 1. Personal Information -->
+                <section class="space-y-6">
+                    <h3 class="section-header text-sky-600">I. Personal Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="date" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none" placeholder="Date of Completion">
+                        <input type="text" id="p-name" placeholder="Name" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
+                        <input type="text" placeholder="Date of Birth" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
+                        <input type="text" placeholder="Phone" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
+                        <input type="text" placeholder="Mailing Address" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none md:col-span-2">
+                        <input type="text" placeholder="Occupation" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
+                        <input type="email" placeholder="Email" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
                         
-                        <!-- Basic Inputs -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_date_completion">Date of Completion (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1"></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_name">Name:</label><input type="text" id="patient-name-input" class="w-full p-2 border rounded-lg mt-1"></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_dob">Date of birth (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1"></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_phone">Phone:</label><input type="tel" class="w-full p-2 border rounded-lg mt-1"></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_email">Email:</label><input type="email" class="w-full p-2 border rounded-lg mt-1"></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_occupation">Occupation:</label><input type="text" class="w-full p-2 border rounded-lg mt-1"></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_education">Education level:</label><input type="text" class="w-full p-2 border rounded-lg mt-1"></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_address">Mailing address:</label><input type="text" class="w-full p-2 border rounded-lg mt-1"></div>
+                        <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                             <select class="p-3 bg-slate-50 border rounded-xl text-sm outline-none"><option>Marital Status</option><option>Single</option><option>Married</option><option>Other</option></select>
+                             <select class="p-3 bg-slate-50 border rounded-xl text-sm outline-none"><option>Gender</option><option>Male</option><option>Female</option></select>
                         </div>
                         
-                        <!-- Single Choice Inputs -->
-                        <div class="grid grid-cols-2 gap-4 pt-2">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700" data-key="field_gender">Gender:</label>
-                                <select class="w-full p-2 border rounded-lg mt-1">
-                                    <option value="male" data-key="option_male">Male / 男</option>
-                                    <option value="female" data-key="option_female">Female / 女</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700" data-key="field_marital">Marital status:</label>
-                                <select class="w-full p-2 border rounded-lg mt-1">
-                                    <option value="single" data-key="option_single">Single / 未婚</option>
-                                    <option value="married" data-key="option_married">Married / 已婚</option>
-                                    <option value="other" data-key="option_other">Other / 其他</option>
-                                </select>
+                        <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                             <input type="number" placeholder="Children (Boys)" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
+                             <input type="number" placeholder="Children (Girls)" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
+                        </div>
+
+                        <select class="p-3 bg-slate-50 border rounded-xl text-sm outline-none md:col-span-2">
+                            <option>Education Level</option><option>High School</option><option>University</option><option>Graduate</option>
+                        </select>
+                        
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="q-label">Living Situation</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
+                                <label><input type="checkbox" class="mr-1"> Live alone</label>
+                                <label><input type="checkbox" class="mr-1"> With parents</label>
+                                <label><input type="checkbox" class="mr-1"> With partner</label>
+                                <label><input type="checkbox" class="mr-1"> With children</label>
+                                <label><input type="checkbox" class="mr-1"> Partner + children</label>
                             </div>
                         </div>
 
-                        <!-- Children -->
-                         <div>
-                            <label class="block text-sm font-medium text-gray-700" data-key="field_children">Children (Boys/Girls):</label>
-                            <input type="text" placeholder="e.g., Boys 1, Girls 1" class="w-full p-2 border rounded-lg mt-1">
-                            <p class="text-xs text-gray-500 mt-1" data-key="note_children_boys_girls">男孩Boys 位、女孩Girls 位</p>
-                        </div>
-                        
-                        <!-- START IMPROVED READABILITY SECTION -->
-
-                        <!-- Living Situation (Multiple Choice) -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" data-key="field_living_situation">Living situation (Select all that apply):</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-label"><input type="checkbox" name="living_situation" value="alone" class="text-sky-600 mr-1"><span data-key="opt_live_alone">Live alone / 一人居住</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="living_situation" value="parents" class="text-sky-600 mr-1"><span data-key="opt_with_parents">With parents / 父母</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="living_situation" value="partner" class="text-sky-600 mr-1"><span data-key="opt_with_partner">With partner / 伴侶</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="living_situation" value="children" class="text-sky-600 mr-1"><span data-key="opt_with_children">With children / 小孩</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="living_situation" value="partner_children" class="text-sky-600 mr-1"><span data-key="opt_partner_children">Partner + children / 伴侶+小孩</span></label>
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="q-label">How did you learn about us?</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
+                                <label><input type="checkbox" class="mr-1"> Referral</label>
+                                <label><input type="checkbox" class="mr-1"> Internet</label>
+                                <label><input type="checkbox" class="mr-1"> Passing by</label>
+                                <label><input type="checkbox" class="mr-1"> Other</label>
                             </div>
                         </div>
                         
-                        <!-- How Did You Learn About Our Clinic? (Multiple Choice + Custom) -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" data-key="field_how_found">How Did You Learn About Our Clinic? (Select all that apply):</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="referral" class="text-sky-600 mr-1" onchange="checkReferralSource(this.checked, 'referral')"><span data-key="opt_referred_by_friend">Referred by relatives/friends</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="internet" class="text-sky-600 mr-1"><span data-key="opt_internet">Internet (Google/FB/IG)</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="passing" class="text-sky-600 mr-1"><span data-key="opt_passing_by">Passing by / 路過</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="book" class="text-sky-600 mr-1"><span data-key="opt_book">Book (Dr. Felix\'s Book)</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="seminar" class="text-sky-600 mr-1"><span data-key="opt_seminar">Seminar / Workshop</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="article" class="text-sky-600 mr-1"><span data-key="opt_article">News/Health Article</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="dentist" class="text-sky-600 mr-1" onchange="checkReferralSource(this.checked, 'dentist')"><span data-key="opt_dentist_referral">Dentist Referral</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="how_found" value="other_found" class="text-sky-600 mr-1" onchange="checkReferralSource(this.checked, 'other_found')"><span data-key="opt_other">Other / 其他</span></label>
-                            </div>
-                            <input type="text" id="referrer-input" placeholder="Referrer Name / Dentist Name / Other Source" class="w-full p-2 border rounded-lg mt-2 hidden">
-                        </div>
-                        
-                        <!-- Purpose of Visit -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" data-key="field_purpose_visit">Purpose of your visit (Select all that apply):</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_body_constitution">Understand body constitution</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_routine_checkup">Routine check-up</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_identify_discomfort">Identify causes of discomfort</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_anti_aging">Anti-aging/longevity</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_health_regimen">Find suitable health regimen</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_early_detection">Early disease detection</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="purpose" class="text-sky-600 mr-1"><span data-key="pur_other">Other</span></label>
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="q-label">Purpose of visit</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
+                                <label><input type="checkbox" class="mr-1"> Body constitution</label>
+                                <label><input type="checkbox" class="mr-1"> Routine check-up</label>
+                                <label><input type="checkbox" class="mr-1"> Identify discomfort</label>
+                                <label><input type="checkbox" class="mr-1"> Anti-aging</label>
+                                <label><input type="checkbox" class="mr-1"> Early detection</label>
+                                <label><input type="checkbox" class="mr-1"> Health regimen</label>
                             </div>
                         </div>
 
-                        <!-- Health Improvement -->
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2" data-key="field_improve_health">How would you like to improve your health? (Select all that apply):</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-label"><input type="checkbox" name="improve_health" class="text-sky-600 mr-1"><span data-key="imp_lifestyle">Lifestyle changes</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="improve_health" class="text-sky-600 mr-1"><span data-key="imp_dietary">Dietary habit changes</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="improve_health" class="text-sky-600 mr-1"><span data-key="imp_chinese_herbal">Chinese herbal medicine</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="improve_health" class="text-sky-600 mr-1"><span data-key="imp_nutritional_supplements">Nutritional supplements</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="improve_health" class="text-sky-600 mr-1"><span data-key="imp_nutritionist">Consultation with a nutritionist</span></label>
-                                <label class="checkbox-label"><input type="checkbox" name="improve_health" class="text-sky-600 mr-1"><span data-key="imp_other">Other</span></label>
+                         <div class="md:col-span-2 space-y-2">
+                            <label class="q-label">How to improve health?</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
+                                <label><input type="checkbox" class="mr-1"> Lifestyle</label>
+                                <label><input type="checkbox" class="mr-1"> Dietary</label>
+                                <label><input type="checkbox" class="mr-1"> Supplements</label>
+                                <label><input type="checkbox" class="mr-1"> Chinese Med</label>
+                                <label><input type="checkbox" class="mr-1"> Nutritionist</label>
                             </div>
                         </div>
-                        <!-- END IMPROVED READABILITY SECTION -->
+                    </div>
+                </section>
 
+                <!-- 2. Integrated MSQ -->
+                <section class="space-y-8">
+                    <div class="flex justify-between items-end border-b pb-2">
+                        <h3 class="text-xs font-black text-indigo-600 uppercase tracking-widest">II. Integrated MSQ (Rate 0-4)</h3>
+                        <div class="flex gap-2 text-[9px] text-slate-400 font-bold uppercase">
+                            <span>0: Never</span><span>1: Occasional</span><span>2: Severe</span><span>3: Frequent</span><span>4: Constant</span>
+                        </div>
+                    </div>
+
+                    <!-- Section 1: Head, Neck, ENT -->
+                    <div class="bg-indigo-50/30 p-6 rounded-2xl border border-indigo-100">
+                        <h4 class="font-black text-indigo-800 text-sm mb-4 uppercase">Section 1: Head, Neck & ENT</h4>
+                        <div id="msq-sec1" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
                     </div>
                     
-                    <!-- Section: Personal Data Consent Form -->
-                    <div class="border p-4 rounded-lg bg-red-50">
-                        <h3 class="text-xl font-bold text-red-700 mb-4" data-key="sec_consent_title">Personal Data Consent Form (Required)</h3>
-                        <p class="text-sm text-red-600 mb-4" data-key="sec_consent_statement">Essentia Lifestyle Management collects and obtains your personal data for the purpose of providing relevant services. According to applicable laws, the processing and use of your personal data are regulated by the Personal Data Protection Act and related regulations. You acknowledge that you have understood and agree to the statements above. This consent form grants our clinic the right to collect, process, and use your personal data.</p>
-                        
-                        <label class="flex items-center text-red-700 font-medium mb-3">
-                            <input type="checkbox" id="consent-checkbox" class="text-red-600 mr-2">
-                            <span data-key="field_consent_checkbox">I have read, understood, and agree to the statements above.</span>
+                    <!-- Section 2: Cardiopulmonary -->
+                    <div class="bg-red-50/30 p-6 rounded-2xl border border-red-100">
+                        <h4 class="font-black text-red-800 text-sm mb-4 uppercase">Section 2: Cardiopulmonary & Metabolism</h4>
+                        <div id="msq-sec2" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
+                    </div>
+
+                    <!-- Section 3: Digestive -->
+                    <div class="bg-green-50/30 p-6 rounded-2xl border border-green-100">
+                        <h4 class="font-black text-green-800 text-sm mb-4 uppercase">Section 3: Digestive System</h4>
+                        <div id="msq-sec3" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
+                    </div>
+
+                    <!-- Section 4: Brain/Emotion/Structure -->
+                    <div class="bg-amber-50/30 p-6 rounded-2xl border border-amber-100">
+                        <h4 class="font-black text-amber-800 text-sm mb-4 uppercase">Section 4: Brain, Emotions & Structure</h4>
+                        <div id="msq-sec4" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
+                    </div>
+                </section>
+
+                <!-- 3. Structural & Special -->
+                <section class="space-y-6">
+                    <h3 class="section-header text-amber-600">III. Structural & Physical Features</h3>
+                    <div id="struct-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    
+                    <h3 class="text-xs font-black text-amber-600 uppercase mt-6 mb-2">Special Conditions</h3>
+                    <div id="special-list" class="grid grid-cols-1 gap-2"></div>
+                </section>
+
+                <!-- 4. Goals -->
+                <section class="space-y-4">
+                    <h3 class="section-header text-teal-600">IV. Health Complaints & Goals</h3>
+                    <div class="space-y-2">
+                        <input type="text" placeholder="1. Top Priority" class="w-full p-3 bg-slate-50 border rounded-xl text-sm">
+                        <input type="text" placeholder="2. Secondary Concern" class="w-full p-3 bg-slate-50 border rounded-xl text-sm">
+                        <input type="text" placeholder="3. Additional Goal" class="w-full p-3 bg-slate-50 border rounded-xl text-sm">
+                    </div>
+                </section>
+
+                <!-- 5. Medical History -->
+                <section class="space-y-4">
+                    <h3 class="section-header text-purple-600">V. Medical History</h3>
+                    <div class="overflow-x-auto border rounded-xl">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
+                                <tr><th class="p-3">Condition</th><th class="p-3 text-center">Self</th><th class="p-3 text-center">Family</th><th class="p-3">Notes</th></tr>
+                            </thead>
+                            <tbody id="med-history-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 6. Consent -->
+                <section class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-sm mb-2">Personal Data Consent</h3>
+                    <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+                        I authorize Essentia Lifestyle Management and AMD clinics to collect and process my health data for treatment purposes under the Personal Data Protection Act. 
+                        <strong>International Transfer Consent:</strong> I explicitly consent to the pseudonymized transfer of my diagnostic data (CBCT, STL, Photos) to remote specialists located in the USA for the purpose of clinical design and consultation. I understand all Personal Identifiable Information (PII) will be scrubbed prior to transfer in compliance with Taiwan DPA regulations.
+                    </p>
+                    <label class="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer mb-4">
+                        <input type="checkbox" class="h-4 w-4 text-sky-600"> I have read, understood, and agree to the statements above.
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Signature (Type Name)" class="p-3 bg-white border rounded-xl text-sm">
+                        <input type="text" placeholder="Date" class="p-3 bg-white border rounded-xl text-sm">
+                    </div>
+                </section>
+
+                <div class="flex justify-end pt-8">
+                    <button onclick="nextStep(2)" class="px-10 py-4 bg-sky-600 text-white font-black rounded-2xl shadow-xl hover:bg-sky-700 transition uppercase tracking-widest text-xs">Proceed to Referral</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Referral Workflow -->
+            <div id="step-2" class="hidden space-y-8">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2">Select Your Clinical Partners</h2>
+                    <p class="text-slate-500 text-sm">To generate your referral, you must select an Imaging Lab and an AMD Practitioner.</p>
+                </div>
+
+                <!-- 1. Lab Selection -->
+                <div class="p-6 border rounded-2xl bg-white shadow-sm">
+                    <h3 class="text-xs font-black text-sky-600 uppercase tracking-widest mb-4">1. Select Imaging Lab</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="p-4 border rounded-xl flex items-center gap-3 cursor-pointer hover:border-sky-500 transition bg-slate-50">
+                            <input type="radio" name="lab" onchange="checkSelections()">
+                            <div><p class="font-bold text-sm text-slate-800">Taipei Digital Imaging</p><p class="text-xs text-slate-500">Da'an District • CBCT/Ceph Ready</p></div>
                         </label>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_signature">Signature required:</label><input type="text" class="w-full p-2 border rounded-lg mt-1" placeholder="Type your name (Mock Signature)"></div>
-                            <div><label class="block text-sm font-medium text-gray-700" data-key="field_date_signature">Date of Signature (MM/DD/YYYY):</label><input type="text" placeholder="MM/DD/YYYY" class="w-full p-2 border rounded-lg mt-1"></div>
-                        </div>
-                        <p class="text-xs text-gray-500 mt-2" data-key="note_guardian_signature">If the signer is under 18, a legal guardian must sign.</p>
-                        <input type="text" placeholder="Legal Guardian Signature (If applicable)" class="w-full p-2 border rounded-lg mt-2">
+                        <label class="p-4 border rounded-xl flex items-center gap-3 cursor-pointer hover:border-sky-500 transition bg-slate-50">
+                            <input type="radio" name="lab" onchange="checkSelections()">
+                            <div><p class="font-bold text-sm text-slate-800">Kaohsiung Pro Scan</p><p class="text-xs text-slate-500">Zuoying District • High Res</p></div>
+                        </label>
                     </div>
-                    
-                    <!-- Section: Symptom Assessment -->
-                    <div class="border p-4 rounded-lg bg-blue-50">
-                        <h3 class="text-xl font-bold text-gray-700 mb-4" data-key="sec_symptom_assessment">Symptom Assessment</h3>
-                        <p class="text-sm text-gray-600 mb-6" data-key="sec_symptom_note">Please rate the following symptoms based on your health status in the past 30 days:</p>
-                        
-                        <div class="flex justify-between text-xs font-medium text-gray-700 mb-2">
-                            <span data-key="rating_scale_0">0=Never/almost never</span>
-                            <span data-key="rating_scale_1">1=Occasionally, mild impact</span>
-                            <span data-key="rating_scale_2">2=Occasionally, severe impact</span>
-                            <span data-key="rating_scale_3">3=Frequent, mild impact</span>
-                            <span data-key="rating_scale_4">4=Frequent, severe impact</span>
-                        </div>
+                </div>
 
-                        <div id="symptom-list" class="space-y-4">
-                            <!-- Symptom categories injected by JS -->
-                        </div>
-                    </div>
+                <!-- 2. AMD Selection -->
+                <div class="p-6 border rounded-2xl bg-white shadow-sm">
+                    <h3 class="text-xs font-black text-teal-600 uppercase tracking-widest mb-4">2. Select AMD Practitioner</h3>
                     
-                    <!-- Section: Structural & Physical Features / Special Conditions -->
-                    <div class="border p-4 rounded-lg bg-yellow-50">
-                        <h3 class="text-xl font-bold text-gray-700 mb-4" data-key="sec_structural_title">Structural & Physical Features / Special Conditions</h3>
-                        <p class="text-sm text-gray-600 mb-6" data-key="sec_structural_note">Please select "Yes" or "No" according to your actual condition.</p>
-                        
-                        <div id="structural-questions" class="space-y-4">
-                            <!-- Structural questions injected by JS -->
-                        </div>
-                    </div>
-                    
-                    <!-- Section: Health Complaints & Goals -->
-                    <div class="border p-4 rounded-lg bg-green-50">
-                        <h3 class="text-xl font-bold text-gray-700 mb-4" data-key="sec_goals_title">Health Complaints & Goals</h3>
-                        <p class="text-sm text-gray-600 mb-4" data-key="sec_goals_note">Please list your top three concerns you wish to improve:</p>
-                        <input type="text" placeholder="1. Top 3 concerns 1" class="w-full p-2 border rounded-lg mb-2">
-                        <input type="text" placeholder="2. Top 3 concerns 2" class="w-full p-2 border rounded-lg mb-2">
-                        <input type="text" placeholder="3. Top 3 concerns 3" class="w-full p-2 border rounded-lg mb-2">
-                    </div>
-
-                    <!-- Section: Medical History -->
-                    <div class="border p-4 rounded-lg bg-purple-50">
-                        <h3 class="text-xl font-bold text-gray-700 mb-4" data-key="sec_medical_history">Medical History</h3>
-                        
-                        <div class="grid grid-cols-6 gap-2 text-sm font-medium text-gray-700 border-b pb-2 mb-2">
-                            <span class="col-span-3" data-key="mh_condition">Condition</span>
-                            <span data-key="mh_self">Self</span>
-                            <span data-key="mh_family">Family</span>
-                            <span data-key="mh_notes">Notes</span>
-                        </div>
-                        <div id="medical-history-matrix" class="space-y-2">
-                            <!-- Medical history rows injected by JS -->
+                    <!-- Mock Map -->
+                    <div class="h-64 bg-slate-100 rounded-xl mb-6 relative overflow-hidden flex items-center justify-center border border-slate-200">
+                        <img src="https://placehold.co/800x400/f1f5f9/94a3b8?text=Interactive+Map+of+Taipei+Clinics" class="absolute inset-0 w-full h-full object-cover opacity-50">
+                        <div class="relative z-10 flex gap-8">
+                            <div class="w-8 h-8 bg-teal-500 rounded-full border-2 border-white shadow-lg animate-bounce"></div>
+                            <div class="w-8 h-8 bg-teal-500 rounded-full border-2 border-white shadow-lg" style="margin-top: 40px"></div>
                         </div>
                     </div>
 
-                </form>
-                <div class="flex justify-end pt-6">
-                    <button onclick="nextStep(2)" class="py-3 px-8 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="btn_next_step">Next Step</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="p-4 border rounded-xl flex items-center gap-3 cursor-pointer hover:border-teal-500 transition bg-slate-50">
+                            <input type="radio" name="amd" onchange="checkSelections()">
+                            <div><p class="font-bold text-sm text-slate-800">Dr. C. Lin (Harmony Clinic)</p><p class="text-xs text-slate-500">Taipei • Certified Specialist</p></div>
+                        </label>
+                        <label class="p-4 border rounded-xl flex items-center gap-3 cursor-pointer hover:border-teal-500 transition bg-slate-50">
+                            <input type="radio" name="amd" onchange="checkSelections()">
+                            <div><p class="font-bold text-sm text-slate-800">Dr. K. Wang (Airway Center)</p><p class="text-xs text-slate-500">Kaohsiung • Advanced Provider</p></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. Download -->
+                <div class="p-8 bg-slate-800 rounded-3xl text-center text-white opacity-50 transition-opacity" id="download-section">
+                    <i class="fa-solid fa-file-prescription text-4xl mb-4 text-teal-400"></i>
+                    <h3 class="text-xl font-bold mb-2">Referral Generation</h3>
+                    <p class="text-sm text-slate-400 mb-6">Download your customized referral form containing specs for the selected Lab and AMD.</p>
+                    <button id="btn-download" disabled class="px-8 py-3 bg-teal-600 text-white font-black rounded-xl uppercase tracking-widest text-xs disabled:cursor-not-allowed disabled:bg-slate-600 transition shadow-lg">Download Referral PDF</button>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button onclick="nextStep(1)" class="px-8 py-3 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs uppercase">Back</button>
+                    <button onclick="nextStep(3)" class="px-8 py-3 bg-sky-600 text-white font-bold rounded-xl text-xs uppercase shadow-md">Next Step</button>
                 </div>
             </div>
 
-            <!-- Step 2: Referral and Dentist Selection -->
-            <div id="step-2" class="hidden">
-                 <h2 class="text-2xl font-bold text-sky-600 mb-6" data-key="sec_dentist_select_title_new">2. Referral and Dentist Selection</h2>
-                 
-                 <!-- Patient Name & ID -->
-                 <div class="mb-6 border p-4 rounded-lg bg-gray-100">
-                    <p class="text-lg font-semibold text-gray-800" data-key="patient_info_name">Patient Name: <span id="patient-display-name"></span></p>
-                    <p class="text-sm text-gray-500" data-key="patient_info_id">Patient ID: <span id="patient-display-id">AMDTW001</span></p>
-                 </div>
-
-                 <!-- Referral Preview & Download -->
-                 <div class="bg-teal-50 border-l-4 border-teal-500 p-4 mb-6 rounded-lg">
-                     <h3 class="font-bold text-teal-800 mb-2" data-key="referral_box_title_new">Download your referral</h3>
-                     
-                     <div class="mb-4 space-y-2">
-                        <p class="text-sm text-teal-700" data-key="referral_scan_required">Required Scans: CBCT Scan and Jaw X-ray (Cephalometric view). </p>
-                        <p class="text-sm text-teal-700 font-medium" data-key="referral_raw_file_request_new">Crucial: We require the raw INV file for analysis. Please ask your clinic to upload the file to the below personalised secure link. Alternatively you can obtain the INV file and upload manually to the link or on your Client Dashboard.</p>
-                     </div>
-                     
-                     <div class="flex flex-col md:flex-row items-center gap-4">
-                        <!-- QR Code Mockup (Download Link) -->
-                         <div id="qr-code-mock" class="flex items-center justify-center w-24 h-24 border-2 border-teal-600">
-                            <p class="text-xs text-teal-600 font-bold">QR</p>
-                         </div>
-                        
-                        <div class="flex-grow space-y-2">
-                            <p class="text-sm text-gray-700 font-medium" data-key="referral_download_prompt">Download the referral form (PDF) using the QR code above or the button below.</p>
-                            <button class="py-3 px-6 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 text-sm" data-key="btn_download_referral">Download Scan Referral Form</button>
-                            <!-- Removed btn_secure_upload -->
-                        </div>
-                     </div>
-                 </div>
-
-                 <!-- Dentist Selection -->
-                 <h3 class="font-bold text-gray-700 pt-4 mb-4" data-key="sec_select_dentist_title">Select Your Local AMD Dentist (Choose 2)</h3>
-                 
-                 <p class="text-sm text-gray-500 mb-4" data-key="sec_select_dentist_subtitle">Select two recommended local dentists. We will contact you once one accepts your case to book your first appointment.</p>
-
-                 <!-- Map Mockup (Using the requested file path structure) -->
-                 <div class="h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-4">
-                     <!-- Note: This image URL is a placeholder based on your requested file name/structure. -->
-                     <img src="images/clientonboarding/Dentistmapoftaiwan.png" alt="Map of Taiwan Dentist Network" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e0f2f7/06b6d4?text=Map+of+Taiwan+Dentist+Network';" data-key="map_mock">
-                 </div>
-
-                 <!-- Dentist Search -->
-                 <input type="text" id="dentist-search-input" placeholder="Search by Clinic Name or Area in Taiwan" class="w-full p-3 border border-gray-300 rounded-lg mb-4">
-                 
-                 <!-- Dentist List/Selection -->
-                 <div id="dentist-list" class="space-y-3 mb-6">
-                     <!-- Mock Dentists -->
-                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-sky-50">
-                         <input type="checkbox" name="dentist_select" value="1" class="text-sky-600 focus:ring-sky-500 mr-3">
-                         <span class="flex-grow">Dr. C. Lin, Harmony Clinic (Taipei)</span>
-                         <span class="text-xs text-sky-600 font-medium">IMS Certified</span>
-                     </label>
-                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-sky-50">
-                         <input type="checkbox" name="dentist_select" value="2" class="text-sky-600 focus:ring-sky-500 mr-3">
-                         <span class="flex-grow">Dr. K. Wang, Airway Center (Kaohsiung)</span>
-                         <span class="text-xs text-sky-600 font-medium">IMS Certified</span>
-                     </label>
-                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-sky-50">
-                         <input type="checkbox" name="dentist_select" value="other" class="text-sky-600 focus:ring-sky-500 mr-3" onchange="toggleOtherDentistDetails(this.checked)">
-                         <span class="flex-grow" data-key="option_other_dentist">Other (I will use my own dentist)</span>
-                     </label>
-                 </div>
-                 
-                 <!-- Other Dentist Details -->
-                 <div id="other-dentist-details" class="space-y-3 mb-6 hidden border p-4 rounded-lg bg-gray-50">
-                     <p class="text-sm text-gray-700 font-medium" data-key="other_dentist_note">Please provide your dentist's details and we will send them the necessary IMV file specifications.</p>
-                     <input type="text" placeholder="Dentist Name / 牙醫姓名" class="w-full p-3 border border-gray-300 rounded-lg">
-                     <input type="email" placeholder="Clinic Email / 診所電郵" class="w-full p-3 border border-gray-300 rounded-lg">
-                 </div>
-
-                <div class="flex justify-between">
-                    <button onclick="nextStep(1)" class="py-3 px-8 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150" data-key="btn_previous_step">Previous Step</button>
-                    <button onclick="nextStep(3)" class="py-3 px-8 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition duration-150" data-key="btn_next_step">Next Step</button>
+            <!-- Step 3: Photos -->
+            <div id="step-3" class="hidden space-y-10 text-center">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-4">Visual Baseline</h2>
+                    <p class="text-slate-500 max-w-lg mx-auto">Upload initial photos of your jaw profile and posture to accelerate the specialist's preliminary review.</p>
                 </div>
-            </div>
-
-            <!-- Step 3: Optional Photo Upload -->
-            <div id="step-3" class="hidden">
-                 <h2 class="text-2xl font-bold text-sky-600 mb-6" data-key="sec_photo_upload_title">3. Optional: Upload Jaw & Posture Photos</h2>
-                 
-                 <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-lg">
-                     <p class="font-bold text-blue-800 mb-1" data-key="photo_note_title">Note:</p>
-                     <p class="text-sm text-blue-700" data-key="photo_note_desc">More comprehensive photos will be taken at the clinic. This upload is optional, but highly recommended as it helps the specialist accelerate your preliminary diagnosis.</p>
-                 </div>
-
-                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center flex flex-col justify-center items-center mb-6">
-                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <p class="mt-2 text-sm text-gray-500" data-key="upload_prompt">Drag and drop photos here or click to browse (Jaw, Posture - Multiple Angles recommended)</p>
-                    <input type="file" multiple class="hidden" id="file-upload-input" onclick="document.getElementById('file-upload-input').value = null; document.getElementById('file-upload-input').click();" onchange="simulateUpload(this.files.length)">
-                 </div>
-
-                <div class="flex justify-between">
-                    <button onclick="nextStep(2)" class="py-3 px-8 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150" data-key="btn_previous_step">Previous Step</button>
-                    <button onclick="finishOnboarding()" class="py-3 px-8 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition duration-150" data-key="btn_finish_onboarding">Go to Client Dashboard</button>
+                <div class="border-4 border-dashed border-slate-200 rounded-3xl p-16 hover:border-sky-400 transition cursor-pointer bg-slate-50">
+                    <i class="fa-solid fa-camera text-4xl text-slate-300 mb-4"></i>
+                    <p class="font-bold text-slate-400 uppercase text-xs">Drop Photos Here</p>
                 </div>
+                <button onclick="window.location.href='ClientDashboard.html'" class="w-full py-4 bg-teal-600 text-white font-black rounded-2xl shadow-xl uppercase tracking-widest text-sm">Enter Dashboard</button>
             </div>
 
         </main>
     </div>
 
-    <!-- JavaScript for multi-step logic and translations -->
     <script>
-        let currentStep = 1;
-        let currentLang = 'en';
+        // --- 1. MSQ Data (Full Breakdown from Doc) ---
+        const msqSec1 = [ // Head, Neck, ENT
+            "Headache/migraine (waking)", "Dizziness/lightheadedness", 
+            "TMJ clicking/jaw locking", "Bruxism/teeth clenching", "Difficulty swallowing", 
+            "Coughing/clearing throat", "Sore throat/hoarseness", "Mouth sores/ulcers", 
+            "Bleeding gums/sensitivity", "Dry mouth (waking)", "Tongue scalloping", "Drooling (sleep)",
+            "Snoring/mouth breathing", "Nasal congestion", "Runny nose", "Sneezing",
+            "Itchy ears/pain", "Tinnitus/hearing loss", "Ear discharge",
+            "Dry eyes", "Tearing eyes", "Puffy eyelids/dark circles"
+        ];
+        const msqSec2 = [ // Cardio/Metabolism
+            "Irregular heartbeat", "Rapid heartbeat", "Chest pain/tightness",
+            "Breathing difficulty", "Asthma/bronchitis", "Chest tightness",
+            "Overweight/abdominal obesity", "Edema/swelling", "Sugar/starch cravings", 
+            "Binge eating", "Underweight", "Acne", "Hives/eczema", "Dry skin", "Hair loss", "Flushing"
+        ];
+        const msqSec3 = [ // Digestive
+            "GERD/heartburn", "Bloating/gas", "Constipation", "Diarrhea", 
+            "Stomach pain/cramps", "Nausea/vomiting", "Poor appetite"
+        ];
+        const msqSec4 = [ // Brain/Structure
+            "Fatigue/weakness", "Daytime sleepiness", "Insomnia/light sleep", "Restlessness", 
+            "Waking tired", "Slow recovery", "Anxiety/fear", "Depression/low mood", 
+            "Irritability", "Poor memory", "Brain fog", "Slow reaction", "Indecisiveness", 
+            "Slurred speech", "Poor coordination", "Stiff neck/shoulders", "Joint pain", "Muscle soreness"
+        ];
 
-        // --- Full Translation Data Structure (JSON) ---
-        const translations = {
-            'en': {
-                'title': 'Client Onboarding: Start Your Journey',
-                'step_1_name': 'Basic Info & Assessment',
-                'step_2_name': 'Referral and Dentist Selection', // UPDATED
-                'step_3_name': 'Optional Photo Upload',
-                'sec_basic_info_title': '1. Basic Info & Assessment',
-                
-                // Section 1: Personal Info
-                'sec_personal_info': 'Personal Information and Purpose of Visit',
-                'field_date_completion': 'Date of Completion (MM/DD/YYYY):',
-                'field_name': 'Name:',
-                'field_dob': 'Date of birth (MM/DD/YYYY):',
-                'field_phone': 'Phone:',
-                'field_email': 'Email:',
-                'field_address': 'Mailing address:',
-                'field_occupation': 'Occupation:',
-                'field_education': 'Education level:',
-                'field_gender': 'Gender:',
-                'field_marital': 'Marital status:',
-                'field_children': 'Children (Boys/Girls):',
-                'note_children_boys_girls': 'Boys [  ] positions, Girls [  ] positions',
-                'field_living_situation': 'Living situation (Select all that apply):',
-                'opt_live_alone': 'Live alone',
-                'opt_with_parents': 'With parents',
-                'opt_with_partner': 'With partner',
-                'opt_with_children': 'With children',
-                'opt_partner_children': 'Partner + children',
-                'opt_male': 'Male / 男',
-                'opt_female': 'Female / 女',
-                'opt_single': 'Single / 未婚',
-                'opt_married': 'Married / 已婚',
-                'opt_other': 'Other / 其他',
-                
-                // How Found Options
-                'field_how_found': 'How Did You Learn About Our Clinic? (Select all that apply):',
-                'opt_referred_by_friend': 'Referred by relatives/friends (Referrer: )',
-                'opt_internet': 'Internet (Google/FB/IG)',
-                'opt_passing_by': 'Passing by / 路過',
-                'opt_book': 'Book (Link to Dr. Felix\'s Book)',
-                'opt_seminar': 'Seminar / Workshop',
-                'opt_article': 'News/Health Article',
-                'opt_dentist_referral': 'Dentist Referral (Name Dentist)',
-                'placeholder_referrer_input': 'Referrer Name / Dentist Name / Other Source',
+        // --- 2. Structural & Special ---
+        const structItems = [
+            "Crowded teeth", "Scalloped tongue", "Deep bite/underbite", "Receding gums", 
+            "Retruded chin", "Sunken lips", "Jaw shifts", "Forward head posture", "Bony growth (tori)"
+        ];
+        const specialItems = [
+            "Extraction history", "Extensive dental work", "Sleep apnea diagnosis", "Erectile dysfunction / PMS"
+        ];
 
-                // Purpose of Visit
-                'field_purpose_visit': 'Purpose of your visit (Select all that apply):',
-                'pur_body_constitution': 'Understand body constitution',
-                'pur_routine_checkup': 'Routine check-up',
-                'pur_identify_discomfort': 'Identify causes of discomfort',
-                'pur_anti_aging': 'Anti-aging/longevity',
-                'pur_health_regimen': 'Find suitable health regimen',
-                'pur_early_detection': 'Early disease detection',
-                
-                // Health Improvement
-                'field_improve_health': 'How would you like to improve your health? (Select all that apply):',
-                'imp_lifestyle': 'Lifestyle changes',
-                'imp_dietary': 'Dietary habit changes',
-                'imp_chinese_herbal': 'Chinese herbal medicine',
-                'imp_nutritional_supplements': 'Nutritional supplements',
-                'imp_nutritionist': 'Consultation with a nutritionist',
+        // --- 3. Medical History ---
+        const medHistory = [
+            "High blood sugar", "High blood pressure", "High cholesterol", "Fatty liver", 
+            "Headache/migraine", "Thyroid disorders", "Liver disease", "Kidney disease", 
+            "Gallbladder disease", "Heart conditions", "Depression/bipolar", "Fibromyalgia", 
+            "Clotting disorders", "Osteoporosis", "Thrombosis", "Cancer", "Alzheimer's", "Ulcers", "Other"
+        ];
 
-                // Consent
-                'sec_consent_title': 'Personal Data Consent Form (Required)',
-                'sec_consent_statement': 'Essentia Lifestyle Management collects and obtains your personal data for the purpose of providing relevant services. According to applicable laws, the processing and use of your personal data are regulated by the Personal Data Protection Act and related regulations. You acknowledge that you have understood and agree to the statements above. This consent form grants our clinic the right to collect, process, and use your personal data.',
-                'field_consent_checkbox': 'I have read, understood, and agree to the statements above.',
-                'field_signature': 'Signature required:',
-                'field_date_signature': 'Date of Signature (MM/DD/YYYY):',
-                'note_guardian_signature': 'If the signer is under 18, a legal guardian must sign.',
-                'placeholder_signature': 'Type your name (Mock Signature)',
-                'placeholder_guardian': 'Legal Guardian Signature (If applicable)',
+        // --- Rendering ---
+        function renderMSQ(list, id) {
+            document.getElementById(id).innerHTML = list.map(q => `
+                <div>
+                    <div class="flex justify-between text-[10px] font-bold text-slate-700 uppercase mb-1"><span>${q}</span><span class="text-sky-600 val">0</span></div>
+                    <input type="range" min="0" max="4" value="0" class="rating-input w-full" oninput="this.previousElementSibling.querySelector('.val').innerText=this.value">
+                </div>
+            `).join('');
+        }
 
-                // Symptom Assessment (Rating Scale)
-                'sec_symptom_assessment': 'Symptom Assessment',
-                'sec_symptom_note': 'Please rate the following symptoms based on your health status in the past 30 days:',
-                'rating_scale_0': '0=Never/almost never',
-                'rating_scale_1': '1=Occasionally, mild impact',
-                'rating_scale_2': '2=Occasionally, severe impact',
-                'rating_scale_3': '3=Frequent, mild impact',
-                'rating_scale_4': '4=Frequent, severe impact',
+        function initForm() {
+            renderMSQ(msqSec1, 'msq-sec1');
+            renderMSQ(msqSec2, 'msq-sec2');
+            renderMSQ(msqSec3, 'msq-sec3');
+            renderMSQ(msqSec4, 'msq-sec4');
 
-                // Symptoms (Extensive list simplified for the purpose of this mock)
-                'symptom_headache': 'Headache/migraine (especially upon waking)',
-                'symptom_tmj': 'TMJ clicking/jaw locking',
-                'symptom_snoring': 'Snoring/mouth breathing during sleep',
-                'symptom_stiffness': 'Stiff neck & shoulders / soreness',
-                'symptom_fatigue': 'Fatigue/weakness',
-                
-                // Structural
-                'sec_structural_title': 'Structural & Physical Features / Special Conditions',
-                'sec_structural_note': 'Please select "Yes" or "No" according to your actual condition.',
-                'q_crowded_teeth': 'Crowded teeth/malocclusion',
-                'q_deep_underbite': 'Deep bite (upper teeth covering > 1/2 of lower teeth) or underbite',
-                'q_retruded_chin': 'Retruded chin (weak chin)/ double chin',
-                'q_jaw_shifts': 'Jaw shifts sideways when opening',
-                'q_bony_growth': 'Bony growth inside upper/lower jaw (tori)',
-                'q_scalloped_tongue': 'Scalloped tongue',
-                'q_forward_head': 'Forward head posture (\'turtle neck\')',
-                'q_sleep_apnea': 'Previous sleep test showing sleep apnea',
-                
-                // Goals & Medical History
-                'sec_goals_title': 'Health Complaints & Goals',
-                'sec_goals_note': 'Please list your top three concerns you wish to improve:',
-                'sec_medical_history': 'Medical History',
-                'mh_condition': 'Condition',
-                'mh_self': 'Self',
-                'mh_family': 'Family',
-                'mh_notes': 'Notes',
+            document.getElementById('struct-list').innerHTML = structItems.map((q, i) => `
+                <div class="p-3 border rounded-xl flex justify-between bg-slate-50 text-xs items-center"><span class="font-bold text-slate-700">${q}</span><div class="flex gap-2"><label><input type="radio" name="st-${i}" class="mr-1">Y</label><label><input type="radio" name="st-${i}" class="mr-1" checked>N</label></div></div>
+            `).join('');
+            
+            document.getElementById('special-list').innerHTML = specialItems.map((q, i) => `
+                <div class="p-3 border rounded-xl flex justify-between bg-slate-50 text-xs items-center"><span class="font-bold text-slate-700">${q}</span><div class="flex gap-2"><label><input type="radio" name="sp-${i}" class="mr-1">Y</label><label><input type="radio" name="sp-${i}" class="mr-1" checked>N</label></div></div>
+            `).join('');
 
-                'btn_next_step': 'Next Step',
-                'btn_previous_step': 'Previous Step',
-                'sec_dentist_select_title': 'Select Your Local AMD Dentist (Choose 2)',
-                'sec_dentist_select_title_new': 'Referral and Dentist Selection', // NEW TITLE
-                'patient_info_name': 'Patient Name:',
-                'patient_info_id': 'Patient ID:',
-                'referral_box_title': 'Initial Scan Referral Instructions',
-                'referral_box_title_new': 'Download your referral', // NEW TITLE
-                'referral_scan_required': 'Required Scans: CBCT Scan and Jaw X-ray (Cephalometric view). ',
-                'referral_raw_file_request': 'Crucial: We require the raw INV file to be shared directly with your selected clinic.',
-                'referral_raw_file_request_new': 'Crucial: We require the raw INV file for analysis. Please ask your clinic to upload the file to the below personalised secure link. Alternatively you can obtain the INV file and upload manually to the link or on your Client Dashboard.', // NEW TEXT
-                'referral_download_prompt': 'Download the referral form (PDF) using the QR code above or the button below.',
-                'btn_download_referral': 'Download Scan Referral Form',
-                'btn_secure_upload': 'Secure Location for Raw INV File',
-                'sec_select_dentist_title': 'Select Your Local AMD Dentist (Choose 2)',
-                'sec_select_dentist_subtitle': 'Select two recommended local dentists. We will contact you once one accepts your case to book your first appointment.',
-                'map_mock': 'Mockup of Taiwan Map showing Recommended Clinics',
-                'option_other_dentist': 'Other (I will use my own dentist)',
-                'other_dentist_note': 'Please provide your dentist\'s details and we will send them the necessary IMV file specifications.',
-                'sec_photo_upload_title': '3. Optional: Upload Jaw & Posture Photos',
-                'photo_note_title': 'Note:',
-                'photo_note_desc': 'More comprehensive photos will be taken at the clinic. This upload is optional, but highly recommended as it helps the specialist accelerate your preliminary diagnosis.',
-                'upload_prompt': 'Drag and drop photos here or click to browse (Jaw, Posture - Multiple Angles recommended)',
-                'btn_finish_onboarding': 'Go to Client Dashboard',
-                'toggle_text': '中文'
-            },
-            'zh': {
-                 'title': '客戶註冊：開始您的旅程',
-                'step_1_name': '基本資料與評估',
-                'step_2_name': '轉介與牙醫選擇', // UPDATED
-                'step_3_name': '可選照片上傳',
-                'sec_basic_info_title': '1. 基本資料與評估',
+            document.getElementById('med-history-body').innerHTML = medHistory.map(c => `
+                <tr><td class="p-3 font-bold text-slate-700">${c}</td><td class="p-3 text-center"><input type="checkbox" class="h-4 w-4 text-purple-600 rounded"></td><td class="p-3 text-center"><input type="checkbox" class="h-4 w-4 text-purple-600 rounded"></td><td class="p-3"><input type="text" class="w-full bg-transparent border-b outline-none text-xs"></td></tr>
+            `).join('');
+        }
 
-                // Section 1: Personal Info
-                'sec_personal_info': '個人資料與就診目的',
-                'field_date_completion': '填寫日期 (MM/DD/YYYY):',
-                'field_name': '姓名:',
-                'field_dob': '生日 (MM/DD/YYYY):',
-                'field_phone': '電話:',
-                'field_email': '電子郵箱:',
-                'field_address': '收件住址:',
-                'field_occupation': '職業:',
-                'field_education': '教育程度:',
-                'field_gender': '性別:',
-                'field_marital': '婚姻狀況:',
-                'field_children': '小孩數量 (男孩/女孩):',
-                'note_children_boys_girls': '男孩 Boys 位、女孩 Girls 位',
-                'field_living_situation': '居住狀況 (可複選):',
-                'opt_live_alone': '一人居住',
-                'opt_with_parents': '父母',
-                'opt_with_partner': '伴侶',
-                'opt_with_children': '小孩',
-                'opt_partner_children': '伴侶+小孩',
-                'opt_male': '男 / Male',
-                'opt_female': '女 / Female',
-                'opt_single': '未婚 / Single',
-                'opt_married': '已婚 / Married',
-                'opt_other': '其他 / Other',
-                
-                // How Found Options
-                'field_how_found': '如何知道本診所 (可複選):',
-                'opt_referred_by_friend': '親友介紹 (介紹人: )',
-                'opt_internet': '網路 (Google/FB/IG)',
-                'opt_passing_by': '路過 / Passing by',
-                'opt_book': '書籍 (Dr. Felix 的書連結)',
-                'opt_seminar': '研討會 / 工作坊',
-                'opt_article': '新聞/健康文章',
-                'opt_dentist_referral': '牙醫轉介 (牙醫姓名)',
-                'placeholder_referrer_input': '介紹人/牙醫姓名/其他來源',
+        function checkSelections() {
+            const lab = document.querySelector('input[name="lab"]:checked');
+            const amd = document.querySelector('input[name="amd"]:checked');
+            const section = document.getElementById('download-section');
+            const btn = document.getElementById('btn-download');
 
-                // Purpose of Visit
-                'field_purpose_visit': '您接受看診的目的是希望 (可複選):',
-                'pur_body_constitution': '了解體質',
-                'pur_routine_checkup': '例行健康檢查',
-                'pur_identify_discomfort': '找出身體不適的原因',
-                'pur_anti_aging': '保持青春延緩老化',
-                'pur_health_regimen': '早找出適合自己的保健方式',
-                'pur_early_detection': '早期發現疾病以利早期治療',
-                
-                // Health Improvement
-                'field_improve_health': '您希望以何種方式來促進健康呢 (可複選):',
-                'imp_lifestyle': '改變生活型態',
-                'imp_dietary': '改變飲食習慣',
-                'imp_chinese_herbal': '中藥',
-                'imp_nutritional_supplements': '營養輔助品',
-                'imp_nutritionist': '營養師諮詢',
-
-                // Consent
-                'sec_consent_title': '個人資料提供同意書 (必填)',
-                'sec_consent_statement': 'Essentia Lifestyle Management 蒐集並取得您的個人資料,目的在於為您提供服務時的相關作業。依據相關法令,於處理及使用您的個人資料時須受到個人資料保護法及相關法令之規範。您同意您已瞭解並同意上述告知事項,本同意書具有同意本診所蒐集、處理及使用您的個人資料。',
-                'field_consent_checkbox': '我已詳閱本同意書,瞭解並同意上述說明。',
-                'field_signature': '簽名 required:',
-                'field_date_signature': '簽署日期 (MM/DD/YYYY):',
-                'note_guardian_signature': '立同意書者若未滿十八歲,須由法定監護人簽章。',
-                'placeholder_signature': '輸入您的姓名 (模擬簽名)',
-                'placeholder_guardian': '法定監護人簽章 (如適用)',
-
-                // Symptom Assessment (Rating Scale)
-                'sec_symptom_assessment': '症狀評估',
-                'sec_symptom_note': '請根據您過去 30 天的健康狀況,為以下症狀評分:',
-                'rating_scale_0': '0=從未或幾乎從未有過',
-                'rating_scale_1': '1=偶爾有,影響不嚴重',
-                'rating_scale_2': '2=偶爾有,影響嚴重',
-                'rating_scale_3': '3=經常有,影響不嚴重',
-                'rating_scale_4': '4=經常有,影響嚴重',
-
-                // Symptoms (Extensive list simplified for the purpose of this mock)
-                'symptom_headache': '頭痛、偏頭痛(尤其是晨起時)',
-                'symptom_tmj': '顳顎關節彈響/張口卡住',
-                'symptom_snoring': '打鼾/睡覺張口呼吸',
-                'symptom_stiffness': '肩頸僵硬/痠痛',
-                'symptom_fatigue': '疲勞/虛弱無力',
-                
-                // Structural
-                'sec_structural_title': '結構與外觀特徵及特殊案例',
-                'sec_structural_note': '請根據您的實際情況,勾選「是」或「否」。',
-                'q_crowded_teeth': '牙齒排列擁擠/咬合不正',
-                'q_deep_underbite': '深咬(上排牙齒蓋住下排超過1/2)或戽斗',
-                'q_retruded_chin': '下巴後縮(沒下巴)或明顯雙下巴',
-                'q_jaw_shifts': '張口時下顎左右歪斜(下巴會偏向一邊)',
-                'q_bony_growth': '上顎或下顎內側有骨頭生長(骨隆凸)',
-                'q_scalloped_tongue': '舌頭兩側有齒印(荷葉舌)',
-                'q_forward_head': '頭部前傾(烏龜頸):耳朵位置在肩膀前方',
-                'q_sleep_apnea': '曾做過睡眠測試顯示有「睡眠呼吸中止症」',
-
-                // Goals & Medical History
-                'sec_goals_title': '健康主訴與目標',
-                'sec_goals_note': '請填寫您最優先希望改善的三大症狀:',
-                'sec_medical_history': '病史',
-                'mh_condition': '病狀 Condition',
-                'mh_self': '自己 Self',
-                'mh_family': '家人 Family',
-                'mh_notes': '備註 Notes',
-
-                'btn_next_step': '下一步',
-                'btn_previous_step': '上一步',
-                'sec_dentist_select_title': '選擇您的本地 AMD 牙醫 (請選擇 2 位)',
-                'sec_dentist_select_title_new': '轉介與牙醫選擇', // NEW TITLE
-                'patient_info_name': 'Patient Name:',
-                'patient_info_id': 'Patient ID:',
-                'referral_box_title': '初步掃描轉介說明',
-                'referral_box_title_new': '下載您的轉介單', // NEW TITLE
-                'referral_scan_required': '所需掃描：錐束CT掃描 (CBCT) 和下顎X光片 (頭影測量視圖)。',
-                'referral_raw_file_request': '關鍵：我們要求將原始 INV 文件直接分享給您選定的診所。',
-                'referral_raw_file_request_new': '關鍵：我們需要原始 INV 文件進行分析。請要求您的診所將檔案上傳至下方個人化安全連結，或您可自行取得 INV 文件後手動上傳至該連結或在您的客戶儀表板上傳。', // NEW TEXT
-                'referral_download_prompt': '使用上方的 QR 碼或下方的按鈕下載轉介表格 (PDF)。',
-                'btn_download_referral': '下載掃描轉介表格',
-                'btn_secure_upload': '原始 INV 文件安全位置',
-                'sec_select_dentist_title': '選擇您的本地 AMD 牙醫 (請選擇 2 位)',
-                'sec_select_dentist_subtitle': '請選擇兩位推薦的本地牙醫。一旦有人接受您的病例，我們將與您聯繫，以便預約您的初診。',
-                'map_mock': '台灣地圖模擬，顯示推薦診所',
-                'option_other_dentist': '其他 (我將使用自己的牙醫)',
-                'other_dentist_note': '請提供您牙醫的詳細資訊，我們將向他們發送所需的 IMV 文件規格。',
-                'sec_photo_upload_title': '3. 可選：上傳下顎與姿勢照片',
-                'photo_note_title': '注意:',
-                'photo_note_desc': '診所將拍攝更全面的照片。此上傳為可選，但強烈建議，因為它有助於專家加快您的初步診斷。',
-                'upload_prompt': '在此處拖放照片或點擊瀏覽 (下顎、姿勢—建議多角度)',
-                'btn_finish_onboarding': '前往客戶儀表板',
-                'toggle_text': 'English'
+            if(lab && amd) {
+                section.classList.remove('opacity-50');
+                btn.removeAttribute('disabled');
+                btn.classList.replace('bg-slate-600', 'bg-teal-600');
+                btn.onclick = () => alert("Referral PDF generated for " + amd.nextElementSibling.innerText.split('\n')[0]);
             }
-        };
-        
-        // Mock data for Symptom Assessment (Head, TMJ, Snoring, Stiffness, Fatigue)
-        const mockSymptoms = [
-            'symptom_headache', 'symptom_tmj', 'symptom_snoring', 'symptom_stiffness', 'symptom_fatigue'
-        ];
-        
-        // Mock data for Structural and Special Conditions (simplified)
-        const mockStructuralQuestions = [
-            'q_crowded_teeth', 'q_deep_underbite', 'q_retruded_chin', 'q_jaw_shifts', 
-            'q_bony_growth', 'q_scalloped_tongue', 'q_forward_head', 'q_sleep_apnea'
-        ];
-        
-        // Mock data for Medical History
-        const mockMedicalHistory = [
-            'High blood sugar', 'High blood pressure', 'High cholesterol', 'Fatty liver', 
-            'Headache / migraine', 'Thyroid disorders', 'Liver disease', 'Kidney disease', 
-            'Heart conditions', 'Depression / bipolar', 'Cancer'
-        ];
-
-
-        // --- DOM Rendering Functions ---
-
-        function renderSymptoms() {
-            const listContainer = document.getElementById('symptom-list');
-            const langData = translations[currentLang];
-            listContainer.innerHTML = mockSymptoms.map((key, index) => `
-                <div class="p-3 bg-gray-100 rounded-lg">
-                    <p class="font-medium text-gray-700">${index + 1}: ${langData[key]}</p>
-                    <input type="range" min="0" max="4" value="0" class="rating-input w-full mt-2" name="ims_q${index + 1}">
-                    <div class="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>${langData.rating_scale_0.split('=')[0]}</span>
-                        <span>${langData.rating_scale_4.split('=')[0]}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderStructural() {
-            const listContainer = document.getElementById('structural-questions');
-            const langData = translations[currentLang];
-            listContainer.innerHTML = mockStructuralQuestions.map(key => `
-                <div class="p-3 bg-yellow-100 rounded-lg flex justify-between items-center">
-                    <p class="font-medium text-gray-700">${langData[key]}</p>
-                    <div class="flex space-x-4">
-                        <label class="checkbox-label"><input type="radio" name="${key}" value="yes" class="text-yellow-600 mr-1"><span data-key="opt_yes">Yes / 是</span></label>
-                        <label class="checkbox-label"><input type="radio" name="${key}" value="no" class="text-yellow-600 mr-1" checked><span data-key="opt_no">No / 否</span></label>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function renderMedicalHistory() {
-            const listContainer = document.getElementById('medical-history-matrix');
-            const langData = translations[currentLang];
-            listContainer.innerHTML = mockMedicalHistory.map(condition => `
-                <div class="grid grid-cols-6 gap-2 text-sm items-center">
-                    <span class="col-span-3 text-gray-700">${condition}</span>
-                    <label class="flex justify-center"><input type="checkbox" name="mh_self_${condition}" class="text-purple-600"></label>
-                    <label class="flex justify-center"><input type="checkbox" name="mh_family_${condition}" class="text-purple-600"></label>
-                    <input type="text" placeholder="${langData.mh_notes.split(' ')[0]}" class="p-1 border rounded-lg text-xs">
-                </div>
-            `).join('');
-        }
-
-
-        // --- Stepper Logic ---
-        function updateStepper(step) {
-            document.querySelectorAll('.step-indicator').forEach(el => {
-                const stepNum = parseInt(el.id.split('-')[1]);
-                el.classList.remove('active', 'pending', 'complete');
-                if (stepNum < step) {
-                    el.classList.add('complete');
-                } else if (stepNum === step) {
-                    el.classList.add('active');
-                } else {
-                    el.classList.add('pending');
-                }
-            });
-
-            document.querySelectorAll('[id^="step-"]').forEach(el => {
-                if (el.id === `step-${step}`) {
-                    el.classList.remove('hidden');
-                } else {
-                    el.classList.add('hidden');
-                }
-            });
-
-            currentStep = step;
         }
 
         function nextStep(step) {
-            const langData = translations[currentLang];
-            
-            // Step 1 logic
-            if (currentStep === 1) {
-                 const patientNameInput = document.getElementById('patient-name-input');
-                 const patientDisplayName = document.getElementById('patient-display-name');
-                 const patientDisplayId = document.getElementById('patient-display-id'); // Get ID element
-
-                 // Safely retrieve patient name (or 'Mr. John Lee' if empty)
-                 const patientName = patientNameInput ? patientNameInput.value.trim() : '';
-
-                 // Update patient display name and ID for step 2 before transitioning
-                 if (patientDisplayName) {
-                     patientDisplayName.textContent = patientName || 'Mr. John Lee'; // Use mock name if empty
-                 }
-                 if (patientDisplayId) {
-                     patientDisplayId.textContent = 'AMDTW001'; // Mock ID
-                 }
-                 
-                 // Proceed to the next step immediately after data gathering (for mockup)
-                 updateStepper(step);
-                 window.scrollTo(0, 0);
-                 return; 
-            }
-            // Validation for Step 2
-            else if (currentStep === 2) {
-                 const selectedDentists = document.querySelectorAll('input[name="dentist_select"]:checked').length;
-                 const otherChecked = document.querySelector('input[name="dentist_select"][value="other"]').checked;
-                 
-                 if (selectedDentists === 0) {
-                     alert(langData.sec_select_dentist_subtitle.split('.')[0] + ' ' + (currentLang === 'en' ? 'Please select at least one dentist.' : '請至少選擇一位牙醫。'));
-                     return;
-                 }
-                 if (!otherChecked && selectedDentists > 2) {
-                     alert(langData.sec_select_dentist_subtitle.split('.')[0] + ' ' + (currentLang === 'en' ? 'Please select a maximum of two recommended dentists.' : '請最多選擇兩位推薦牙醫。'));
-                     return;
-                 }
-            }
-            
-            updateStepper(step);
-            window.scrollTo(0, 0); // Scroll to top for new section
-        }
-
-        function checkReferralSource(checked, source) {
-            const input = document.getElementById('referrer-input');
-            const showInput = checked && (source === 'referral' || source === 'dentist' || source === 'other_found');
-            
-            if (showInput) {
-                input.classList.remove('hidden');
-            } else {
-                // Check if any other input source is still checked
-                const isAnyOtherChecked = Array.from(document.querySelectorAll('input[name="how_found"]:checked'))
-                    .some(cb => cb.value === 'referral' || cb.value === 'dentist' || cb.value === 'other_found');
-                
-                if (!isAnyOtherChecked) {
-                    input.classList.add('hidden');
-                    input.value = '';
-                }
-            }
-        }
-
-        function toggleOtherDentistDetails(checked) {
-            const details = document.getElementById('other-dentist-details');
-            if (checked) {
-                details.classList.remove('hidden');
-            } else {
-                details.classList.add('hidden');
-            }
-        }
-        
-        function simulateUpload(count) {
-             const message = currentLang === 'en' ? 
-                 `Successfully selected ${count} photo(s). You can proceed to the dashboard.` :
-                 `成功選擇 ${count} 張照片。您可以前往儀表板。`;
-             alert(message);
-        }
-
-        function finishOnboarding() {
-            // Final mock submission and redirect
-            alert(translations[currentLang].btn_finish_onboarding.replace('Go to Client Dashboard', 'Onboarding Complete! Redirecting to dashboard.'));
-            window.location.href = 'ClientDashboard.html';
-        }
-
-        // --- Translation & Initialization ---
-        function updateText() {
-            const langData = translations[currentLang];
-            
-            // 1. Update elements with data-key attribute
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                if (langData[key]) {
-                    element.textContent = langData[key];
-                }
+            document.querySelectorAll('[id^="step-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            document.querySelectorAll('.step-indicator').forEach((el, i) => {
+                el.classList.remove('active', 'complete', 'pending');
+                if (i + 1 < step) el.classList.add('complete');
+                else if (i + 1 === step) el.classList.add('active');
+                else el.classList.add('pending');
             });
-            
-            // 2. Manual Placeholder updates
-            // Use querySelector to handle placeholders regardless of current language value
-            document.querySelector('[placeholder="MM/DD/YYYY"]').placeholder = 'MM/DD/YYYY';
-            document.querySelector('[placeholder="Type your name (Mock Signature)"]').placeholder = langData.placeholder_signature;
-            document.querySelector('[placeholder="Legal Guardian Signature (If applicable)"]').placeholder = langData.placeholder_guardian;
-            document.getElementById('referrer-input').placeholder = langData.placeholder_referrer_input;
-
-            document.getElementById('dentist-search-input').placeholder = currentLang === 'en' ? 'Search by Clinic Name or Area in Taiwan' : '按診所名稱或台灣地區搜尋';
-
-            // 3. Re-render dynamic content (symptoms, structural, history)
-            renderSymptoms();
-            renderStructural();
-            renderMedicalHistory();
-
-            // 4. Final updates
-            document.getElementById('lang-toggle').textContent = langData.toggle_text;
-            document.documentElement.setAttribute('lang', currentLang);
-            document.title = langData.title;
+            window.scrollTo(0,0);
         }
 
         function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            updateText();
+            const btn = document.getElementById('lang-toggle');
+            btn.innerText = btn.innerText === '中文' ? 'English' : '中文';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            updateText();
-            updateStepper(1);
-        });
+        window.onload = initForm;
     </script>
 </body>
 </html>
