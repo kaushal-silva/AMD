@@ -16,7 +16,7 @@
         .nav-button:hover { background-color: #f1f5f9; color: #0d9488; }
         .nav-button.active { background-color: #e6fffa; color: #0d9488; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border-right: 3px solid #0d9488; }
 
-        .tracker-header { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; }
+        .tracker-header { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; cursor: help; }
         .ageing-pill { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700; display: inline-block; }
         .ageing-done { background-color: #f1f5f9; color: #94a3b8; }
         .ageing-active { background-color: #e6fffa; color: #0d9488; border: 1px solid #b2f5ea; }
@@ -96,13 +96,14 @@
                                     <thead class="bg-slate-50/50">
                                         <tr>
                                             <th class="tracker-header text-left pl-6" data-key="col_patient">Patient</th>
-                                            <th class="tracker-header text-center" data-key="col_intake">Intake</th>
-                                            <th class="tracker-header text-center" data-key="col_diag">Diag</th>
-                                            <th class="tracker-header text-center" data-key="col_spec">Spec</th>
-                                            <th class="tracker-header text-center text-teal-600 bg-teal-50/50">Payment</th> <!-- New Stage -->
-                                            <th class="tracker-header text-center" data-key="col_cons">Cons</th>
-                                            <th class="tracker-header text-center" data-key="col_mfg">Mfg</th>
-                                            <th class="tracker-header text-center" data-key="col_log">Log</th>
+                                            <th class="tracker-header text-center" title="Patient Onboarding & Clinical Scheduling" data-key="col_intake">Intake</th>
+                                            <th class="tracker-header text-center" title="Diagnostic Imaging & Vitals Collection" data-key="col_diag">Diag</th>
+                                            <th class="tracker-header text-center" title="Remote Specialist Case Review" data-key="col_spec">Spec</th>
+                                            <th class="tracker-header text-center text-teal-600 bg-teal-50/50" title="Patient Agreement & Fee Payment">Payment</th>
+                                            <th class="tracker-header text-center" title="Treatment Consultation & Design" data-key="col_cons">Cons</th>
+                                            <th class="tracker-header text-center" title="Lab Manufacturing & QC" data-key="col_mfg">Mfg</th>
+                                            <th class="tracker-header text-center" title="Device Delivery & Fitting" data-key="col_del">Delivery</th>
+                                            <th class="tracker-header text-center" title="Ongoing Treatment & Monitoring" data-key="col_maint">Active Maint.</th>
                                             <th class="tracker-header text-right pr-6" data-key="col_ageing">Ageing Breakdown</th>
                                         </tr>
                                     </thead>
@@ -142,7 +143,6 @@
                                     </p>
                                 </div>
                             </div>
-                            <button onclick="openPDPA()" class="px-5 py-2.5 bg-red-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest shadow-lg hover:bg-red-700 transition" data-key="btn_refer">Refer to Specialist</button>
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-6">
@@ -203,9 +203,9 @@
                                         <!-- Reports -->
                                         <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Medical Reports</h4>
                                         <div class="space-y-2">
-                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Blood Panel (CBC) - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">View</button></div>
-                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Liver Function - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">View</button></div>
-                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Kidney Function - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">View</button></div>
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Blood Panel (CBC) - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Liver Function - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Kidney Function - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
                                         </div>
                                     </div>
                                 </div>
@@ -213,28 +213,45 @@
                                 <!-- Specialist Tab (Updated with Payment Trigger) -->
                                 <div id="tab-specialist" class="detail-tab hidden space-y-6">
                                     <div class="section-card relative">
-                                        <div id="report-locked" class="absolute inset-0 bg-slate-100/80 backdrop-blur-sm flex items-center justify-center z-10 hidden">
+                                        
+                                        <!-- Referral Action Area -->
+                                        <div class="mb-8 p-6 bg-slate-50 border border-slate-200 rounded-xl">
+                                            <div class="flex justify-between items-center mb-4">
+                                                <h3 class="font-bold text-slate-800 uppercase text-xs tracking-widest">Specialist Referral Status</h3>
+                                                <span class="text-[10px] font-bold text-slate-400 uppercase" id="referral-timestamp">--</span>
+                                            </div>
+                                            <div id="referral-action-area">
+                                                 <button onclick="openPDPA()" class="w-full py-3 bg-red-600 text-white font-black text-xs rounded-lg uppercase shadow-lg hover:bg-red-700 transition" data-key="btn_refer">Refer to Specialist (Doc Felix)</button>
+                                            </div>
+                                        </div>
+
+                                        <div id="report-locked" class="absolute inset-0 top-32 bg-slate-100/80 backdrop-blur-sm flex items-center justify-center z-10 hidden">
                                             <div class="text-center p-6 bg-white rounded-xl shadow border border-slate-200">
                                                 <i class="fa-solid fa-lock text-slate-300 text-4xl mb-4"></i>
                                                 <h4 class="font-black text-slate-800 uppercase text-xs" data-key="report_locked">Report Not Available</h4>
                                             </div>
                                         </div>
+
                                         <div class="flex justify-between items-center mb-6 border-b pb-4">
                                             <h3 class="font-bold text-slate-800" data-key="clinical_design_report">Clinical Design Report</h3>
                                             <button onclick="alert('Downloading...')" class="bg-teal-600 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest">Download PDF</button>
                                         </div>
                                         
-                                        <!-- Payment & Agreement Section (NEW) -->
+                                        <!-- Payment & Agreement Section (UPDATED) -->
                                         <div class="p-6 bg-green-50 border border-green-200 rounded-xl mb-6">
                                             <h4 class="font-black text-green-800 uppercase text-xs tracking-widest mb-3">Patient Agreement & Payment</h4>
                                             <div class="flex flex-col gap-3">
                                                 <label class="flex items-center gap-2 text-xs font-bold text-slate-700">
                                                     <input type="checkbox" class="h-4 w-4 text-green-600" id="agree-check"> Patient has agreed to the treatment plan.
                                                 </label>
+                                                <p class="text-[10px] text-green-600 hidden pl-6 font-bold" id="agreement-time">Timestamp: --</p>
+                                                
                                                 <label class="flex items-center gap-2 text-xs font-bold text-slate-700">
                                                     <input type="checkbox" class="h-4 w-4 text-green-600" id="pay-check"> Payment confirmed / Financing approved.
                                                 </label>
-                                                <button onclick="confirmPayment()" class="mt-2 w-full py-3 bg-green-600 text-white font-black text-xs rounded-lg uppercase shadow-md hover:bg-green-700 transition">Confirm Payment & Trigger Manufacturing</button>
+                                                <p class="text-[10px] text-green-600 hidden pl-6 font-bold" id="payment-time">Timestamp: --</p>
+
+                                                <button onclick="confirmPayment()" class="mt-2 w-full py-3 bg-green-600 text-white font-black text-xs rounded-lg uppercase shadow-md hover:bg-green-700 transition">Confirm Payment & Trigger Treatment Design</button>
                                             </div>
                                         </div>
 
@@ -355,7 +372,7 @@
             "Ready for Specialist Referral": "Verified; ready to push.",
             "Pending Specialist Consultation": "Case in California; awaiting report.",
             "Specialist Report Finalized": "Report complete; awaiting sharing.",
-            "Pending Payment": "Patient must pay MSO fee.",
+            "Pending Payment": "MSO fee required.",
             "STA In Progress": "Lab is fabricating device.",
             "Pending STA Delivery": "Device in transit.",
             "Treatment In Progress": "Active growth phase.",
@@ -365,14 +382,14 @@
         const translations = {
             en: {
                 header_title: "AMD Practitioner Dashboard", nav_group_title: "Practice Management", nav_overview: "Overview", nav_patients: "Patients", nav_intake: "Intake Queue", nav_accounting: "Accounting",
-                overview_title: "Case Pipeline Tracking", registry_title: "Patient Registry", col_patient: "Patient", col_intake: "Intake", col_diag: "Diag", col_spec: "Spec", col_cons: "Cons", col_mfg: "Mfg", col_log: "Log", col_ageing: "Ageing Breakdown",
+                overview_title: "Case Pipeline Tracking", registry_title: "Patient Registry", col_patient: "Patient", col_intake: "Intake", col_diag: "Diag", col_spec: "Spec", col_cons: "Cons", col_mfg: "Mfg", col_log: "Log", col_del: "Delivery", col_maint: "Active Maint.", col_ageing: "Ageing Breakdown",
                 btn_refer: "Refer to Specialist", tab_clinical: "Clinical Progress", tab_onboarding: "Goals & Pains", tab_diagnostics: "Scans, Analysis & Reports", tab_consultation: "Specialist Consultation", tab_coaching_hub: "Shared Coaching Hub", tab_treatment: "Treatment Workspace", tab_chat: "Case Chat", tab_records: "Practice Records", tab_spec_chat: "Clinical Collaboration", tab_questionnaire: "Patient Questionnaire",
                 granular_status: "Granular Workflow Status", motivations: "Core Motivations", pains: "Pain Points", imaging_models: "Imaging & Models", report_locked: "Report Not Available", clinical_design_report: "Clinical Design Report", notes_for_amd: "Notes for AMD", specialist_guidance: "Specialist Guidance", treatment_summary: "Treatment Summary", shared_videos: "ATC-Escalated Progress Videos", active_monitoring: "Growth Monitoring", patient_feedback: "Patient Sentiment", collaboration_hub: "Secure Group Chat", clinical_archive: "Clinical Archive", stat_total_revenue: "Total Revenue (YTD)", stat_pending_fees: "Pending MSO Fees",
                 uploaded_diagnostics: "Scans, Analysis & Reports", amd_prescription: "AMD Prescription Summary"
             },
             zh: {
                 header_title: "AMD 醫師儀表板", nav_group_title: "實務管理", nav_overview: "總覽", nav_patients: "患者", nav_intake: "入組隊列", nav_accounting: "會計",
-                overview_title: "病例管道追踪", registry_title: "患者登記", col_patient: "患者", col_intake: "入組", col_diag: "診斷", col_spec: "專科", col_cons: "諮詢", col_mfg: "製造", col_log: "物流", col_ageing: "時程分析",
+                overview_title: "病例管道追踪", registry_title: "患者登記", col_patient: "患者", col_intake: "入組", col_diag: "診斷", col_spec: "專科", col_cons: "諮詢", col_mfg: "製造", col_log: "物流", col_del: "交付", col_maint: "積極維護", col_ageing: "時程分析",
                 btn_refer: "轉介專科醫生", tab_clinical: "臨床進度", tab_onboarding: "目標與疼痛", tab_diagnostics: "掃描、分析與報告", tab_consultation: "專科醫師諮詢", tab_coaching_hub: "ATC 指導中心", tab_treatment: "治療工作區", tab_chat: "病例對話", tab_records: "診所記錄", tab_spec_chat: "臨床協作", tab_questionnaire: "患者問卷",
                 granular_status: "詳細進度狀態", motivations: "核心動力", pains: "痛點", imaging_models: "影像與模型", report_locked: "報告尚未可用", clinical_design_report: "臨床設計報告", notes_for_amd: "致 AMD 醫師備註", specialist_guidance: "專科醫師指導", treatment_summary: "治療摘要", shared_videos: "ATC 轉交進度影片", active_monitoring: "成長監測", patient_feedback: "患者情緒追蹤", collaboration_hub: "安全群組聊天", clinical_archive: "臨床檔案", stat_total_revenue: "年累計總收入", stat_pending_fees: "待處理 MSO 費用",
                 uploaded_diagnostics: "掃描、分析與報告", amd_prescription: "AMD 處方摘要"
@@ -382,22 +399,24 @@
         const mockPatients = [
             { 
                 name: "John Lee", id: "TW-001", atc: "Jane Chen", totalDays: 42, referred: true, 
-                currentStatus: "STA In Progress", phaseIndex: 5, // Adjusted phase index to accommodate 'Pay'
+                currentStatus: "STA In Progress", phaseIndex: 5, 
                 motivation: "Eliminate chronic daytime fatigue and achieve airway health.", pains: "Severe snoring, morning headaches.",
                 qHist: "High Blood Pressure (Family)",
-                phases: { intake: 5, diag: 12, spec: 8, pay: 4, cons: 4, mfg: 13, log: 0, treat: 0, offb: 0 }, // Added 'pay'
+                phases: { intake: 5, diag: 12, spec: 8, pay: 4, cons: 4, mfg: 13, log: 0, del: 0, treat: 0, offb: 0 },
                 granular: {
                     "Intake": { status: "Complete", age: 5, steps: [{name: "Forms", done: true}, {name: "Scheduling", done: true}, {name: "Confirmed", done: true}] },
                     "Diagnostics": { status: "Complete", age: 12, steps: [{name: "CBCT Airway", done: true}, {name: "Lateral Ceph", done: true}] },
                     "Specialist Review": { status: "Complete", age: 8, steps: [{name: "Vitals Check", done: true}, {name: "Doc Felix Refer", done: true}] },
-                    "Payment": { status: "Complete", age: 4, steps: [{name: "Patient Agreement", done: true}, {name: "MSO Fee Paid", done: true}] }, // Added Payment step
-                    "Manufacturing": { status: "Active", age: 13, steps: [{name: "Order Rec'd", done: true}, {name: "3D Print", done: false, pending: "STA Lab"}] }
+                    "Payment": { status: "Complete", age: 4, steps: [{name: "Patient Agreement", done: true}, {name: "MSO Fee Paid", done: true}] },
+                    "Manufacturing": { status: "Active", age: 13, steps: [{name: "Order Rec'd", done: true}, {name: "3D Print", done: false, pending: "STA Lab"}] },
+                    "Delivery": { status: "Pending", age: 0, steps: [{name: "Transit", done: false}] },
+                    "Active Maintenance": { status: "Pending", age: 0, steps: [] }
                 },
                 prescription: "Rapid expansion focus. 2.0 turns bi-weekly. Target intermolar width expansion: +4.5mm. Correct velopharyngeal restriction.",
                 guidance: "Monitor FMA closely. Accelerate turns if airway volume remains critical.",
                 bio: "Bone broth daily. Magnesium supplementation.",
                 details: { target: "+4.5mm", protocol: "2 Turns / Bi-weekly" },
-                analysis: "Sassouni analysis shows class II malocclusion with severe airway constriction. Schwartz analysis indicates 5mm transverse deficiency.",
+                analysis: "Expert Analysis Summary: Structural analysis confirms severe airway constriction. 5mm transverse deficiency identified.",
                 notes: "Patient highly motivated but sensitive to dental pressure.",
                 summary: "18-month active prescription. Phase 1: Expansion focus.",
                 internalNotes: [{date: "Jan 10, 2026", author: "Dr. Ryan Chiang", text: "Trial turns successful."}, {date: "Dec 15, 2025", author: "Dr. Ryan Chiang", text: "Onboarding done."}],
@@ -407,8 +426,8 @@
                 ],
                 chat: [{ role: "atc", name: "Jane Chen", msg: "Hi John!" }, { role: "amd", name: "Dr. Ryan", msg: "Video reviewed. Tension is expected." }]
             },
-            { name: "Mei-Ling Wu", id: "TW-002", atc: "Jane Chen", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, pay: 0, cons: 0, mfg: 0, log: 0, treat: 0, offb: 0 }, motivation: "TMJ relief.", pains: "Clicking.", qHist: "--", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Radiology Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], treatment: null, videos: [], chat: [] },
-            { name: "Alice Chang", id: "TW-004", atc: "Kaushal V.", totalDays: 240, referred: true, currentStatus: "Treatment In Progress", phaseIndex: 7, phases: { intake: 10, diag: 15, spec: 12, pay: 5, cons: 10, mfg: 25, log: 20, treat: 148, offb: 0 }, motivation: "Correction.", pains: "Mouth breathing.", qHist: "Asthma", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Daily Wear", done: true}] } }, prescription: "Maintain 18h wear-time.", internalNotes: [], treatment: { width: "43.8mm", target: "45.0mm", progress: 85, turns: 32, logs: [], sentiment: [] }, videos: [], chat: [] }
+            { name: "Mei-Ling Wu", id: "TW-002", atc: "Jane Chen", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, pay: 0, cons: 0, mfg: 0, log: 0, del: 0, treat: 0, offb: 0 }, motivation: "TMJ relief.", pains: "Clicking.", qHist: "--", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Radiology Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], treatment: null, videos: [], chat: [] },
+            { name: "Alice Chang", id: "TW-004", atc: "Kaushal V.", totalDays: 240, referred: true, currentStatus: "Treatment In Progress", phaseIndex: 8, phases: { intake: 10, diag: 15, spec: 12, pay: 5, cons: 10, mfg: 25, log: 20, del: 5, treat: 148, offb: 0 }, motivation: "Correction.", pains: "Mouth breathing.", qHist: "Asthma", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Daily Wear", done: true}] } }, prescription: "Maintain 18h wear-time.", internalNotes: [], treatment: { width: "43.8mm", target: "45.0mm", progress: 85, turns: 32, logs: [], sentiment: [] }, videos: [], chat: [] }
         ];
 
         function switchMainPane(id) {
@@ -445,7 +464,7 @@
             set('name', p.name); set('id', p.id); set('atc', p.atc); set('mot', p.motivation); set('pain', p.pains); set('age', `${p.totalDays}d`);
             set('motQ', p.motivation); set('painQ', p.pains); set('histQ', p.qHist);
 
-            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log', 'treat', 'offb']; // Added 'pay'
+            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log', 'del', 'treat', 'offb']; 
             html('timeline', Object.entries(p.granular || {}).map(([ph, data]) => `<div class="relative pl-8 border-l-2 ${data.status === 'Complete' ? 'border-teal-500' : 'border-slate-200'}"><div class="absolute -left-2 top-0 w-4 h-4 rounded-full ${data.status === 'Complete' ? 'bg-teal-500' : 'bg-slate-200'}"></div><div class="mb-4 flex justify-between"><b>${ph}</b><span class="text-[9px] font-black">${data.age}d age</span></div></div>`).join(''));
 
             const reportLocked = document.getElementById(els.reportLocked);
@@ -456,6 +475,8 @@
                 if (p.details) {
                     set('cTarget', p.details.target); set('cProtocol', p.details.protocol); set('cBio', p.bio);
                 }
+                const refTime = document.getElementById('referral-timestamp');
+                if (refTime) refTime.innerText = "Referral Sent: 2025/12/10 14:30";
             }
 
             html('vList', p.videos.map(v => `<div class="p-4 border rounded-xl flex gap-6 bg-slate-50/50"><div class="w-40 aspect-video bg-slate-900 rounded-lg flex items-center justify-center"><i class="fa-solid fa-play text-white opacity-30"></i></div><div class="flex-1"><p class="text-[10px] font-bold text-slate-400 uppercase">${v.date} submission</p><p class="text-sm italic text-slate-600 mb-3">"${v.transcript}"</p><textarea class="w-full p-2 bg-white border rounded text-xs" placeholder="Add clinical note to this video..."></textarea></div></div>`).join('') || '<p class="text-xs text-slate-400 py-6 text-center">No videos shared by ATC.</p>');
@@ -497,7 +518,7 @@
 
         function renderTracker() {
             const body = document.getElementById('tracker-body');
-            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log']; // Added 'pay'
+            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log', 'del', 'treat', 'offb']; 
             body.innerHTML = mockPatients.map(p => {
                 const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || 0;
                 return `<tr class="hover:bg-slate-50 cursor-pointer transition-colors group" onclick="selectPatient('${p.id}')"><td class="px-6 py-4 font-bold text-xs">${p.name}<br><span class="text-[9px] font-normal text-teal-600 uppercase">${p.currentStatus}</span></td>${phaseKeys.map((key, idx) => `<td class="text-center px-2 py-4"><span class="ageing-pill ${idx < p.phaseIndex ? 'ageing-done' : idx === p.phaseIndex ? 'ageing-active' : ''}">${p.phases[key]}d</span></td>`).join('')}<td class="px-6 py-4 text-right text-xs font-black text-teal-600">${currentPhaseDays}d / ${p.totalDays}d</td></tr>`;
@@ -506,8 +527,18 @@
         
         function confirmPayment() {
             if(document.getElementById('agree-check').checked && document.getElementById('pay-check').checked) {
-                alert("Payment Confirmed. Case Status moved to 'Manufacturing'. Specialist Notified.");
+                alert("Payment Confirmed. Case Status moved to 'Specialist Treatment Design'. Specialist Notified.");
                 document.getElementById('pay-check').disabled = true;
+                const payTime = document.getElementById('payment-time');
+                if (payTime) {
+                    payTime.innerText = "Payment Confirmed: 2025/12/12 09:15";
+                    payTime.classList.remove('hidden');
+                }
+                const agreeTime = document.getElementById('agreement-time');
+                if (agreeTime) {
+                    agreeTime.innerText = "Agreement Confirmed: 2025/12/12 09:00";
+                    agreeTime.classList.remove('hidden');
+                }
             } else {
                 alert("Please confirm both agreement and payment.");
             }
@@ -523,7 +554,12 @@
 
         function openPDPA() { document.getElementById('pdpa-modal').classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function confirmConsultation() { alert("Case referred. Files pseudonymized."); closeModal('pdpa-modal'); }
+        function confirmConsultation() { 
+            alert("Case referred. Files pseudonymized."); 
+            closeModal('pdpa-modal'); 
+            const ts = document.getElementById('referral-timestamp');
+            if (ts) ts.innerText = "Referral Sent: 2025/12/10 14:30";
+        }
         function filterPatients() { /* Logic simplified for this view */ }
 
         window.onload = () => { updateText(); };
