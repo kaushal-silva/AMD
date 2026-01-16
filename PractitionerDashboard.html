@@ -99,6 +99,7 @@
                                             <th class="tracker-header text-center" data-key="col_intake">Intake</th>
                                             <th class="tracker-header text-center" data-key="col_diag">Diag</th>
                                             <th class="tracker-header text-center" data-key="col_spec">Spec</th>
+                                            <th class="tracker-header text-center text-teal-600 bg-teal-50/50">Payment</th> <!-- New Stage -->
                                             <th class="tracker-header text-center" data-key="col_cons">Cons</th>
                                             <th class="tracker-header text-center" data-key="col_mfg">Mfg</th>
                                             <th class="tracker-header text-center" data-key="col_log">Log</th>
@@ -184,16 +185,14 @@
                                     </div>
                                 </div>
 
-                                <!-- Scans, Analysis & Reports (Updated Terminology & Features) -->
+                                <!-- Scans, Analysis & Reports -->
                                 <div id="tab-diagnostics" class="detail-tab hidden space-y-6">
                                     <div class="section-card">
                                         <h3 class="font-bold text-slate-800 mb-4" data-key="uploaded_diagnostics">Scans, Analysis & Reports</h3>
                                         
                                         <!-- Scans -->
                                         <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Clinical Scans</h4>
-                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="detail-scans-list">
-                                            <!-- Injected via JS with timestamps -->
-                                        </div>
+                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="detail-scans-list"></div>
                                         
                                         <!-- Analysis -->
                                         <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Expert Analysis</h4>
@@ -211,7 +210,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Specialist Tab (Expanded Info) -->
+                                <!-- Specialist Tab (Updated with Payment Trigger) -->
                                 <div id="tab-specialist" class="detail-tab hidden space-y-6">
                                     <div class="section-card relative">
                                         <div id="report-locked" class="absolute inset-0 bg-slate-100/80 backdrop-blur-sm flex items-center justify-center z-10 hidden">
@@ -224,21 +223,29 @@
                                             <h3 class="font-bold text-slate-800" data-key="clinical_design_report">Clinical Design Report</h3>
                                             <button onclick="alert('Downloading...')" class="bg-teal-600 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest">Download PDF</button>
                                         </div>
+                                        
+                                        <!-- Payment & Agreement Section (NEW) -->
+                                        <div class="p-6 bg-green-50 border border-green-200 rounded-xl mb-6">
+                                            <h4 class="font-black text-green-800 uppercase text-xs tracking-widest mb-3">Patient Agreement & Payment</h4>
+                                            <div class="flex flex-col gap-3">
+                                                <label class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                                                    <input type="checkbox" class="h-4 w-4 text-green-600" id="agree-check"> Patient has agreed to the treatment plan.
+                                                </label>
+                                                <label class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                                                    <input type="checkbox" class="h-4 w-4 text-green-600" id="pay-check"> Payment confirmed / Financing approved.
+                                                </label>
+                                                <button onclick="confirmPayment()" class="mt-2 w-full py-3 bg-green-600 text-white font-black text-xs rounded-lg uppercase shadow-md hover:bg-green-700 transition">Confirm Payment & Trigger Manufacturing</button>
+                                            </div>
+                                        </div>
+
                                         <div class="space-y-6">
-                                            <!-- Full Prescription Details Visible -->
                                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
                                                 <h4 class="text-[10px] font-black text-teal-600 uppercase mb-2" data-key="notes_for_amd">Notes for AMD</h4>
                                                 <p id="consult-notes" class="text-sm text-slate-700 font-medium italic mb-4">--</p>
                                                 
                                                 <div class="grid grid-cols-2 gap-4 border-t pt-4 mt-2">
-                                                    <div>
-                                                        <p class="text-[9px] font-black text-slate-400 uppercase">Target Expansion</p>
-                                                        <p class="text-sm font-bold text-slate-800" id="consult-target">--</p>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-[9px] font-black text-slate-400 uppercase">Turn Protocol</p>
-                                                        <p class="text-sm font-bold text-slate-800" id="consult-protocol">--</p>
-                                                    </div>
+                                                    <div><p class="text-[9px] font-black text-slate-400 uppercase">Target Expansion</p><p class="text-sm font-bold text-slate-800" id="consult-target">--</p></div>
+                                                    <div><p class="text-[9px] font-black text-slate-400 uppercase">Turn Protocol</p><p class="text-sm font-bold text-slate-800" id="consult-protocol">--</p></div>
                                                 </div>
                                             </div>
                                             
@@ -348,7 +355,7 @@
             "Ready for Specialist Referral": "Verified; ready to push.",
             "Pending Specialist Consultation": "Case in California; awaiting report.",
             "Specialist Report Finalized": "Report complete; awaiting sharing.",
-            "Pending Payment": "MSO fee required.",
+            "Pending Payment": "Patient must pay MSO fee.",
             "STA In Progress": "Lab is fabricating device.",
             "Pending STA Delivery": "Device in transit.",
             "Treatment In Progress": "Active growth phase.",
@@ -375,14 +382,15 @@
         const mockPatients = [
             { 
                 name: "John Lee", id: "TW-001", atc: "Jane Chen", totalDays: 42, referred: true, 
-                currentStatus: "STA In Progress", phaseIndex: 4, 
+                currentStatus: "STA In Progress", phaseIndex: 5, // Adjusted phase index to accommodate 'Pay'
                 motivation: "Eliminate chronic daytime fatigue and achieve airway health.", pains: "Severe snoring, morning headaches.",
                 qHist: "High Blood Pressure (Family)",
-                phases: { intake: 5, diag: 12, spec: 8, cons: 4, mfg: 13, log: 0, treat: 0, offb: 0 },
+                phases: { intake: 5, diag: 12, spec: 8, pay: 4, cons: 4, mfg: 13, log: 0, treat: 0, offb: 0 }, // Added 'pay'
                 granular: {
                     "Intake": { status: "Complete", age: 5, steps: [{name: "Forms", done: true}, {name: "Scheduling", done: true}, {name: "Confirmed", done: true}] },
                     "Diagnostics": { status: "Complete", age: 12, steps: [{name: "CBCT Airway", done: true}, {name: "Lateral Ceph", done: true}] },
                     "Specialist Review": { status: "Complete", age: 8, steps: [{name: "Vitals Check", done: true}, {name: "Doc Felix Refer", done: true}] },
+                    "Payment": { status: "Complete", age: 4, steps: [{name: "Patient Agreement", done: true}, {name: "MSO Fee Paid", done: true}] }, // Added Payment step
                     "Manufacturing": { status: "Active", age: 13, steps: [{name: "Order Rec'd", done: true}, {name: "3D Print", done: false, pending: "STA Lab"}] }
                 },
                 prescription: "Rapid expansion focus. 2.0 turns bi-weekly. Target intermolar width expansion: +4.5mm. Correct velopharyngeal restriction.",
@@ -399,8 +407,8 @@
                 ],
                 chat: [{ role: "atc", name: "Jane Chen", msg: "Hi John!" }, { role: "amd", name: "Dr. Ryan", msg: "Video reviewed. Tension is expected." }]
             },
-            { name: "Mei-Ling Wu", id: "TW-002", atc: "Jane Chen", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, cons: 0, mfg: 0, log: 0, treat: 0, offb: 0 }, motivation: "TMJ relief.", pains: "Clicking.", qHist: "--", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Radiology Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], treatment: null, videos: [], chat: [] },
-            { name: "Alice Chang", id: "TW-004", atc: "Kaushal V.", totalDays: 240, referred: true, currentStatus: "Treatment In Progress", phaseIndex: 6, phases: { intake: 10, diag: 15, spec: 12, cons: 10, mfg: 25, log: 20, treat: 148, offb: 0 }, motivation: "Correction.", pains: "Mouth breathing.", qHist: "Asthma", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Daily Wear", done: true}] } }, prescription: "Maintain 18h wear-time.", internalNotes: [], treatment: { width: "43.8mm", target: "45.0mm", progress: 85, turns: 32, logs: [], sentiment: [] }, videos: [], chat: [] }
+            { name: "Mei-Ling Wu", id: "TW-002", atc: "Jane Chen", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, pay: 0, cons: 0, mfg: 0, log: 0, treat: 0, offb: 0 }, motivation: "TMJ relief.", pains: "Clicking.", qHist: "--", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Radiology Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], treatment: null, videos: [], chat: [] },
+            { name: "Alice Chang", id: "TW-004", atc: "Kaushal V.", totalDays: 240, referred: true, currentStatus: "Treatment In Progress", phaseIndex: 7, phases: { intake: 10, diag: 15, spec: 12, pay: 5, cons: 10, mfg: 25, log: 20, treat: 148, offb: 0 }, motivation: "Correction.", pains: "Mouth breathing.", qHist: "Asthma", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Daily Wear", done: true}] } }, prescription: "Maintain 18h wear-time.", internalNotes: [], treatment: { width: "43.8mm", target: "45.0mm", progress: 85, turns: 32, logs: [], sentiment: [] }, videos: [], chat: [] }
         ];
 
         function switchMainPane(id) {
@@ -437,7 +445,7 @@
             set('name', p.name); set('id', p.id); set('atc', p.atc); set('mot', p.motivation); set('pain', p.pains); set('age', `${p.totalDays}d`);
             set('motQ', p.motivation); set('painQ', p.pains); set('histQ', p.qHist);
 
-            const phaseKeys = ['intake', 'diag', 'spec', 'cons', 'mfg', 'log', 'treat', 'offb'];
+            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log', 'treat', 'offb']; // Added 'pay'
             html('timeline', Object.entries(p.granular || {}).map(([ph, data]) => `<div class="relative pl-8 border-l-2 ${data.status === 'Complete' ? 'border-teal-500' : 'border-slate-200'}"><div class="absolute -left-2 top-0 w-4 h-4 rounded-full ${data.status === 'Complete' ? 'bg-teal-500' : 'bg-slate-200'}"></div><div class="mb-4 flex justify-between"><b>${ph}</b><span class="text-[9px] font-black">${data.age}d age</span></div></div>`).join(''));
 
             const reportLocked = document.getElementById(els.reportLocked);
@@ -455,7 +463,6 @@
             html('iNotes', p.internalNotes.map(n => `<div class="p-3 bg-slate-50 border rounded-lg mb-2 text-xs"><b>${n.date} - ${n.author}</b><p class="italic text-slate-600 mt-1">"${n.text}"</p></div>`).join(''));
             html('chat', p.chat.map(m => `<div class="chat-bubble chat-${m.role}"><p class="text-[9px] font-black uppercase mb-1">${m.name}</p><p class="text-sm">${m.msg}</p></div>`).join('') || '<p class="text-center text-slate-300 py-12">Start a conversation.</p>');
             
-            // Updated Scans Section with timestamps and view dropdowns
             html('sList', `
                 <div class="scan-card p-3 border">
                     <div class="flex justify-between items-center mb-2"><i class="fa-solid fa-x-ray text-slate-300 text-xl"></i><span class="text-[9px] font-bold text-slate-500 uppercase">Lateral Ceph</span></div>
@@ -490,11 +497,20 @@
 
         function renderTracker() {
             const body = document.getElementById('tracker-body');
-            const phaseKeys = ['intake', 'diag', 'spec', 'cons', 'mfg', 'log'];
+            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log']; // Added 'pay'
             body.innerHTML = mockPatients.map(p => {
-                const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || (p.phaseIndex >= 6 ? (p.phaseIndex === 6 ? p.phases.treat : p.phases.offb) : 0);
+                const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || 0;
                 return `<tr class="hover:bg-slate-50 cursor-pointer transition-colors group" onclick="selectPatient('${p.id}')"><td class="px-6 py-4 font-bold text-xs">${p.name}<br><span class="text-[9px] font-normal text-teal-600 uppercase">${p.currentStatus}</span></td>${phaseKeys.map((key, idx) => `<td class="text-center px-2 py-4"><span class="ageing-pill ${idx < p.phaseIndex ? 'ageing-done' : idx === p.phaseIndex ? 'ageing-active' : ''}">${p.phases[key]}d</span></td>`).join('')}<td class="px-6 py-4 text-right text-xs font-black text-teal-600">${currentPhaseDays}d / ${p.totalDays}d</td></tr>`;
             }).join('');
+        }
+        
+        function confirmPayment() {
+            if(document.getElementById('agree-check').checked && document.getElementById('pay-check').checked) {
+                alert("Payment Confirmed. Case Status moved to 'Manufacturing'. Specialist Notified.");
+                document.getElementById('pay-check').disabled = true;
+            } else {
+                alert("Please confirm both agreement and payment.");
+            }
         }
 
         function toggleLanguage() { currentLang = currentLang === 'en' ? 'zh' : 'en'; updateText(); }
