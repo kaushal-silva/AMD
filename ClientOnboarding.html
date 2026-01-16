@@ -36,17 +36,17 @@
             <div class="flex justify-between items-center px-4 md:px-20">
                 <div class="flex flex-col items-center gap-2">
                     <div id="step-1-icon" class="step-indicator active">1</div>
-                    <p class="text-[10px] font-black uppercase text-slate-400">Assessment</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400" data-key="step_1">Assessment</p>
                 </div>
                 <div class="flex-grow h-px bg-slate-100 mx-4"></div>
                 <div class="flex flex-col items-center gap-2">
                     <div id="step-2-icon" class="step-indicator pending">2</div>
-                    <p class="text-[10px] font-black uppercase text-slate-400">Referral</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400" data-key="step_2">Referral</p>
                 </div>
                 <div class="flex-grow h-px bg-slate-100 mx-4"></div>
                 <div class="flex flex-col items-center gap-2">
                     <div id="step-3-icon" class="step-indicator pending">3</div>
-                    <p class="text-[10px] font-black uppercase text-slate-400">Photos</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400" data-key="step_3">Photos</p>
                 </div>
             </div>
         </div>
@@ -56,13 +56,13 @@
             <!-- Step 1: Comprehensive Questionnaire -->
             <div id="step-1" class="space-y-12">
                 <div>
-                    <h2 class="text-3xl font-black text-slate-800 mb-2">Oral-Airway Symptom Assessment</h2>
-                    <p class="text-slate-500 text-sm leading-relaxed">Complete Intake Form (113+ Points). Please answer all sections.</p>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2" data-key="form_title">Oral-Airway Symptom Assessment</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed" data-key="form_subtitle">Complete Intake Form (113+ Points). Please answer all sections.</p>
                 </div>
 
                 <!-- 1. Personal Information -->
                 <section class="space-y-6">
-                    <h3 class="section-header text-sky-600">I. Personal Information</h3>
+                    <h3 class="section-header text-sky-600" data-key="sec_personal">I. Personal Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="date" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none" placeholder="Date of Completion">
                         <input type="text" id="p-name" placeholder="Name" class="p-3 bg-slate-50 border rounded-xl text-sm outline-none">
@@ -87,46 +87,30 @@
                         </select>
                         
                         <div class="md:col-span-2 space-y-2">
-                            <label class="q-label">Living Situation</label>
-                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
-                                <label><input type="checkbox" class="mr-1"> Live alone</label>
-                                <label><input type="checkbox" class="mr-1"> With parents</label>
-                                <label><input type="checkbox" class="mr-1"> With partner</label>
-                                <label><input type="checkbox" class="mr-1"> With children</label>
-                                <label><input type="checkbox" class="mr-1"> Partner + children</label>
+                            <label class="q-label" data-key="lbl_living">Living Situation</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600" id="living-opts">
+                                <!-- JS injected -->
                             </div>
                         </div>
 
                         <div class="md:col-span-2 space-y-2">
-                            <label class="q-label">How did you learn about us?</label>
-                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
-                                <label><input type="checkbox" class="mr-1"> Referral</label>
-                                <label><input type="checkbox" class="mr-1"> Internet</label>
-                                <label><input type="checkbox" class="mr-1"> Passing by</label>
-                                <label><input type="checkbox" class="mr-1"> Other</label>
+                            <label class="q-label" data-key="lbl_how_found">How did you learn about us?</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600" id="found-opts">
+                                <!-- JS injected -->
                             </div>
                         </div>
                         
                         <div class="md:col-span-2 space-y-2">
-                            <label class="q-label">Purpose of visit</label>
-                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
-                                <label><input type="checkbox" class="mr-1"> Body constitution</label>
-                                <label><input type="checkbox" class="mr-1"> Routine check-up</label>
-                                <label><input type="checkbox" class="mr-1"> Identify discomfort</label>
-                                <label><input type="checkbox" class="mr-1"> Anti-aging</label>
-                                <label><input type="checkbox" class="mr-1"> Early detection</label>
-                                <label><input type="checkbox" class="mr-1"> Health regimen</label>
+                            <label class="q-label" data-key="lbl_purpose">Purpose of visit</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600" id="purpose-opts">
+                                <!-- JS injected -->
                             </div>
                         </div>
 
                          <div class="md:col-span-2 space-y-2">
-                            <label class="q-label">How to improve health?</label>
-                            <div class="flex flex-wrap gap-3 text-sm text-slate-600">
-                                <label><input type="checkbox" class="mr-1"> Lifestyle</label>
-                                <label><input type="checkbox" class="mr-1"> Dietary</label>
-                                <label><input type="checkbox" class="mr-1"> Supplements</label>
-                                <label><input type="checkbox" class="mr-1"> Chinese Med</label>
-                                <label><input type="checkbox" class="mr-1"> Nutritionist</label>
+                            <label class="q-label" data-key="lbl_improve">How to improve health?</label>
+                            <div class="flex flex-wrap gap-3 text-sm text-slate-600" id="improve-opts">
+                                <!-- JS injected -->
                             </div>
                         </div>
                     </div>
@@ -135,49 +119,49 @@
                 <!-- 2. Integrated MSQ -->
                 <section class="space-y-8">
                     <div class="flex justify-between items-end border-b pb-2">
-                        <h3 class="text-xs font-black text-indigo-600 uppercase tracking-widest">II. Integrated MSQ (Rate 0-4)</h3>
-                        <div class="flex gap-2 text-[9px] text-slate-400 font-bold uppercase">
-                            <span>0: Never</span><span>1: Occasional</span><span>2: Severe</span><span>3: Frequent</span><span>4: Constant</span>
+                        <h3 class="text-xs font-black text-indigo-600 uppercase tracking-widest" data-key="sec_msq">II. Integrated MSQ (Rate 0-4)</h3>
+                        <div class="flex gap-2 text-[9px] text-slate-400 font-bold uppercase" id="msq-legend">
+                            <!-- JS injected -->
                         </div>
                     </div>
 
-                    <!-- Section 1: Head, Neck, ENT -->
+                    <!-- Section 1 -->
                     <div class="bg-indigo-50/30 p-6 rounded-2xl border border-indigo-100">
-                        <h4 class="font-black text-indigo-800 text-sm mb-4 uppercase">Section 1: Head, Neck & ENT</h4>
+                        <h4 class="font-black text-indigo-800 text-sm mb-4 uppercase" data-key="msq_s1_title">Section 1: Head, Neck & ENT</h4>
                         <div id="msq-sec1" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
                     </div>
                     
-                    <!-- Section 2: Cardiopulmonary -->
+                    <!-- Section 2 -->
                     <div class="bg-red-50/30 p-6 rounded-2xl border border-red-100">
-                        <h4 class="font-black text-red-800 text-sm mb-4 uppercase">Section 2: Cardiopulmonary & Metabolism</h4>
+                        <h4 class="font-black text-red-800 text-sm mb-4 uppercase" data-key="msq_s2_title">Section 2: Cardiopulmonary & Metabolism</h4>
                         <div id="msq-sec2" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
                     </div>
 
-                    <!-- Section 3: Digestive -->
+                    <!-- Section 3 -->
                     <div class="bg-green-50/30 p-6 rounded-2xl border border-green-100">
-                        <h4 class="font-black text-green-800 text-sm mb-4 uppercase">Section 3: Digestive System</h4>
+                        <h4 class="font-black text-green-800 text-sm mb-4 uppercase" data-key="msq_s3_title">Section 3: Digestive System</h4>
                         <div id="msq-sec3" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
                     </div>
 
-                    <!-- Section 4: Brain/Emotion/Structure -->
+                    <!-- Section 4 -->
                     <div class="bg-amber-50/30 p-6 rounded-2xl border border-amber-100">
-                        <h4 class="font-black text-amber-800 text-sm mb-4 uppercase">Section 4: Brain, Emotions & Structure</h4>
+                        <h4 class="font-black text-amber-800 text-sm mb-4 uppercase" data-key="msq_s4_title">Section 4: Brain, Emotions & Structure</h4>
                         <div id="msq-sec4" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></div>
                     </div>
                 </section>
 
                 <!-- 3. Structural & Special -->
                 <section class="space-y-6">
-                    <h3 class="section-header text-amber-600">III. Structural & Physical Features</h3>
+                    <h3 class="section-header text-amber-600" data-key="sec_struct">III. Structural & Physical Features</h3>
                     <div id="struct-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     
-                    <h3 class="text-xs font-black text-amber-600 uppercase mt-6 mb-2">Special Conditions</h3>
+                    <h3 class="text-xs font-black text-amber-600 uppercase mt-6 mb-2" data-key="sec_special">Special Conditions</h3>
                     <div id="special-list" class="grid grid-cols-1 gap-2"></div>
                 </section>
 
                 <!-- 4. Goals -->
                 <section class="space-y-4">
-                    <h3 class="section-header text-teal-600">IV. Health Complaints & Goals</h3>
+                    <h3 class="section-header text-teal-600" data-key="sec_goals">IV. Health Complaints & Goals</h3>
                     <div class="space-y-2">
                         <input type="text" placeholder="1. Top Priority" class="w-full p-3 bg-slate-50 border rounded-xl text-sm">
                         <input type="text" placeholder="2. Secondary Concern" class="w-full p-3 bg-slate-50 border rounded-xl text-sm">
@@ -187,11 +171,11 @@
 
                 <!-- 5. Medical History -->
                 <section class="space-y-4">
-                    <h3 class="section-header text-purple-600">V. Medical History</h3>
+                    <h3 class="section-header text-purple-600" data-key="sec_history">V. Medical History</h3>
                     <div class="overflow-x-auto border rounded-xl">
                         <table class="w-full text-left text-sm">
                             <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
-                                <tr><th class="p-3">Condition</th><th class="p-3 text-center">Self</th><th class="p-3 text-center">Family</th><th class="p-3">Notes</th></tr>
+                                <tr id="history-header"><th class="p-3">Condition</th><th class="p-3 text-center">Self</th><th class="p-3 text-center">Family</th><th class="p-3">Notes</th></tr>
                             </thead>
                             <tbody id="med-history-body" class="divide-y divide-slate-100"></tbody>
                         </table>
@@ -200,13 +184,13 @@
 
                 <!-- 6. Consent -->
                 <section class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-sm mb-2">Personal Data Consent</h3>
-                    <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+                    <h3 class="font-bold text-slate-800 text-sm mb-2" data-key="consent_title">Personal Data Consent</h3>
+                    <p class="text-xs text-slate-500 mb-4 leading-relaxed" data-key="consent_text">
                         I authorize Essentia Lifestyle Management and AMD clinics to collect and process my health data for treatment purposes under the Personal Data Protection Act. 
                         <strong>International Transfer Consent:</strong> I explicitly consent to the pseudonymized transfer of my diagnostic data (CBCT, STL, Photos) to remote specialists located in the USA for the purpose of clinical design and consultation. I understand all Personal Identifiable Information (PII) will be scrubbed prior to transfer in compliance with Taiwan DPA regulations.
                     </p>
                     <label class="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer mb-4">
-                        <input type="checkbox" class="h-4 w-4 text-sky-600"> I have read, understood, and agree to the statements above.
+                        <input type="checkbox" class="h-4 w-4 text-sky-600"> <span data-key="consent_agree">I have read, understood, and agree to the statements above.</span>
                     </label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" placeholder="Signature (Type Name)" class="p-3 bg-white border rounded-xl text-sm">
@@ -215,20 +199,20 @@
                 </section>
 
                 <div class="flex justify-end pt-8">
-                    <button onclick="nextStep(2)" class="px-10 py-4 bg-sky-600 text-white font-black rounded-2xl shadow-xl hover:bg-sky-700 transition uppercase tracking-widest text-xs">Proceed to Referral</button>
+                    <button onclick="nextStep(2)" class="px-10 py-4 bg-sky-600 text-white font-black rounded-2xl shadow-xl hover:bg-sky-700 transition uppercase tracking-widest text-xs" data-key="btn_next">Proceed to Referral</button>
                 </div>
             </div>
 
             <!-- Step 2: Referral Workflow -->
             <div id="step-2" class="hidden space-y-8">
                 <div>
-                    <h2 class="text-3xl font-black text-slate-800 mb-2">Select Your Clinical Partners</h2>
-                    <p class="text-slate-500 text-sm">To generate your referral, you must select an Imaging Lab and an AMD Practitioner.</p>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2" data-key="referral_title">Select Your Clinical Partners</h2>
+                    <p class="text-slate-500 text-sm" data-key="referral_subtitle">To generate your referral, you must select an Imaging Lab and an AMD Practitioner.</p>
                 </div>
 
                 <!-- 1. Lab Selection -->
                 <div class="p-6 border rounded-2xl bg-white shadow-sm">
-                    <h3 class="text-xs font-black text-sky-600 uppercase tracking-widest mb-4">1. Select Imaging Lab</h3>
+                    <h3 class="text-xs font-black text-sky-600 uppercase tracking-widest mb-4" data-key="lab_select">1. Select Imaging Lab</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <label class="p-4 border rounded-xl flex items-center gap-3 cursor-pointer hover:border-sky-500 transition bg-slate-50">
                             <input type="radio" name="lab" onchange="checkSelections()">
@@ -242,8 +226,8 @@
                 </div>
 
                 <!-- 2. AMD Selection -->
-                <div class="p-6 border rounded-2xl bg-white shadow-sm">
-                    <h3 class="text-xs font-black text-teal-600 uppercase tracking-widest mb-4">2. Select AMD Practitioner</h3>
+                <div class="p-6 border rounded-2xl bg-white shadow-sm opacity-50 pointer-events-none transition-opacity" id="amd-selection-section">
+                    <h3 class="text-xs font-black text-teal-600 uppercase tracking-widest mb-4" data-key="amd_select">2. Select AMD Practitioner</h3>
                     
                     <!-- Mock Map -->
                     <div class="h-64 bg-slate-100 rounded-xl mb-6 relative overflow-hidden flex items-center justify-center border border-slate-200">
@@ -269,118 +253,137 @@
                 <!-- 3. Download -->
                 <div class="p-8 bg-slate-800 rounded-3xl text-center text-white opacity-50 transition-opacity" id="download-section">
                     <i class="fa-solid fa-file-prescription text-4xl mb-4 text-teal-400"></i>
-                    <h3 class="text-xl font-bold mb-2">Referral Generation</h3>
-                    <p class="text-sm text-slate-400 mb-6">Download your customized referral form containing specs for the selected Lab and AMD.</p>
-                    <button id="btn-download" disabled class="px-8 py-3 bg-teal-600 text-white font-black rounded-xl uppercase tracking-widest text-xs disabled:cursor-not-allowed disabled:bg-slate-600 transition shadow-lg">Download Referral PDF</button>
+                    <h3 class="text-xl font-bold mb-2" data-key="ref_gen">Referral Generation</h3>
+                    <p class="text-sm text-slate-400 mb-6" data-key="ref_desc">Download your customized referral form containing specs for the selected Lab and AMD.</p>
+                    <button id="btn-download" disabled class="px-8 py-3 bg-teal-600 text-white font-black rounded-xl uppercase tracking-widest text-xs disabled:cursor-not-allowed disabled:bg-slate-600 transition shadow-lg" data-key="btn_download">Download Referral PDF</button>
                 </div>
 
                 <div class="flex justify-between pt-4">
-                    <button onclick="nextStep(1)" class="px-8 py-3 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs uppercase">Back</button>
-                    <button onclick="nextStep(3)" class="px-8 py-3 bg-sky-600 text-white font-bold rounded-xl text-xs uppercase shadow-md">Next Step</button>
+                    <button onclick="nextStep(1)" class="px-8 py-3 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs uppercase" data-key="btn_back">Back</button>
+                    <button onclick="nextStep(3)" class="px-8 py-3 bg-sky-600 text-white font-bold rounded-xl text-xs uppercase shadow-md" data-key="btn_next">Next Step</button>
                 </div>
             </div>
 
             <!-- Step 3: Photos -->
             <div id="step-3" class="hidden space-y-10 text-center">
                 <div>
-                    <h2 class="text-3xl font-black text-slate-800 mb-4">Visual Baseline</h2>
-                    <p class="text-slate-500 max-w-lg mx-auto">Upload initial photos of your jaw profile and posture to accelerate the specialist's preliminary review.</p>
+                    <h2 class="text-3xl font-black text-slate-800 mb-4" data-key="photo_title">Visual Baseline</h2>
+                    <p class="text-slate-500 max-w-lg mx-auto" data-key="photo_desc">Upload initial photos of your jaw profile and posture to accelerate the specialist's preliminary review.</p>
                 </div>
                 <div class="border-4 border-dashed border-slate-200 rounded-3xl p-16 hover:border-sky-400 transition cursor-pointer bg-slate-50">
                     <i class="fa-solid fa-camera text-4xl text-slate-300 mb-4"></i>
-                    <p class="font-bold text-slate-400 uppercase text-xs">Drop Photos Here</p>
+                    <p class="font-bold text-slate-400 uppercase text-xs" data-key="drop_photos">Drop Photos Here</p>
                 </div>
-                <button onclick="window.location.href='ClientDashboard.html'" class="w-full py-4 bg-teal-600 text-white font-black rounded-2xl shadow-xl uppercase tracking-widest text-sm">Enter Dashboard</button>
+                <button onclick="window.location.href='ClientDashboard.html'" class="w-full py-4 bg-teal-600 text-white font-black rounded-2xl shadow-xl uppercase tracking-widest text-sm" data-key="btn_dashboard">Enter Dashboard</button>
             </div>
 
         </main>
     </div>
 
     <script>
-        // --- 1. MSQ Data (Full Breakdown from Doc) ---
-        const msqSec1 = [ // Head, Neck, ENT
-            "Headache/migraine (waking)", "Dizziness/lightheadedness", 
-            "TMJ clicking/jaw locking", "Bruxism/teeth clenching", "Difficulty swallowing", 
-            "Coughing/clearing throat", "Sore throat/hoarseness", "Mouth sores/ulcers", 
-            "Bleeding gums/sensitivity", "Dry mouth (waking)", "Tongue scalloping", "Drooling (sleep)",
-            "Snoring/mouth breathing", "Nasal congestion", "Runny nose", "Sneezing",
-            "Itchy ears/pain", "Tinnitus/hearing loss", "Ear discharge",
-            "Dry eyes", "Tearing eyes", "Puffy eyelids/dark circles"
-        ];
-        const msqSec2 = [ // Cardio/Metabolism
-            "Irregular heartbeat", "Rapid heartbeat", "Chest pain/tightness",
-            "Breathing difficulty", "Asthma/bronchitis", "Chest tightness",
-            "Overweight/abdominal obesity", "Edema/swelling", "Sugar/starch cravings", 
-            "Binge eating", "Underweight", "Acne", "Hives/eczema", "Dry skin", "Hair loss", "Flushing"
-        ];
-        const msqSec3 = [ // Digestive
-            "GERD/heartburn", "Bloating/gas", "Constipation", "Diarrhea", 
-            "Stomach pain/cramps", "Nausea/vomiting", "Poor appetite"
-        ];
-        const msqSec4 = [ // Brain/Structure
-            "Fatigue/weakness", "Daytime sleepiness", "Insomnia/light sleep", "Restlessness", 
-            "Waking tired", "Slow recovery", "Anxiety/fear", "Depression/low mood", 
-            "Irritability", "Poor memory", "Brain fog", "Slow reaction", "Indecisiveness", 
-            "Slurred speech", "Poor coordination", "Stiff neck/shoulders", "Joint pain", "Muscle soreness"
-        ];
+        let currentLang = 'en';
 
-        // --- 2. Structural & Special ---
-        const structItems = [
-            "Crowded teeth", "Scalloped tongue", "Deep bite/underbite", "Receding gums", 
-            "Retruded chin", "Sunken lips", "Jaw shifts", "Forward head posture", "Bony growth (tori)"
-        ];
-        const specialItems = [
-            "Extraction history", "Extensive dental work", "Sleep apnea diagnosis", "Erectile dysfunction / PMS"
-        ];
+        const dict = {
+            en: {
+                step_1: "Assessment", step_2: "Referral", step_3: "Photos",
+                form_title: "Oral-Airway Symptom Assessment", form_subtitle: "Complete Intake Form (113+ Points). Please answer all sections.",
+                sec_personal: "I. Personal Information", lbl_living: "Living Situation", lbl_how_found: "How did you learn about us?", lbl_purpose: "Purpose of visit", lbl_improve: "How to improve health?",
+                sec_msq: "II. Integrated MSQ (Rate 0-4)", msq_s1_title: "Section 1: Head, Neck & ENT", msq_s2_title: "Section 2: Cardiopulmonary & Metabolism", msq_s3_title: "Section 3: Digestive System", msq_s4_title: "Section 4: Brain, Emotions & Structure",
+                sec_struct: "III. Structural & Physical Features", sec_special: "Special Conditions", sec_goals: "IV. Health Complaints & Goals", sec_history: "V. Medical History",
+                consent_title: "Personal Data Consent", consent_text: "I authorize Essentia Lifestyle Management and AMD clinics to collect and process my health data for treatment purposes under the Personal Data Protection Act. International Transfer Consent: I explicitly consent to the pseudonymized transfer of my diagnostic data (CBCT, STL, Photos) to remote specialists located in the USA for the purpose of clinical design and consultation. I understand all Personal Identifiable Information (PII) will be scrubbed prior to transfer in compliance with Taiwan DPA regulations.", consent_agree: "I have read, understood, and agree to the statements above.",
+                referral_title: "Select Your Clinical Partners", referral_subtitle: "To generate your referral, you must select an Imaging Lab and an AMD Practitioner.", lab_select: "1. Select Imaging Lab", amd_select: "2. Select AMD Practitioner", ref_gen: "Referral Generation", ref_desc: "Download your customized referral form containing specs for the selected Lab and AMD.",
+                photo_title: "Visual Baseline", photo_desc: "Upload initial photos of your jaw profile and posture to accelerate the specialist's preliminary review.", drop_photos: "Drop Photos Here",
+                btn_next: "Next Step", btn_back: "Back", btn_download: "Download Referral PDF", btn_dashboard: "Enter Dashboard",
+                living: ["Live alone", "With parents", "With partner", "With children", "Partner + children"],
+                found: ["Referral", "Internet", "Passing by", "Other"],
+                purpose: ["Body constitution", "Routine check-up", "Identify discomfort", "Anti-aging", "Early detection", "Health regimen"],
+                improve: ["Lifestyle", "Dietary", "Supplements", "Chinese Med", "Nutritionist"],
+                hist_header: ["Condition", "Self", "Family", "Notes"],
+                yes: "Y", no: "N"
+            },
+            zh: {
+                step_1: "評估", step_2: "轉介", step_3: "照片",
+                form_title: "口腔氣道症狀評估", form_subtitle: "完成入組表格 (113+ 點)。請回答所有部分。",
+                sec_personal: "I. 個人資料", lbl_living: "居住狀況", lbl_how_found: "如何知道本診所?", lbl_purpose: "看診目的", lbl_improve: "希望如何促進健康?",
+                sec_msq: "II. 綜合 MSQ (評分 0-4)", msq_s1_title: "第一區: 頭頸部與五官", msq_s2_title: "第二區: 心肺與代謝", msq_s3_title: "第三區: 消化", msq_s4_title: "第四區: 腦力、情緒與結構",
+                sec_struct: "III. 結構與外觀特徵", sec_special: "特殊案例", sec_goals: "IV. 健康主訴與目標", sec_history: "V. 病史",
+                consent_title: "個人資料提供同意書", consent_text: "我授權意一堂健康管理和 AMD 診所根據個人資料保護法收集和處理我的健康數據以進行治療。國際傳輸同意：我明確同意將我的診斷數據（CBCT、STL、照片）以假名化方式傳輸給位於美國的遠程專家，用於臨床設計和諮詢。我了解所有個人身份信息 (PII) 將在傳輸前根據台灣 DPA 法規進行清除。", consent_agree: "我已閱讀、理解並同意上述聲明。",
+                referral_title: "選擇您的臨床合作夥伴", referral_subtitle: "要生成您的轉介單，您必須選擇一個影像實驗室和一位 AMD 執業醫師。", lab_select: "1. 選擇影像實驗室", amd_select: "2. 選擇 AMD 執業醫師", ref_gen: "生成轉介單", ref_desc: "下載包含所選實驗室和 AMD 規格的定制轉介表格。",
+                photo_title: "視覺基準", photo_desc: "上傳您的下顎輪廓和姿勢的初始照片，以加速專家的初步審查。", drop_photos: "在此拖放照片",
+                btn_next: "下一步", btn_back: "上一步", btn_download: "下載轉介 PDF", btn_dashboard: "進入儀表板",
+                living: ["獨居", "與父母同住", "與伴侶同住", "與子女同住", "伴侶+子女"],
+                found: ["親友介紹", "網路", "路過", "其他"],
+                purpose: ["了解體質", "例行檢查", "找出不適原因", "抗衰老", "早期發現", "健康養生"],
+                improve: ["生活方式", "飲食", "補充劑", "中藥", "營養師"],
+                hist_header: ["病狀", "自己", "家人", "備註"],
+                yes: "是", no: "否"
+            }
+        };
 
-        // --- 3. Medical History ---
-        const medHistory = [
-            "High blood sugar", "High blood pressure", "High cholesterol", "Fatty liver", 
-            "Headache/migraine", "Thyroid disorders", "Liver disease", "Kidney disease", 
-            "Gallbladder disease", "Heart conditions", "Depression/bipolar", "Fibromyalgia", 
-            "Clotting disorders", "Osteoporosis", "Thrombosis", "Cancer", "Alzheimer's", "Ulcers", "Other"
-        ];
+        const msqData = {
+            s1: {en: ["Headache/migraine", "Dizziness", "TMJ clicking", "Bruxism", "Difficulty swallowing", "Coughing", "Sore throat", "Mouth sores", "Bleeding gums", "Dry mouth", "Tongue scalloping", "Drooling", "Snoring", "Nasal congestion", "Runny nose", "Sneezing", "Itchy ears", "Tinnitus", "Ear discharge", "Dry eyes", "Tearing eyes", "Puffy eyelids"], zh: ["頭痛/偏頭痛", "暈眩", "顳顎關節彈響", "磨牙", "吞嚥困難", "咳嗽", "喉嚨痛", "口腔潰瘍", "牙齦出血", "口乾", "舌頭齒印", "流口水", "打鼾", "鼻塞", "流鼻水", "打噴嚏", "耳朵癢", "耳鳴", "耳朵分泌物", "眼睛乾澀", "流眼淚", "眼皮腫脹"]},
+            s2: {en: ["Irregular heartbeat", "Rapid heartbeat", "Chest pain", "Breathing difficulty", "Asthma", "Chest tightness", "Overweight", "Edema", "Cravings", "Binge eating", "Underweight", "Acne", "Hives", "Dry skin", "Hair loss", "Flushing"], zh: ["心律不整", "心跳過快", "胸痛", "呼吸困難", "氣喘", "胸悶", "體重過重", "水腫", "嗜吃", "暴飲暴食", "體重過輕", "青春痘", "蕁麻疹", "皮膚乾燥", "掉髮", "潮紅"]},
+            s3: {en: ["GERD", "Bloating", "Constipation", "Diarrhea", "Stomach pain", "Nausea", "Poor appetite"], zh: ["胃食道逆流", "脹氣", "便秘", "腹瀉", "胃痛", "噁心", "食慾不佳"]},
+            s4: {en: ["Fatigue", "Sleepiness", "Insomnia", "Restlessness", "Waking tired", "Slow recovery", "Anxiety", "Depression", "Irritability", "Poor memory", "Brain fog", "Slow reaction", "Indecisiveness", "Slurred speech", "Poor coordination", "Stiff neck", "Joint pain", "Muscle soreness"], zh: ["疲勞", "嗜睡", "失眠", "坐立不安", "醒來累", "恢復慢", "焦慮", "憂鬱", "易怒", "記憶差", "腦霧", "反應慢", "優柔寡斷", "口齒不清", "協調差", "肩頸僵硬", "關節痛", "肌肉痠痛"]}
+        };
 
-        // --- Rendering ---
-        function renderMSQ(list, id) {
-            document.getElementById(id).innerHTML = list.map(q => `
-                <div>
-                    <div class="flex justify-between text-[10px] font-bold text-slate-700 uppercase mb-1"><span>${q}</span><span class="text-sky-600 val">0</span></div>
-                    <input type="range" min="0" max="4" value="0" class="rating-input w-full" oninput="this.previousElementSibling.querySelector('.val').innerText=this.value">
-                </div>
-            `).join('');
+        const structData = {en: ["Crowded teeth", "Scalloped tongue", "Deep bite", "Receding gums", "Retruded chin", "Sunken lips", "Jaw shifts", "Forward head", "Bony growth"], zh: ["牙齒擁擠", "荷葉舌", "深咬", "牙齦萎縮", "下巴後縮", "凹陷嘴唇", "下顎歪斜", "烏龜頸", "骨隆凸"]};
+        const specialData = {en: ["Extraction history", "Extensive dental work", "Sleep apnea", "Erectile dysfunction / PMS"], zh: ["拔牙病史", "大量牙科治療", "睡眠呼吸中止", "勃起障礙 / 經前症候群"]};
+        const histData = {en: ["High blood sugar", "High blood pressure", "Cholesterol", "Fatty liver", "Headache", "Thyroid", "Liver", "Kidney", "Gallbladder", "Heart", "Depression", "Fibromyalgia", "Clotting", "Osteoporosis", "Thrombosis", "Cancer", "Alzheimer's", "Ulcers"], zh: ["高血糖", "高血壓", "高血脂", "脂肪肝", "頭痛", "甲狀腺", "肝臟", "腎臟", "膽囊", "心臟", "憂鬱", "肌纖維痛", "凝血", "骨質疏鬆", "血栓", "癌症", "阿茲海默", "潰瘍"]};
+
+        function renderCheckboxes(ids, dataKey) {
+            ids.forEach(id => {
+                const container = document.getElementById(id);
+                if(container) {
+                    container.innerHTML = dict[currentLang][dataKey].map(opt => `<label><input type="checkbox" class="mr-1"> ${opt}</label>`).join('');
+                }
+            });
+        }
+
+        function renderMSQ(secKey, containerId) {
+            const list = msqData[secKey][currentLang];
+            document.getElementById(containerId).innerHTML = list.map(q => `<div><div class="flex justify-between text-[11px] font-bold text-slate-700 uppercase mb-1"><span>${q}</span><span class="text-sky-600 val">0</span></div><input type="range" min="0" max="4" value="0" class="rating-input w-full" oninput="this.previousElementSibling.querySelector('.val').innerText=this.value"></div>`).join('');
+        }
+
+        function renderStruct() {
+            const y = dict[currentLang].yes, n = dict[currentLang].no;
+            document.getElementById('struct-list').innerHTML = structData[currentLang].map((q, i) => `<div class="p-3 border rounded-xl flex justify-between bg-slate-50 text-xs items-center"><span class="font-bold text-slate-700">${q}</span><div class="flex gap-2"><label><input type="radio" name="st-${i}" class="mr-1">${y}</label><label><input type="radio" name="st-${i}" class="mr-1" checked>${n}</label></div></div>`).join('');
+            document.getElementById('special-list').innerHTML = specialData[currentLang].map((q, i) => `<div class="p-3 border rounded-xl flex justify-between bg-slate-50 text-xs items-center"><span class="font-bold text-slate-700">${q}</span><div class="flex gap-2"><label><input type="radio" name="sp-${i}" class="mr-1">${y}</label><label><input type="radio" name="sp-${i}" class="mr-1" checked>${n}</label></div></div>`).join('');
+        }
+
+        function renderHistory() {
+            const h = dict[currentLang].hist_header;
+            document.getElementById('history-header').innerHTML = `<th class="p-3">${h[0]}</th><th class="p-3 text-center">${h[1]}</th><th class="p-3 text-center">${h[2]}</th><th class="p-3">${h[3]}</th>`;
+            document.getElementById('med-history-body').innerHTML = histData[currentLang].map(c => `<tr><td class="p-3 font-bold text-slate-700">${c}</td><td class="p-3 text-center"><input type="checkbox"></td><td class="p-3 text-center"><input type="checkbox"></td><td class="p-3"><input type="text" class="w-full bg-transparent border-b outline-none text-xs"></td></tr>`).join('');
         }
 
         function initForm() {
-            renderMSQ(msqSec1, 'msq-sec1');
-            renderMSQ(msqSec2, 'msq-sec2');
-            renderMSQ(msqSec3, 'msq-sec3');
-            renderMSQ(msqSec4, 'msq-sec4');
-
-            document.getElementById('struct-list').innerHTML = structItems.map((q, i) => `
-                <div class="p-3 border rounded-xl flex justify-between bg-slate-50 text-xs items-center"><span class="font-bold text-slate-700">${q}</span><div class="flex gap-2"><label><input type="radio" name="st-${i}" class="mr-1">Y</label><label><input type="radio" name="st-${i}" class="mr-1" checked>N</label></div></div>
-            `).join('');
+            renderCheckboxes(['living-opts'], 'living');
+            renderCheckboxes(['found-opts'], 'found');
+            renderCheckboxes(['purpose-opts'], 'purpose');
+            renderCheckboxes(['improve-opts'], 'improve');
+            renderMSQ('s1', 'msq-sec1'); renderMSQ('s2', 'msq-sec2'); renderMSQ('s3', 'msq-sec3'); renderMSQ('s4', 'msq-sec4');
+            renderStruct(); renderHistory();
             
-            document.getElementById('special-list').innerHTML = specialItems.map((q, i) => `
-                <div class="p-3 border rounded-xl flex justify-between bg-slate-50 text-xs items-center"><span class="font-bold text-slate-700">${q}</span><div class="flex gap-2"><label><input type="radio" name="sp-${i}" class="mr-1">Y</label><label><input type="radio" name="sp-${i}" class="mr-1" checked>N</label></div></div>
-            `).join('');
-
-            document.getElementById('med-history-body').innerHTML = medHistory.map(c => `
-                <tr><td class="p-3 font-bold text-slate-700">${c}</td><td class="p-3 text-center"><input type="checkbox" class="h-4 w-4 text-purple-600 rounded"></td><td class="p-3 text-center"><input type="checkbox" class="h-4 w-4 text-purple-600 rounded"></td><td class="p-3"><input type="text" class="w-full bg-transparent border-b outline-none text-xs"></td></tr>
-            `).join('');
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const k = el.getAttribute('data-key');
+                if(dict[currentLang][k]) el.innerText = dict[currentLang][k];
+            });
         }
 
         function checkSelections() {
             const lab = document.querySelector('input[name="lab"]:checked');
+            const amdSelection = document.getElementById('amd-selection-section');
             const amd = document.querySelector('input[name="amd"]:checked');
             const section = document.getElementById('download-section');
             const btn = document.getElementById('btn-download');
 
+            if(lab) amdSelection.classList.remove('opacity-50', 'pointer-events-none');
             if(lab && amd) {
                 section.classList.remove('opacity-50');
                 btn.removeAttribute('disabled');
                 btn.classList.replace('bg-slate-600', 'bg-teal-600');
-                btn.onclick = () => alert("Referral PDF generated for " + amd.nextElementSibling.innerText.split('\n')[0]);
+                btn.onclick = () => alert("Referral PDF generated.");
             }
         }
 
@@ -398,7 +401,9 @@
 
         function toggleLanguage() {
             const btn = document.getElementById('lang-toggle');
-            btn.innerText = btn.innerText === '中文' ? 'English' : '中文';
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            btn.innerText = currentLang === 'en' ? '中文' : 'English';
+            initForm();
         }
 
         window.onload = initForm;
