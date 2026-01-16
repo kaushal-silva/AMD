@@ -26,6 +26,16 @@
         .abcde-card {
             @apply p-4 rounded-2xl border border-slate-100 bg-white shadow-sm flex flex-col items-center text-center transition hover:shadow-md hover:-translate-y-1;
         }
+        /* Custom modal animation */
+        .modal-fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -34,6 +44,7 @@
         <!-- Header -->
         <header class="w-full max-w-7xl mx-auto flex justify-between items-center py-4 px-2 sticky top-0 bg-[#f8fafc]/95 backdrop-blur-md z-50">
             <h1 class="text-2xl font-black text-gray-900 flex items-center gap-2">
+                <!-- Ecosystem Logo: Head/Airway focus -->
                 <svg width="36" height="36" viewBox="0 0 100 100" class="fill-sky-600">
                     <path d="M70,20 C60,10 40,10 30,20 C20,30 15,50 20,65 C22,70 25,75 30,78 C35,82 45,85 55,85 C65,85 75,80 80,70 C85,60 85,30 70,20 Z M50,15 C65,15 75,25 78,40 C80,50 80,65 72,78 C65,85 50,85 40,78 C35,74 30,65 30,50 C30,35 40,15 50,15 Z" opacity="0.4"/>
                     <path d="M45,45 Q50,40 55,45 Q60,50 55,65 Q50,75 45,65 Q40,55 45,45 Z" fill="#0ea5e9"/> 
@@ -78,7 +89,7 @@
                                 <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs"><i class="fa-solid fa-pen-nib"></i></div>
                                 <span>STA Design Lab</span>
                             </a>
-                            <a href="STALab.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-orange-50 transition border-b border-slate-50">
+                            <a href="STALab.html" class="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-700 hover:bg-orange-50 transition border-b border-slate-50 transition">
                                 <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-xs"><i class="fa-solid fa-cubes"></i></div>
                                 <span>STA Manufacturing</span>
                             </a>
@@ -95,18 +106,26 @@
         <!-- Main Content Area -->
         <main class="w-full max-w-7xl mx-auto flex-grow py-8">
 
-            <!-- Hero: The Invisalign for Airway -->
-            <section class="text-center mb-16 max-w-4xl mx-auto">
+            <!-- Hero Section -->
+            <section class="text-center mb-16 max-w-4xl mx-auto px-4">
                 <h2 class="text-5xl font-black text-gray-900 sm:text-6xl tracking-tight leading-tight" data-key="main_headline">
                     The <span class="text-sky-600">"Invisalign"</span> for Airway Health.
                 </h2>
                 <p class="mt-6 text-xl text-gray-600 font-medium leading-relaxed" data-key="main_mission">
                     Solving <strong>Impaired Mouth Syndrome</strong> (IMS) through proprietary clinical protocols. We redevelop the mouth to fit the tongue, optimizing whole-body performance.
                 </p>
+                <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="ClientOnboarding.html" class="px-8 py-4 bg-sky-600 text-white font-black text-lg rounded-2xl hover:bg-sky-700 transition shadow-xl shadow-sky-200" data-key="btn_hero_signup">
+                        Start Your Journey Today
+                    </a>
+                    <a href="#journey" class="px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold text-lg rounded-2xl hover:bg-slate-50 transition">
+                        How it Works
+                    </a>
+                </div>
             </section>
 
             <!-- Concept Section: Tiger vs Cage -->
-            <section class="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            <section class="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center px-4">
                 <div class="lg:col-span-2 section-card bg-gradient-to-br from-slate-900 to-slate-800 text-white p-10 rounded-3xl relative overflow-hidden">
                     <div class="relative z-10">
                         <h3 class="text-3xl font-black mb-4" data-key="tiger_cage_title">Six-Foot Tiger, Three-Foot Cage</h3>
@@ -115,28 +134,26 @@
                         </p>
                         <div class="flex flex-wrap gap-4">
                             <span class="px-4 py-2 bg-white/10 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest">No Surgery</span>
-                            <span class="px-4 py-2 bg-white/10 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest">No Drilling</span>
                             <span class="px-4 py-2 bg-white/10 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest">Epigenetic Activation</span>
                         </div>
                     </div>
-                    <!-- Decorative SVG Metaphor -->
                     <div class="absolute -right-20 -bottom-20 opacity-10 pointer-events-none">
                         <i class="fa-solid fa-cat text-[300px]"></i>
                     </div>
                 </div>
 
                 <div class="section-card border-l-4 border-amber-500 bg-amber-50/30 p-8 flex flex-col justify-center">
-                    <h4 class="font-black text-amber-800 uppercase text-xs tracking-widest mb-4">Ancient Wisdom Meets Science</h4>
+                    <h4 class="font-black text-amber-800 uppercase text-xs tracking-widest mb-4">Clinical Insight</h4>
                     <p class="text-lg font-serif italic text-amber-900 leading-relaxed">"Disease enters through the mouth."</p>
                     <p class="mt-4 text-sm text-amber-700 font-bold">— Dr. Felix Liao, DDS</p>
                 </div>
             </section>
 
             <!-- ABCDES Framework -->
-            <section class="mb-20">
+            <section class="mb-20 px-4">
                 <div class="text-center mb-10">
                     <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tight" data-key="abcde_title">The ABCDES of a Holistic Mouth</h3>
-                    <p class="text-slate-500 mt-2">When we widen the "Cage," we unlock these 6 critical health pillars:</p>
+                    <p class="text-slate-500 mt-2">Redeveloping your cage unlocks the 6 pillars of systemic health:</p>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     <div class="abcde-card">
@@ -172,91 +189,91 @@
                 </div>
             </section>
 
-            <div class="lg:grid lg:grid-cols-2 gap-12 items-start">
-                
-                <!-- LEFT: Journey -->
+            <div id="journey" class="lg:grid lg:grid-cols-2 gap-12 items-start px-4">
+                <!-- Standardized Journey -->
                 <section class="bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
-                    <h3 class="text-2xl font-black text-gray-800 mb-10 text-sky-600" data-key="flow_title">Your Path to Optimized Health</h3>
-                    
+                    <h3 class="text-2xl font-black text-gray-800 mb-10 text-sky-600" data-key="flow_title">Your Health Journey</h3>
                     <div class="flow-container pl-4 pb-4 relative">
                         <div class="flow-step-line"></div> 
-
-                        <!-- Step 1: Admission -->
                         <div class="flow-step relative mb-12">
                             <div class="flow-step-icon">1</div>
                             <div class="pl-14">
                                 <p class="font-black text-gray-800 text-lg" data-key="flow_step_1_bold">Admission</p>
-                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_1_desc">Enroll on the platform and pay your diagnostic fee to select your local certified AMD practitioner.</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_1_desc">Enroll on the platform and select your local certified AMD practitioner.</p>
                             </div>
                         </div>
-
-                        <!-- Step 2: Data Collection -->
                         <div class="flow-step relative mb-12">
                             <div class="flow-step-icon">2</div>
                             <div class="pl-14">
                                 <p class="font-black text-gray-800 text-lg" data-key="flow_step_2_bold">Data Collection</p>
-                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_2_desc">Visit a preferred lab for CBCT, X-rays, and blood work to establish your clinical baseline.</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_2_desc">Visit a preferred lab for your personalized "Vitals Package" scans.</p>
                             </div>
                         </div>
-                        
-                        <!-- Step 3: The Reveal -->
                         <div class="flow-step relative mb-12">
                             <div class="flow-step-icon">3</div>
                             <div class="pl-14">
                                 <p class="font-black text-gray-800 text-lg" data-key="flow_step_3_bold">The Reveal</p>
-                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_3_desc">Review your "Tiger vs. Cage" visualization and receive your personalized Airway Prescription.</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_3_desc">Receive your official "Airway Prescription" and structural visualization.</p>
                             </div>
                         </div>
-                        
-                        <!-- Step 4: Design & Delivery -->
                         <div class="flow-step relative mb-12">
                             <div class="flow-step-icon">4</div>
                             <div class="pl-14">
                                 <p class="font-black text-gray-800 text-lg" data-key="flow_step_4_bold">Design & Delivery</p>
-                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_4_desc">Expert specialists finalize your clinical blueprint. Your custom STA appliance is fabricated and fitted.</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_4_desc">Expert finalization of your engineered STA appliance for fabrication.</p>
                             </div>
                         </div>
-                         
-                        <!-- Step 5: Guided Growth -->
                         <div class="flow-step relative mb-12">
                             <div class="flow-step-icon">5</div>
                             <div class="pl-14">
-                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_5_bold">The Long Tail</p>
-                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_5_desc">Over 12-24 months, track anatomical progress with bi-weekly adjustments and 24/7 ATC support.</p>
+                                <p class="font-black text-gray-800 text-lg" data-key="flow_step_5_bold">Guided Growth</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_5_desc">Track progress over 12-24 months with bi-weekly clinical adjustments.</p>
                             </div>
                         </div>
-
-                        <!-- Step 6: Empowerment -->
                         <div class="flow-step relative">
                             <div class="flow-step-icon bg-green-500">6</div>
                             <div class="pl-14">
                                 <p class="font-black text-gray-800 text-lg" data-key="flow_step_6_bold">Empowerment</p>
-                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_6_desc">Final health optimization achieved. Move from chronic symptoms to anatomical pride.</p>
+                                <p class="text-sm text-gray-500 mt-1" data-key="flow_step_6_desc">Final health optimization achieved. Move from sick-care to longevity.</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- RIGHT: Patient Access -->
-                <section class="flex flex-col items-center">
-                    <div class="bg-white p-10 rounded-3xl shadow-2xl border-t-8 border-sky-500 w-full max-w-sm text-center">
-                        <div class="text-7xl text-sky-500 mb-6"><i class="fa-solid fa-user-astronaut"></i></div>
-                        <h3 class="text-3xl font-black text-gray-800 mb-3" data-key="client_card_title">Patient Access</h3>
-                        <p class="text-gray-500 mb-8 font-medium leading-relaxed" data-key="client_card_desc">
-                            Begin your journey, track your results, and share your milestones with the community.
+                <!-- Signup/Login Access -->
+                <section class="flex flex-col gap-8">
+                    <div class="bg-white p-10 rounded-3xl shadow-2xl border-t-8 border-sky-500 text-center">
+                        <div class="text-7xl text-sky-500 mb-6"><i class="fa-solid fa-seedling"></i></div>
+                        <h3 class="text-3xl font-black text-gray-800 mb-3" data-key="signup_card_title">New Patients</h3>
+                        <p class="text-gray-500 mb-8 font-medium leading-relaxed" data-key="signup_card_desc">
+                            Start your journey today to redevelop your holistic mouth and unlock your structural health.
                         </p>
-                        <a href="ClientDashboard.html" class="block w-full py-4 px-6 bg-sky-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-sky-700 transition shadow-xl shadow-sky-200">
-                            <span data-key="client_card_button">Enter My Health Portal</span>
+                        <a href="ClientOnboarding.html" class="block w-full py-4 px-6 bg-sky-600 text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-sky-700 transition shadow-xl shadow-sky-200">
+                            Start My Journey
                         </a>
+                        <div class="mt-6 pt-6 border-t border-slate-100">
+                             <p class="text-xs text-slate-400 font-bold uppercase mb-3" data-key="existing_user_label">Already Enrolled?</p>
+                             <a href="ClientDashboard.html" class="text-sky-600 font-black text-sm hover:underline" data-key="link_signin">Sign in to my Dashboard</a>
+                        </div>
                     </div>
                     
-                    <div class="mt-12 bg-slate-100 p-6 rounded-2xl border border-slate-200 w-full max-w-sm flex items-center justify-between shadow-sm">
-                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest" data-key="clinic_upload_title">Secure Vitals Package Upload</div>
-                        <a href="ImagingPartnerPortal.html" class="py-2 px-4 bg-white border border-slate-300 text-slate-800 font-bold rounded-xl hover:bg-slate-50 transition text-[10px] uppercase">Upload Hub</a>
+                    <div class="bg-slate-100 p-8 rounded-3xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-teal-600"><i class="fa-solid fa-shield-halved text-xl"></i></div>
+                            <div>
+                                <h4 class="font-black text-slate-800 uppercase text-xs tracking-widest" data-key="secure_upload_label">Imaging Hub</h4>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase mt-0.5">Secure Vitals Package Upload</p>
+                            </div>
+                        </div>
+                        <a href="ImagingPartnerPortal.html" class="block w-full py-3 bg-white border border-slate-300 text-slate-800 font-black rounded-xl hover:bg-slate-50 transition text-center text-xs uppercase tracking-widest">Partner Access</a>
                     </div>
                 </section>
             </div>
         </main>
+
+        <footer class="mt-16 py-8 border-t border-slate-100 text-center">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest" data-key="footer_rights">© 2026 AMD Ecosystem HHS MSO. All Rights Reserved.</p>
+        </footer>
     </div>
 
     <script>
@@ -266,28 +283,28 @@
             'en': {
                 'header_title': 'AMD Portal',
                 'main_headline': 'The "Invisalign" for Airway Health.',
-                'main_mission': 'Solving "Impaired Mouth Syndrome" (IMS) through proprietary clinical protocols. We bridge the gap between dental intervention and medical health optimization.',
+                'main_mission': 'Solving "Impaired Mouth Syndrome" (IMS) through proprietary clinical protocols. We redevelop the mouth to fit the tongue, optimizing whole-body performance.',
                 'tiger_cage_title': 'Six-Foot Tiger, Three-Foot Cage',
                 'tiger_cage_desc': 'Your tongue is a "Six-Foot Tiger." In an Impaired Mouth, it is trapped in a "Three-Foot Cage"—jaws and an airway much smaller than nature intended. This constriction blocks your health at the source.',
                 'abcde_title': 'The ABCDES of a Holistic Mouth',
                 'flow_title': 'Your Path to Optimized Health',
                 'flow_step_1_bold': 'Admission',
-                'flow_step_1_desc': 'Enroll on the platform and pay your diagnostic fee to select your local certified AMD practitioner.',
+                'flow_step_1_desc': 'Enroll on the platform and select your local certified AMD practitioner.',
                 'flow_step_2_bold': 'Data Collection',
-                'flow_step_2_desc': 'Visit a preferred lab for CBCT, X-rays, and blood work to establish your clinical baseline.',
+                'flow_step_2_desc': 'Visit a preferred lab for scans to establish your clinical baseline.',
                 'flow_step_3_bold': 'The Reveal',
                 'flow_step_3_desc': 'Review your "Tiger vs. Cage" visualization and receive your personalized Airway Prescription.',
                 'flow_step_4_bold': 'Design & Delivery',
                 'flow_step_4_desc': 'Expert specialists finalize your clinical blueprint. Your custom STA appliance is fabricated and fitted.',
-                'flow_step_5_bold': 'The Long Tail',
-                'flow_step_5_desc': 'Over 12-24 months, track anatomical progress with bi-weekly adjustments and 24/7 ATC support.',
+                'flow_step_5_bold': 'Guided Growth',
+                'flow_step_5_desc': 'Over 12-24 months, track anatomical progress with bi-weekly adjustments.',
                 'flow_step_6_bold': 'Empowerment',
                 'flow_step_6_desc': 'Final health optimization achieved. Move from chronic symptoms to anatomical pride.',
-                'client_card_title': 'Patient Access',
-                'client_card_desc': 'Begin your journey, track your results, and share your milestones with the community.',
-                'client_card_button': 'Enter My Health Portal',
+                'signup_card_title': 'New Patients',
+                'signup_card_desc': 'Start your journey today to redevelop your holistic mouth and unlock your structural health.',
                 'professionals_dropdown_text': 'Practitioner Access',
-                'clinic_upload_title': 'Secure Vitals Package Upload',
+                'existing_user_label': 'Already Enrolled?',
+                'link_signin': 'Sign in to my Dashboard',
                 'toggle_text': '中文'
             },
             'zh': {
@@ -295,26 +312,26 @@
                 'main_headline': '氣道健康的「隱適美」。',
                 'main_mission': '透過專有的臨床協議解決「整體口腔功能障礙綜合徵」(IMS)。我們彌合了牙科干預與醫療健康優化之間的差距。',
                 'tiger_cage_title': '六英尺老虎，三英尺籠子',
-                'tiger_cage_desc': '您的舌頭是「六英尺老虎」。在一個受損的口腔中，它被困在「三英尺籠子」裡—顎骨和氣道比大自然預期的要小得多。這種收縮從源頭阻礙了您的健康。',
+                'tiger_cage_desc': '您的舌頭是「六英尺老虎」。在一個受損的口腔中，它被困在「三英尺籠子」裡—顎骨和氣道比大自然預期的要小得多。',
                 'abcde_title': '整體口腔的 ABCDES',
                 'flow_title': '您的健康優化之路',
                 'flow_step_1_bold': '入組',
-                'flow_step_1_desc': '在平台上註冊並支付診斷費，選擇您當地的認證 AMD 執業醫師。',
+                'flow_step_1_desc': '在平台上註冊並支付診斷費，選擇您的認證 AMD 執業醫師。',
                 'flow_step_2_bold': '數據收集',
-                'flow_step_2_desc': '前往首選實驗室進行 CBCT、X 光和抽血，建立您的臨床基準。',
+                'flow_step_2_desc': '前往首選實驗室進行掃描，建立您的臨床基準。',
                 'flow_step_3_bold': '真相揭曉',
-                'flow_step_3_desc': '查看您的「老虎對抗籠子」可視化影像，並接收個性化的「氣道處方」。',
+                'flow_step_3_desc': '查看您的「老虎對抗籠子」可視化影像，並接收「氣道處方」。',
                 'flow_step_4_bold': '設計與交付',
                 'flow_step_4_desc': '專家敲定您的臨床藍圖。您的定制 STA 矯治器將被製造並佩戴。',
-                'flow_step_5_bold': '長期追踪',
-                'flow_step_5_desc': '在 12-24 個月的時間裡，透過每兩週一次的調整和 24/7 ATC 支援追踪解剖學進展。',
+                'flow_step_5_bold': '引導成長',
+                'flow_step_5_desc': '在 12-24 個月的時間裡，透過每兩週一次的調整追踪解剖學進展。',
                 'flow_step_6_bold': '賦能健康',
-                'flow_step_6_desc': '實現最終的健康優化。從慢性症狀轉向解剖學上的自豪。',
-                'client_card_title': '患者入口',
-                'client_card_desc': '開始您的旅程，追踪您的結果，並與社群分享您的里程碑。',
-                'client_card_button': '進入我的健康門戶',
+                'flow_step_6_desc': '實現最終健康優化。從慢性症狀轉向解剖學上的自豪。',
+                'signup_card_title': '新患者',
+                'signup_card_desc': '立即開始您的旅程，重新開發您的整體口腔並釋放您的結構健康。',
                 'professionals_dropdown_text': '執業醫師登入',
-                'clinic_upload_title': '安全生命特徵包上傳',
+                'existing_user_label': '已經註冊？',
+                'link_signin': '登入我的控制面板',
                 'toggle_text': 'English'
             }
         };
@@ -325,11 +342,9 @@
             menu.classList.toggle('hidden');
         }
 
-        // Close dropdown when clicking anywhere outside
         window.onclick = function(e) {
             const menu = document.getElementById('dropdown-menu');
-            const trigger = document.getElementById('nav-trigger');
-            if (menu && !trigger.contains(e.target)) {
+            if (menu && !e.target.closest('#nav-trigger')) {
                 menu.classList.add('hidden');
             }
         }
