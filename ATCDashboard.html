@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMD ATC Dashboard | Case Coordination</title>
+    <title>AMD ATC Dashboard | Case Coordination Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -16,16 +16,11 @@
         .nav-button:hover { background-color: #f5f3ff; color: #7c3aed; }
         .nav-button.active { background-color: #f5f3ff; color: #7c3aed; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border-right: 3px solid #7c3aed; }
 
-        .tracker-header { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; }
+        .tracker-header { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 1rem 0.5rem; border-bottom: 2px solid #f1f5f9; cursor: help; }
         .ageing-pill { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700; display: inline-block; }
         .ageing-done { background-color: #f1f5f9; color: #94a3b8; }
         .ageing-active { background-color: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
-        .ageing-alert { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
         
-        .tooltip-container { position: relative; display: inline-block; }
-        .tooltip-text { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400; line-height: 1.4; }
-        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
-
         .sub-nav-btn { padding: 0.6rem 1rem; font-size: 0.8rem; font-weight: 600; color: #64748b; border-radius: 0.5rem; transition: all 0.2s; display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border-left: 3px solid transparent; }
         .sub-nav-btn:hover { background-color: #f8fafc; color: #7c3aed; }
         .sub-nav-btn.active { background-color: #f5f3ff; color: #7c3aed; border-left: 3px solid #7c3aed; font-weight: 700; }
@@ -45,13 +40,12 @@
         <header class="bg-purple-gradient shadow-sm sticky top-0 z-50">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                  <div class="flex items-center gap-3">
-                     <!-- SVG Logo: Head, Jaw, and Airway focus -->
                      <svg width="32" height="32" viewBox="0 0 100 100" class="fill-white">
                         <path d="M70,20 C60,10 40,10 30,20 C20,30 15,50 20,65 C22,70 25,75 30,78 C35,82 45,85 55,85 C65,85 75,80 80,70 C85,60 85,30 70,20 Z M50,15 C65,15 75,25 78,40 C80,50 80,65 72,78 C65,85 50,85 40,78 C35,74 30,65 30,50 C30,35 40,15 50,15 Z" opacity="0.4"/>
                         <path d="M45,45 Q50,40 55,45 Q60,50 55,65 Q50,75 45,65 Q40,55 45,45 Z" fill="#e9d5ff"/>
                         <path d="M35,65 Q40,75 55,75 Q70,75 75,65" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
                      </svg>
-                     <h1 class="text-xl font-bold text-white tracking-tight" data-key="header_title">AMD ATC Dashboard</h1>
+                     <h1 class="text-xl font-bold text-white tracking-tight">AMD ATC Dashboard</h1>
                  </div>
                 <div class="flex items-center space-x-4">
                     <button id="lang-toggle" onclick="toggleLanguage()" class="py-1.5 px-4 rounded-full bg-white/10 text-white font-semibold text-xs border border-white/20 hover:bg-white/20 transition">中文</button>
@@ -67,23 +61,22 @@
                 <div class="lg:col-span-1 mb-8">
                     <div class="space-y-6 sticky top-24">
                         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-2" data-key="nav_assigned_practice">Assigned Practice</h3>
+                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-2">Assigned Practice</h3>
                             <select id="clinic-selector" onchange="changeClinic(this.value)" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-purple-700 outline-none focus:ring-2 focus:ring-purple-500 transition-all">
-                                <option value="harmony">Harmony Clinic Taipei</option>
+                                <option value="harmony" selected>Harmony Clinic Taipei</option>
                                 <option value="zen">Zen Dental Studio</option>
                                 <option value="legacy">Legacy Airway Center</option>
                             </select>
                         </div>
 
                         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-2" data-key="nav_portal_title">ATC Portal</h3>
+                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-2">ATC Portal</h3>
                             <nav class="flex flex-col space-y-1">
-                                <button id="nav-overview" class="nav-button active" onclick="switchMainPane('overview')"><i class="fa-solid fa-house-chimney w-4"></i> <span data-key="nav_overview">Overview</span></button>
-                                <button id="nav-patients" class="nav-button" onclick="switchMainPane('patients')"><i class="fa-solid fa-users w-4"></i> <span data-key="nav_patients">Patient Registry</span></button>
-                                <button id="nav-videos" class="nav-button" onclick="switchMainPane('videos')"><i class="fa-solid fa-video w-4"></i> <span data-key="nav_videos">Video Hub</span><span id="video-count-badge" class="ml-auto bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-black">--</span></button>
-                                <button id="nav-followups" class="nav-button" onclick="switchMainPane('followups')"><i class="fa-solid fa-bell w-4"></i> <span data-key="nav_action_queue">Action Queue</span></button>
-                                <button id="nav-intake" class="nav-button" onclick="switchMainPane('intake')"><i class="fa-solid fa-clipboard-list w-4"></i> <span data-key="nav_intake">Intake Management</span></button>
-                                <button id="nav-payments" class="nav-button" onclick="switchMainPane('payments')"><i class="fa-solid fa-wallet w-4"></i> <span data-key="nav_accounting">Accounting</span></button>
+                                <button id="nav-overview" class="nav-button active" onclick="switchMainPane('overview')"><i class="fa-solid fa-house-chimney w-4"></i> Overview</button>
+                                <button id="nav-patients" class="nav-button" onclick="switchMainPane('patients')"><i class="fa-solid fa-users w-4"></i> Patient Registry</button>
+                                <button id="nav-videos" class="nav-button" onclick="switchMainPane('videos')"><i class="fa-solid fa-video w-4"></i> Global Video Hub <span id="video-count-badge" class="ml-auto bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-black">--</span></button>
+                                <button id="nav-followups" class="nav-button" onclick="switchMainPane('followups')"><i class="fa-solid fa-bell w-4"></i> Action Queue</button>
+                                <button id="nav-payments" class="nav-button" onclick="switchMainPane('payments')"><i class="fa-solid fa-wallet w-4"></i> Accounting</button>
                             </nav>
                         </div>
                     </div>
@@ -97,221 +90,215 @@
                             <div><h2 class="text-2xl font-black text-slate-800 tracking-tight" id="overview-clinic-name">--</h2><p class="text-xs text-slate-400 font-bold uppercase" id="overview-doctor-name">--</p></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="section-card border-l-4 border-purple-500"><p class="text-[10px] font-black text-slate-400 uppercase" data-key="stat_active_cases">My Active Cases</p><p class="text-2xl font-black text-slate-800" id="stat-cases">--</p></div>
-                            <div class="section-card border-l-4 border-amber-500"><p class="text-[10px] font-black text-slate-400 uppercase" data-key="stat_pending_scans">Pending Scans</p><p class="text-2xl font-black text-slate-800" id="stat-scans">--</p></div>
-                            <div class="section-card border-l-4 border-red-500"><div class="flex justify-between items-center"><p class="text-[10px] font-black text-slate-400 uppercase" data-key="stat_video_messages">New Video MSGs</p><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span></div><p class="text-2xl font-black text-slate-800" id="stat-videos">--</p></div>
+                            <div class="section-card border-l-4 border-purple-500"><p class="text-[10px] font-black text-slate-400 uppercase">My Active Cases</p><p class="text-2xl font-black text-slate-800" id="stat-cases">--</p></div>
+                            <div class="section-card border-l-4 border-amber-500"><p class="text-[10px] font-black text-slate-400 uppercase">Pending Scans</p><p class="text-2xl font-black text-slate-800" id="stat-scans">--</p></div>
+                            <div class="section-card border-l-4 border-red-500"><div class="flex justify-between items-center"><p class="text-[10px] font-black text-slate-400 uppercase">New Video MSGs</p><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span></div><p class="text-2xl font-black text-slate-800" id="stat-videos">--</p></div>
                         </div>
-                        <div class="section-card"><h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-500"></i> <span data-key="followup_priority">Follow-up Priority</span></h3><div class="space-y-3" id="priority-list"></div></div>
+
+                        <div class="section-card">
+                            <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-500"></i> Follow-up Priority</h3>
+                            <div class="space-y-3" id="priority-list"></div>
+                        </div>
+
                         <div class="section-card overflow-hidden !p-0 border border-slate-100">
-                            <div class="p-4 border-b border-slate-100"><h3 class="font-bold text-slate-800" data-key="master_case_tracker">Master Case Tracker</h3></div>
-                            <div class="overflow-x-auto no-scrollbar"><table class="min-w-full divide-y divide-slate-100"><thead class="bg-slate-50/50"><tr><th class="tracker-header text-left pl-6" data-key="col_patient">Patient</th><th class="tracker-header text-center" data-key="col_intake">Intake</th><th class="tracker-header text-center" data-key="col_diag">Diag</th><th class="tracker-header text-center" data-key="col_spec">Spec</th><th class="tracker-header text-center" data-key="col_cons">Cons</th><th class="tracker-header text-center" data-key="col_mfg">Mfg</th><th class="tracker-header text-center" data-key="col_log">Log</th><th class="tracker-header text-right pr-6" data-key="col_ageing">Ageing</th></tr></thead><tbody id="tracker-body" class="bg-white divide-y divide-slate-100 text-sm"></tbody></table></div>
+                            <div class="p-4 border-b border-slate-100 flex justify-between items-center"><h3 class="font-bold text-slate-800">Master Case Tracker</h3></div>
+                            <div class="overflow-x-auto no-scrollbar">
+                                <table class="min-w-full divide-y divide-slate-100">
+                                    <thead class="bg-slate-50/50">
+                                        <tr>
+                                            <th class="tracker-header text-left pl-6">Patient</th>
+                                            <th class="tracker-header text-center" title="Intake">Intake</th>
+                                            <th class="tracker-header text-center" title="Diagnostics">Diag</th>
+                                            <th class="tracker-header text-center" title="Spec Review">Spec</th>
+                                            <th class="tracker-header text-center text-purple-600 bg-purple-50/50" title="Payment">Pay</th>
+                                            <th class="tracker-header text-center" title="Cons & Design">Cons</th>
+                                            <th class="tracker-header text-center" title="Manufacturing">Mfg</th>
+                                            <th class="tracker-header text-center" title="Logistics">Log</th>
+                                            <th class="tracker-header text-center" title="Delivery">Del</th>
+                                            <th class="tracker-header text-center" title="Maintenance">Maint</th>
+                                            <th class="tracker-header text-right pr-6">Ageing</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tracker-body" class="bg-white divide-y divide-slate-100 text-sm"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Action Queue Pane -->
+                    <!-- 2. Global Video Hub -->
+                    <div id="pane-videos" class="main-pane hidden space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Global Video Coaching Hub</h2>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full border border-purple-200">Across All Clinics</span>
+                        </div>
+                        <div id="global-video-list" class="grid grid-cols-1 gap-6"></div>
+                    </div>
+
+                    <!-- 3. Action Queue -->
                     <div id="pane-followups" class="main-pane hidden space-y-6">
                         <div class="flex justify-between items-center">
-                            <h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="coordination_tasks_title">Coordination Tasks</h2>
-                            <button onclick="openActionModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md hover:bg-purple-700 transition">Create Action</button>
+                            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Coordination Action Queue</h2>
+                            <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest shadow-md">Batch Update</button>
                         </div>
                         <div id="task-list-full" class="space-y-4"></div>
                     </div>
 
-                    <!-- Additional Panes -->
-                    <div id="pane-patients" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="registry_title">Patient Registry</h2><div class="section-card"><div class="relative mb-6"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input type="text" id="patient-search" onkeyup="filterPatients()" placeholder="Search registry..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-purple-500 transition-all"></div><div class="overflow-hidden border border-slate-100 rounded-lg"><table class="w-full text-left"><tbody id="patient-list-body" class="divide-y divide-slate-50"></tbody></table></div></div></div>
-                    <div id="pane-videos" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="video_hub_title">Direct ATC Access Hub</h2><div class="grid grid-cols-1 gap-6" id="video-feed-list"></div></div>
-                    <div id="pane-intake" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="nav_intake">Intake Management</h2><div class="grid grid-cols-1 gap-4" id="intake-queue-list"></div></div>
-                    <div id="pane-payments" class="main-pane hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 tracking-tight" data-key="nav_accounting">Accounting & Ledger</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="section-card border-l-4 border-green-500"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1" data-key="stat_total_revenue">Total Revenue (YTD)</p><p class="text-3xl font-black text-slate-800" id="acct-revenue">--</p></div><div class="section-card border-l-4 border-amber-500"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1" data-key="stat_pending_fees">Pending Fees</p><p class="text-3xl font-black text-slate-800" id="acct-pending">--</p></div></div></div>
+                    <!-- 4. Patient Registry -->
+                    <div id="pane-patients" class="main-pane hidden space-y-6">
+                        <h2 class="text-2xl font-black text-slate-800 tracking-tight">Patient Registry</h2>
+                        <div class="section-card">
+                            <div class="relative mb-6">
+                                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="text" id="registry-search" placeholder="Search across all practices..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div class="overflow-hidden border border-slate-100 rounded-lg">
+                                <table class="w-full text-left">
+                                    <tbody id="patient-registry-body" class="divide-y divide-slate-50"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- 7. Patient Detail Workspace -->
+                    <!-- 5. Detailed Case Workspace -->
                     <div id="pane-client-detail" class="main-pane hidden space-y-6">
-                        <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center justify-between gap-4 border-b pb-6">
                             <div class="flex items-center gap-4">
                                 <button onclick="switchMainPane('overview')" class="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-purple-600 transition"><i class="fa-solid fa-arrow-left"></i></button>
-                                <div><h2 id="detail-name" class="text-2xl font-black text-slate-900 leading-none mb-1">--</h2><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">ID: <span id="detail-id" class="text-purple-600 font-mono">--</span> <span class="w-1 h-1 rounded-full bg-slate-300"></span> Practitioner: <span id="detail-doctor" class="text-teal-600 font-bold">--</span></p></div>
+                                <div><h2 id="detail-name" class="text-2xl font-black text-slate-900 leading-none mb-1">--</h2><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">ID: <span id="detail-id" class="text-purple-600 font-mono">--</span> <span class="w-1 h-1 rounded-full bg-slate-300"></span> Clinic: <span id="detail-clinic-label" class="text-teal-600 font-bold uppercase">--</span></p></div>
                             </div>
-                            <div class="text-right"><span class="text-[9px] font-black text-slate-400 uppercase block mb-0.5" data-key="label_atc_ageing">ATC Case Ageing</span><span id="detail-active-days" class="text-lg font-black text-purple-600">--</span></div>
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="md:w-64 flex-shrink-0">
-                                <div class="bg-white p-3 rounded-xl border border-slate-100 space-y-1">
-                                    <button class="sub-nav-btn active" onclick="switchDetailTab('clinical')"><i class="fa-solid fa-list-check w-4"></i> <span data-key="tab_clinical">Granular Progress</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('questionnaire')"><i class="fa-solid fa-clipboard-question w-4"></i> <span data-key="tab_questionnaire">Patient Questionnaire</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> <span data-key="tab_diagnostics">Scans, Analysis & Reports</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('treatment')"><i class="fa-solid fa-screwdriver-wrench w-4"></i> <span data-key="tab_treatment">Treatment Plan</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('coaching')"><i class="fa-solid fa-video w-4"></i> <span data-key="tab_coaching">Video Log</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('records')"><i class="fa-solid fa-book-medical w-4"></i> <span data-key="tab_records">Clinic Records</span></button>
-                                    <button class="sub-nav-btn" onclick="switchDetailTab('chat')"><i class="fa-solid fa-comments w-4"></i> <span data-key="tab_chat">Case Chat</span></button>
+                                <div class="bg-white p-3 rounded-xl border border-slate-100 space-y-1 sticky top-24">
+                                    <button class="sub-nav-btn active" onclick="switchDetailTab('clinical')"><i class="fa-solid fa-list-check w-4"></i> Progress Tracker</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('diagnostics')"><i class="fa-solid fa-microscope w-4"></i> Scans & Reports</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('questionnaire')"><i class="fa-solid fa-clipboard-question w-4"></i> Questionnaire</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('treatment')"><i class="fa-solid fa-screwdriver-wrench w-4"></i> Treatment Plan</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('hub')"><i class="fa-solid fa-video w-4"></i> Interaction Hub</button>
+                                    <button class="sub-nav-btn" onclick="switchDetailTab('chat')"><i class="fa-solid fa-comments w-4"></i> Case Chat</button>
                                 </div>
                             </div>
 
                             <div class="flex-1 min-w-0 space-y-6">
-                                <div id="tab-clinical" class="detail-tab space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-6" data-key="granular_status">Granular Workflow Status</h3><span class="text-[10px] font-black text-slate-400 uppercase">Total Ageing: <span id="detail-total-ageing" class="text-purple-600">--</span></span><div id="detail-granular-timeline" class="space-y-8 mt-6"></div></div></div>
+                                <div id="tab-clinical" class="detail-tab space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-6 uppercase text-xs">Clinical Timeline</h3><div id="detail-granular-timeline" class="space-y-8 mt-6"></div></div></div>
                                 
-                                <!-- Questionnaire -->
+                                <div id="tab-diagnostics" class="detail-tab hidden space-y-6">
+                                    <div class="section-card">
+                                        <h3 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest">Scans, Analysis & Reports</h3>
+                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="detail-scans-list"></div>
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Expert Analysis Summary</h4>
+                                        <div class="p-3 bg-amber-50 border border-amber-100 rounded-lg mb-6"><p class="text-xs text-amber-800 italic" id="analysis-summary">--</p></div>
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Clinical Reports</h4>
+                                        <div class="space-y-2" id="detail-reports-list"></div>
+                                    </div>
+                                </div>
+
                                 <div id="tab-questionnaire" class="detail-tab hidden space-y-6">
-                                    <div class="section-card bg-purple-50 border border-purple-100">
-                                        <h3 class="font-bold text-purple-800 mb-4" data-key="tab_questionnaire">Patient Submitted Questionnaire</h3>
+                                    <div class="section-card bg-purple-50/30 border border-purple-100">
+                                        <h3 class="font-bold text-purple-800 mb-4 uppercase text-xs tracking-widest">Baseline Symptom Assessment</h3>
                                         <div class="space-y-4 text-sm text-slate-700">
                                             <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Motivations</h4><p id="q-mot">--</p></div>
                                             <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Pain Points</h4><p id="q-pain">--</p></div>
                                             <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Medical History</h4><p id="q-hist">--</p></div>
-                                            <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">Integrated MSQ Score</h4><p>Head/Neck: 14 | Cardio: 5 | Digestive: 2 | Brain: 18 (Severe)</p></div>
-                                        </div>
-                                        <button class="mt-4 px-4 py-2 bg-purple-600 text-white text-[10px] font-black rounded uppercase shadow-sm hover:bg-purple-700">Download Full PDF</button>
-                                    </div>
-                                </div>
-
-                                <!-- Scans, Analysis & Reports -->
-                                <div id="tab-diagnostics" class="detail-tab hidden space-y-6">
-                                    <div class="section-card">
-                                        <h3 class="font-bold text-slate-800 mb-4" data-key="uploaded_diagnostics">Scans, Analysis & Reports</h3>
-                                        
-                                        <!-- Scans -->
-                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Clinical Scans</h4>
-                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="detail-scans-list"></div>
-                                        
-                                        <!-- Analysis -->
-                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Expert Analysis</h4>
-                                        <div class="p-3 bg-amber-50 border border-amber-100 rounded-lg mb-6">
-                                            <p class="text-xs text-amber-800 italic">"Structural analysis confirms airway volume deficiency. Treatment focuses on arch expansion."</p>
-                                        </div>
-
-                                        <!-- Reports -->
-                                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Medical Reports</h4>
-                                        <div class="space-y-2">
-                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Blood Panel (CBC)</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
-                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Liver Function</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
-                                            <div class="p-2 border rounded flex justify-between text-xs bg-slate-50"><span>Kidney Function</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>
+                                            <div class="bg-white p-3 rounded-lg"><h4 class="font-bold mb-1">MSQ Baseline</h4><p id="q-msq">Head/Neck: 14 | Cardiopulmonary: 5 | Digestive: 2 | Brain/Sleep: 18</p></div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div id="tab-treatment" class="detail-tab hidden space-y-6">
-                                    <div class="section-card bg-teal-50 border-l-4 border-teal-500"><h3 class="font-bold text-teal-800 mb-4" data-key="amd_prescription">AMD Prescription Summary</h3><div id="detail-treatment-summary" class="text-sm leading-relaxed text-slate-700"></div></div>
-                                    <div class="section-card"><h3 class="font-bold text-slate-800 mb-4" data-key="active_growth">Active Growth Monitoring</h3><div id="detail-treatment-log" class="space-y-2"></div></div>
+                                    <div class="section-card border-l-4 border-teal-500 bg-teal-50/30 mb-6">
+                                        <h3 class="font-bold text-teal-800 mb-4 uppercase text-xs tracking-widest">Treatment Interventions</h3>
+                                        <div class="flex items-center gap-6 mb-4">
+                                            <div class="flex-1">
+                                                <p class="text-[10px] font-bold text-slate-500 uppercase">Appliance Completion Progress</p>
+                                                <div class="flex items-center gap-4 mt-1">
+                                                    <div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden"><div id="app-progress-bar" class="h-full bg-teal-500" style="width: 25%"></div></div>
+                                                    <span id="app-percent-text" class="text-xs font-black text-teal-700">25%</span>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-[10px] font-bold text-slate-500 uppercase">Prescription</p>
+                                                <p class="text-xs font-black text-slate-800">24 Months</p>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 border border-teal-100 rounded-xl mb-4">
+                                            <p class="text-xs font-black text-teal-800 uppercase mb-2">Prescribed Nutrition Focus</p>
+                                            <ul class="space-y-1.5 list-disc list-inside text-xs text-slate-600 font-medium pl-2">
+                                                <li>Increase intake of bone broth for collagen support.</li>
+                                                <li>Ensure adequate calcium and magnesium levels.</li>
+                                                <li>Focus on essential fatty acids (Omega-3).</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="section-card"><h3 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest">Clinical Observation Log</h3><div id="detail-treatment-log" class="space-y-3"></div></div>
                                 </div>
-                                <div id="tab-coaching" class="detail-tab hidden space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-4" data-key="tab_coaching">Video Submissions</h3><div id="detail-video-list" class="space-y-4"></div></div></div>
-                                <div id="tab-records" class="detail-tab hidden space-y-6"><div class="section-card"><h3 class="font-bold text-slate-800 mb-4" data-key="tab_records">Clinical Records</h3><div id="detail-internal-notes" class="space-y-4"></div></div></div>
-                                <div id="tab-chat" class="detail-tab hidden"><div class="section-card flex flex-col h-[500px]"><h3 class="font-bold text-slate-800 mb-4 border-b pb-2 uppercase text-xs">Case Collaboration</h3><div id="chat-messages" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col no-scrollbar"></div><div class="mt-4 flex gap-2 pt-4 border-t"><input type="text" placeholder="Type a message..." class="flex-1 px-4 py-2 border rounded-xl outline-none text-sm focus:ring-2 focus:ring-purple-500"><button class="bg-purple-600 text-white px-4 rounded-xl transition hover:bg-purple-700"><i class="fa-solid fa-paper-plane"></i></button></div></div></div>
+
+                                <div id="tab-hub" class="detail-tab hidden space-y-6">
+                                    <div class="section-card border-t-8 border-pink-500"><h3 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest">Interaction Hub & Coaching</h3><div id="detail-hub-videos" class="space-y-4"></div></div>
+                                </div>
+
+                                <div id="tab-chat" class="detail-tab hidden"><div class="section-card flex flex-col h-[500px]"><h3 class="font-bold text-slate-800 mb-4 border-b pb-2 uppercase text-xs tracking-widest">Secure Group Chat</h3><div id="chat-messages" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col no-scrollbar"></div><div class="mt-4 flex gap-2 pt-4 border-t"><input type="text" placeholder="Reply to group..." class="flex-1 px-4 py-2 border rounded-xl outline-none text-sm focus:ring-2 focus:ring-purple-500"><button class="bg-purple-600 text-white px-4 rounded-xl hover:bg-purple-700 transition"><i class="fa-solid fa-paper-plane"></i></button></div></div></div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Accounting Pane -->
+                    <div id="pane-payments" class="main-pane hidden space-y-6">
+                        <h2 class="text-2xl font-black text-slate-800 tracking-tight">Practice Financials</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="accounting-summary"></div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Action Modal -->
-    <div id="action-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
-        <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl">
-            <h3 class="text-xl font-black text-purple-600 mb-6 border-b pb-2 uppercase tracking-tight">Create Coordination Action</h3>
-            <div class="space-y-4">
-                <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Task Title</label><input type="text" id="action-title" class="w-full p-2.5 bg-slate-50 border rounded-lg text-sm outline-none focus:ring-1 focus:ring-purple-500"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Assigned Context</label>
-                    <select id="action-patient" class="w-full p-2.5 bg-slate-50 border rounded-lg text-sm">
-                        <option value="General">General / Administrative</option>
-                        <option value="John Lee">John Lee (TW-001)</option>
-                        <option value="Liam Wang">Liam Wang (TW-014)</option>
-                        <option value="Alice Chang">Alice Chang (TW-004)</option>
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Category</label>
-                        <select id="action-category" class="w-full p-2.5 bg-slate-50 border rounded-lg text-sm font-bold text-purple-600">
-                            <option>Logistics</option><option>Clinical</option><option>Admin</option>
-                        </select>
-                    </div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-1">Priority</label>
-                        <select id="action-priority" class="w-full p-2.5 bg-slate-50 border rounded-lg text-sm font-bold text-amber-600">
-                            <option>Medium</option><option>High</option><option>Urgent</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="flex gap-4 mt-8">
-                <button onclick="closeModal('action-modal')" class="flex-1 py-3 bg-slate-100 text-slate-500 rounded-xl font-black text-xs uppercase">Cancel</button>
-                <button onclick="createAction()" class="flex-1 py-3 bg-purple-600 text-white rounded-xl font-black text-xs uppercase shadow-xl hover:bg-purple-700 transition">Save Action</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         let currentClinic = 'harmony';
         let currentLang = 'en';
-        let dynamicActions = [];
-
-        const statusMap = {
-            "Onboarding Complete": "Forms finished; ready for clinical scheduling.",
-            "Clinical Appointment Scheduled": "Visit confirmed; awaiting exams.",
-            "Imaging In Progress": "Undergoing CBCT, Ceph, or STL scans.",
-            "Lab Images Review WIP": "Vetting scans before referral.",
-            "Ready for Specialist Referral": "Verified; ready to push.",
-            "Pending Specialist Consultation": "Case in California; awaiting report.",
-            "Specialist Report Finalized": "Report complete; awaiting payment.",
-            "Pending Payment": "Patient must pay MSO fee.",
-            "STA In Progress": "Lab is fabricating device.",
-            "Pending STA Delivery": "Device in transit.",
-            "Treatment In Progress": "Active growth phase.",
-            "Treatment Suspended": "On hold.",
-            "Offboarding": "Final release."
-        };
-
-        const translations = {
-            en: {
-                header_title: "AMD ATC Dashboard", nav_assigned_practice: "Assigned Practice", nav_portal_title: "ATC Portal",
-                nav_overview: "Overview", nav_patients: "Patient Registry", nav_videos: "Video Hub", nav_action_queue: "Action Queue",
-                nav_intake: "Intake Management", nav_accounting: "Accounting", stat_active_cases: "My Active Cases", stat_pending_scans: "Pending Scans",
-                stat_video_messages: "New Video MSGs", followup_priority: "Follow-up Priority", master_case_tracker: "Master Case Tracker",
-                registry_title: "Patient Registry", video_hub_title: "Direct ATC Access Hub", coordination_tasks_title: "Coordination Tasks",
-                label_atc_ageing: "ATC Case Ageing", tab_clinical: "Granular Progress", tab_diagnostics: "Scans, Analysis & Reports",
-                tab_treatment: "Treatment Plan", tab_coaching: "Video Log", tab_records: "Clinic Records", tab_chat: "Case Chat", tab_questionnaire: "Patient Questionnaire",
-                granular_status: "Granular Workflow Status", pipeline_progression: "Pipeline Progression", col_patient: "Patient",
-                col_intake: "Intake", col_diag: "Diag", col_spec: "Spec", col_cons: "Cons", col_mfg: "Mfg", col_log: "Log", col_ageing: "Ageing",
-                stat_total_revenue: "Total Revenue (YTD)", stat_pending_fees: "Pending Fees",
-                uploaded_diagnostics: "Scans, Analysis & Reports", amd_prescription: "AMD Prescription Summary", active_growth: "Active Growth Monitoring"
-            },
-            zh: {
-                header_title: "AMD ATC 儀表板", nav_assigned_practice: "分配診所", nav_portal_title: "ATC 門戶",
-                nav_overview: "概覽", nav_patients: "患者登記", nav_videos: "影片中心", nav_action_queue: "行動隊列",
-                nav_intake: "入組管理", nav_accounting: "會計", stat_active_cases: "我的活躍病例", stat_pending_scans: "待處理掃描",
-                stat_video_messages: "新影片訊息", followup_priority: "優先跟進", master_case_tracker: "主要病例追踪",
-                registry_title: "患者登記表", video_hub_title: "ATC 直接存取中心", coordination_tasks_title: "協作任務",
-                label_atc_ageing: "ATC 病例時程", tab_clinical: "詳細進度", tab_diagnostics: "掃描、分析與報告",
-                tab_treatment: "治療計劃", tab_coaching: "影片指導", tab_records: "診所記錄", tab_chat: "病例對話", tab_questionnaire: "患者問卷",
-                granular_status: "詳細工作流程狀態", pipeline_progression: "管道進展", col_patient: "患者",
-                col_intake: "入組", col_diag: "診斷", col_spec: "專科", col_cons: "諮詢", col_mfg: "製造", col_log: "物流", col_ageing: "時程",
-                stat_total_revenue: "總收入 (年累計)", stat_pending_fees: "待處理費用",
-                uploaded_diagnostics: "掃描、分析與報告", amd_prescription: "AMD 處方摘要", active_growth: "主動成長監測"
-            }
-        };
-
-        const clinics = {
-            harmony: { name: "Harmony Clinic Taipei", doc: "Dr. Ryan Chiang", patients: 6, scans: 3, videos: 2, revenue: "NT$ 4,820,000", pendingFees: "NT$ 124,500" },
-            zen: { name: "Zen Dental Studio", doc: "Dr. C. Lin", patients: 6, scans: 2, videos: 1, revenue: "NT$ 2,150,000", pendingFees: "NT$ 45,000" },
-            legacy: { name: "Legacy Airway Center", doc: "Dr. Peter Tseng", patients: 6, scans: 4, videos: 2, revenue: "NT$ 6,840,000", pendingFees: "NT$ 210,000" }
-        };
 
         const mockPatients = [
-            // Harmony
-            { clinic: 'harmony', name: "John Lee", id: "TW-001", totalDays: 42, referred: true, currentStatus: "STA In Progress", phaseIndex: 4, 
-                motivation: "Eliminate fatigue.", pains: "Apnea, snoring.", qHist: "High Blood Pressure (Family)",
-                phases: { intake: 5, diag: 12, spec: 8, cons: 4, mfg: 13, log: 0, treat: 0, offb: 0 },
-                granular: {
-                    "Intake": { status: "Complete", age: 5, steps: [{name: "Forms", done: true}, {name: "Scheduling", done: true}, {name: "Confirmed", done: true}] },
-                    "Diagnostics": { status: "Complete", age: 12, steps: [{name: "CBCT Airway", done: true}, {name: "Lateral Ceph", done: true}, {name: "STL Models", done: true}] },
-                    "Specialist Review": { status: "Complete", age: 8, steps: [{name: "Vitals Check", done: true}, {name: "Doc Felix Refer", done: true}] },
-                    "Manufacturing": { status: "Active", age: 13, steps: [{name: "Order Rec'd", done: true}, {name: "3D Print", done: false, pending: "STA Lab"}, {name: "QC Review", done: false}] }
-                },
-                prescription: "Rapid expansion focus. 2.0 turns bi-weekly. Target intermolar width expansion: +4.5mm. Correct velopharyngeal restriction.",
+            { clinic: 'harmony', name: "John Lee", id: "TW-001", totalDays: 42, currentStatus: "STA In Progress", phaseIndex: 5, 
+                phases: { intake: 5, diag: 12, spec: 8, pay: 4, cons: 4, mfg: 13, log: 0, del: 0, treat: 0, offb: 0 },
+                motivation: "Eliminate chronic fatigue and snoring.", pains: "Apnea, frequent headaches.", qHist: "High Blood Pressure (Family)",
+                analysis: "Structural analysis confirms severe airway constriction. 5mm transverse deficiency identified.",
                 internalNotes: [{date: "Jan 10, 2026", author: "Dr. Ryan Chiang", text: "Trial turns successful."}],
-                videos: [{ id: 'v1', date: 'Jan 10, 2026', transcript: "Pressure on molars noted.", shared: false }],
-                chat: [{ role: "atc", name: "Jane Chen", msg: "Hi John, confirming you're ready?" }, { role: "patient", name: "John Lee", msg: "Yes, ready." }]
+                videos: [{ id: 'v1', date: 'Jan 10', transcript: "Feeling tight on left molar. Is this expansion normal?", escalated: false }],
+                granular: {
+                    "Intake": { status: "Complete", age: 5, steps: [{name: "Forms", done: true}, {name: "Scheduling", done: true}] },
+                    "Diagnostics": { status: "Complete", age: 12, steps: [{name: "CBCT Airway", done: true}, {name: "STL Models", done: true}] },
+                    "Spec Review": { status: "Complete", age: 8, steps: [{name: "Referral Push", done: true}] },
+                    "Payment": { status: "Complete", age: 4, steps: [{name: "MSO Fee Paid", done: true, action: "Mark Payment Received"}] },
+                    "Manufacturing": { status: "Active", age: 13, steps: [{name: "Order Rec'd", done: true}, {name: "3D Print", done: false, pending: "STA Lab"}] }
+                }
             },
-            { clinic: 'harmony', name: "Mei-Ling Wu", id: "TW-002", totalDays: 14, currentStatus: "Lab Images Review WIP", phaseIndex: 1, phases: { intake: 3, diag: 11, spec: 0, cons: 0, mfg: 0, log: 0, treat: 0, offb: 0 }, motivation: "TMJ relief.", pains: "Clicking.", qHist: "--", granular: { "Diagnostics": { status: "Active", age: 11, steps: [{name: "CBCT", done: true}, {name: "Radiology Review", done: false}] } }, prescription: "Awaiting referral.", internalNotes: [], videos: [], chat: [] },
-            { clinic: 'zen', name: "Alice Chang", id: "TW-004", totalDays: 240, currentStatus: "Treatment In Progress", phaseIndex: 6, phases: { intake: 10, diag: 15, spec: 12, cons: 10, mfg: 25, log: 20, treat: 148, offb: 0 }, motivation: "Anatomy fix.", pains: "Mouth breathing.", qHist: "Asthma", granular: { "Treatment": { status: "Active", age: 148, steps: [{name: "Turns", done: true}] } }, prescription: "Maintain rate.", internalNotes: [], videos: [], chat: [] }
+            { clinic: 'harmony', name: "David Hsu", id: "TW-005", totalDays: 35, currentStatus: "Pending Payment", phaseIndex: 3, 
+                phases: { intake: 6, diag: 14, spec: 10, pay: 5, cons: 0, mfg: 0, log: 0, del: 0, treat: 0, offb: 0 }, 
+                motivation: "Migraine relief.", pains: "Mouth breathing.", qHist: "--",
+                videos: [{ id: 'v5', date: 'Jan 15', transcript: "Asking about financing options for treatment.", escalated: true }], 
+                analysis: "Awaiting payment to unlock clinical design.",
+                granular: { "Payment": { status: "Action Needed", age: 5, steps: [{name: "Agreement", done: true}, {name: "MSO Fee", done: false, action: "Mark Payment Received"}] } }
+            },
+            { clinic: 'zen', name: "Sarah Chen", id: "TW-045", totalDays: 15, currentStatus: "Diagnostics In Progress", phaseIndex: 1, 
+                phases: { intake: 5, diag: 10, spec: 0, pay: 0, cons: 0, mfg: 0, log: 0, del: 0, treat: 0, offb: 0 }, 
+                motivation: "Fixing overbite.", pains: "Shoulder tension.", qHist: "None",
+                videos: [{ id: 'v2', date: 'Jan 12', transcript: "Scan resolution question. Specialist asked for rescan.", escalated: true }],
+                granular: { "Diagnostics": { status: "Active", age: 10, steps: [{name: "CBCT", done: true}, {name: "Ceph", done: false}] } }
+            },
+            { clinic: 'legacy', name: "Robert Wilson", id: "TW-110", totalDays: 142, currentStatus: "Active Maintenance", phaseIndex: 9, 
+                phases: { intake: 5, diag: 10, spec: 5, pay: 2, cons: 3, mfg: 10, log: 5, del: 2, treat: 100, offb: 0 }, 
+                motivation: "Long-term wellness.", pains: "Fatigue.", qHist: "None",
+                videos: [{ id: 'v3', date: 'Jan 08', transcript: "Maintenance check-in. Everything feels stable.", escalated: false }], 
+                analysis: "Maintenance phase. Expansion complete.",
+                granular: { "Maintenance": { status: "Active", age: 100, steps: [{name: "Monthly Check", done: true}] } }
+            }
+        ];
+
+        const actionTasks = [
+            { patient: "David Hsu", clinic: "Harmony", task: "Mark Payment Received", priority: "High", due: "Due now" },
+            { patient: "Sarah Chen", clinic: "Zen", task: "Verify Scan Resolution Alert", priority: "High", due: "3h ago" },
+            { patient: "James Wilson", clinic: "Legacy", task: "Confirm postage tracking for device", priority: "Low", due: "Tomorrow" },
+            { patient: "John Lee", clinic: "Harmony", task: "Logistics Tracking: STL to Lab", priority: "Medium", due: "1h ago" }
         ];
 
         function switchMainPane(id) {
@@ -319,39 +306,42 @@
             if (!targetPane) return;
             document.querySelectorAll('.main-pane').forEach(p => p.classList.add('hidden'));
             targetPane.classList.remove('hidden');
-            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-            const btn = document.getElementById(`nav-${id}`);
-            if (btn) btn.classList.add('active');
+            document.querySelectorAll('.nav-button').forEach(b => { if(b) b.classList.remove('active'); });
+            const navBtn = document.getElementById(`nav-${id}`);
+            if (navBtn) navBtn.classList.add('active');
         }
 
         function switchDetailTab(id) {
-            const targetTab = document.getElementById(`tab-${id}`);
-            if (!targetTab) return;
             document.querySelectorAll('.detail-tab').forEach(t => t.classList.add('hidden'));
-            targetTab.classList.remove('hidden');
+            const target = document.getElementById(`tab-${id}`);
+            if (target) target.classList.remove('hidden');
             document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
-            const clickedBtn = Array.from(document.querySelectorAll('.sub-nav-btn')).find(btn => btn.getAttribute('onclick')?.includes(`'${id}'`));
-            if (clickedBtn) clickedBtn.classList.add('active');
+            if (event) event.currentTarget.classList.add('active');
+        }
+
+        function renderTracker() {
+            const body = document.getElementById('tracker-body');
+            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log', 'del', 'treat']; 
+            body.innerHTML = mockPatients.filter(p => p.clinic === currentClinic).map(p => {
+                const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || 0;
+                return `<tr class="hover:bg-slate-50 cursor-pointer transition-colors group" onclick="selectPatient('${p.id}')">
+                    <td class="px-6 py-4 font-bold text-xs">${p.name}<br><span class="text-[9px] font-normal text-purple-600 uppercase">${p.currentStatus}</span></td>
+                    ${phaseKeys.map((key, idx) => `<td class="text-center px-1 py-4"><span class="ageing-pill ${idx < p.phaseIndex ? 'ageing-done' : idx === p.phaseIndex ? 'ageing-active' : ''}">${p.phases[key] || 0}d</span></td>`).join('')}
+                    <td class="px-6 py-4 text-right text-xs font-black text-purple-600">${p.totalDays}d</td>
+                </tr>`;
+            }).join('');
         }
 
         function selectPatient(id) {
             const p = mockPatients.find(x => x.id === id);
             if (!p) return;
-            
-            const detailName = document.getElementById('detail-name');
-            const detailId = document.getElementById('detail-id');
-            const detailDoctor = document.getElementById('detail-doctor');
-            const detailActiveDays = document.getElementById('detail-active-days');
-            const detailTotalAgeing = document.getElementById('detail-total-ageing');
 
-            if (detailName) detailName.innerText = p.name;
-            if (detailId) detailId.innerText = p.id;
-            if (detailDoctor) detailDoctor.innerText = clinics[p.clinic].doc;
-            
-            const phaseKeys = ['intake', 'diag', 'spec', 'cons', 'mfg', 'log', 'treat', 'offb'];
-            if (detailActiveDays) detailActiveDays.innerText = `${p.phases[phaseKeys[p.phaseIndex]] || 0}d`;
-            if (detailTotalAgeing) detailTotalAgeing.innerText = `${p.totalDays}d`;
-            
+            document.getElementById('detail-name').innerText = p.name;
+            document.getElementById('detail-id').innerText = p.id;
+            document.getElementById('detail-clinic-label').innerText = p.clinic;
+
+            // Granular timeline snippet
+            const phaseKeys = ['intake', 'diag', 'spec', 'pay', 'cons', 'mfg', 'log', 'del', 'treat', 'offb']; 
             const timelineBody = document.getElementById('detail-granular-timeline');
             if (timelineBody) {
                 timelineBody.innerHTML = Object.entries(p.granular || {}).map(([phase, data]) => `
@@ -360,127 +350,147 @@
                         <div class="mb-4">
                             <div class="flex justify-between items-center mb-2"><h4 class="font-black text-slate-800 uppercase text-[10px]">${phase}</h4><span class="text-[9px] font-black uppercase text-purple-600">${data.age}d age</span></div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                                ${data.steps.map(step => `<div class="p-2 border rounded-lg ${step.done ? 'bg-purple-50 border-purple-100' : 'bg-slate-50 border-slate-100'}"><div class="flex items-center gap-2"><i class="fa-solid ${step.done ? 'fa-circle-check text-purple-500' : 'fa-circle-notch fa-spin text-slate-300'} text-[10px]"></i><span class="text-[9px] font-bold ${step.done ? 'text-purple-700' : 'text-slate-400'}">${step.name}</span></div>${step.pending ? `<p class="text-[8px] mt-1 text-amber-600 font-bold uppercase">Pending: ${step.pending}</p>` : ''}</div>`).join('')}
+                                ${data.steps.map(step => `
+                                    <div class="p-2 border rounded-lg ${step.done ? 'bg-purple-50 border-purple-100' : 'bg-slate-50 border-slate-100'}">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid ${step.done ? 'fa-circle-check text-purple-500' : 'fa-circle-notch fa-spin text-slate-300'} text-[10px]"></i>
+                                            <span class="text-[9px] font-bold ${step.done ? 'text-purple-700' : 'text-slate-400'}">${step.name}</span>
+                                        </div>
+                                        ${step.action ? `<button class="mt-2 w-full py-1 bg-amber-500 text-white text-[8px] font-black rounded uppercase hover:bg-amber-600" onclick="confirmPaymentAction(this)">${step.action}</button>` : ''}
+                                    </div>`).join('')}
                             </div>
                         </div>
-                    </div>`).join('') || '<p class="text-xs text-slate-400 italic">No detailed steps logged.</p>';
+                    </div>`).join('') || '<p class="text-xs text-slate-400 italic">Timeline initialization pending.</p>';
             }
 
-            const treatSum = document.getElementById('detail-treatment-summary');
-            if (treatSum) treatSum.innerHTML = `<p class="italic">"${p.prescription}"</p>`;
-            
-            const scansList = document.getElementById('detail-scans-list');
-            if (scansList) scansList.innerHTML = `<div class="scan-card"><i class="fa-solid fa-x-ray text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">CBCT Airway</span></div><div class="scan-card"><i class="fa-solid fa-teeth text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">STL Upper</span></div><div class="scan-card"><i class="fa-solid fa-x-ray text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">Lateral Ceph</span></div><div class="scan-card"><i class="fa-solid fa-camera text-slate-300 text-3xl mb-2"></i><span class="text-[9px] font-bold uppercase text-slate-500">Photos</span></div>`;
-            
-            const internalNotes = document.getElementById('detail-internal-notes');
-            if (internalNotes) internalNotes.innerHTML = p.internalNotes.map(n => `<div class="p-3 bg-slate-50 rounded-lg mb-2"><div class="flex justify-between text-[9px] font-bold text-slate-400 mb-1"><span>${n.date}</span><span>${n.author}</span></div><p class="text-xs italic text-slate-600">"${n.text}"</p></div>`).join('') || '<p class="text-center text-slate-400 py-6 italic text-xs">No records found.</p>';
-            
-            const chatMsgs = document.getElementById('chat-messages');
-            if (chatMsgs) chatMsgs.innerHTML = p.chat?.map(m => `<div class="chat-bubble chat-${m.role}"><p class="text-[9px] font-black uppercase mb-1">${m.name}</p><p class="text-sm">${m.msg}</p></div>`).join('') || '<p class="text-center text-slate-300 py-12 italic">No active collaboration messages.</p>';
-            
-            const videoLog = document.getElementById('detail-video-list');
-            if (videoLog) videoLog.innerHTML = p.videos.map(v => `<div class="p-3 border rounded-xl flex gap-4 bg-slate-50/30"><div class="w-24 aspect-video bg-slate-800 rounded-lg flex items-center justify-center"><i class="fa-solid fa-play text-white opacity-40 text-xs"></i></div><div class="flex-1"><p class="text-[10px] font-bold text-slate-400 uppercase">${v.date}</p><p class="text-xs text-slate-700 italic">"${v.transcript}"</p></div></div>`).join('') || '<p class="text-xs italic text-slate-400 py-4 text-center">No coaching videos submitted.</p>';
+            // Scans & Reports
+            document.getElementById('detail-scans-list').innerHTML = `<div class="scan-card p-3 border"><i class="fa-solid fa-cube text-slate-300 text-xl mb-2"></i><span class="text-[9px] font-black uppercase">CBCT</span><p class="text-[8px] text-slate-400">Capture: 2025/12/10</p></div><div class="scan-card p-3 border"><i class="fa-solid fa-teeth text-slate-300 text-xl mb-2"></i><span class="text-[9px] font-black uppercase">STL Models</span><p class="text-[8px] text-slate-400">Capture: 2025/12/10</p></div>`;
+            document.getElementById('analysis-summary').innerText = p.analysis || "Specialist analysis in progress.";
+            document.getElementById('detail-reports-list').innerHTML = `<div class="flex justify-between items-center p-2 border rounded bg-slate-50 text-xs"><span>Blood Panel (CBC) - 2025/11/15</span><button class="text-blue-600 font-bold hover:underline">Download</button></div>`;
 
-            // Populate Questionnaire
-            const qMot = document.getElementById('q-mot'); if(qMot) qMot.innerText = p.motivation;
-            const qPain = document.getElementById('q-pain'); if(qPain) qPain.innerText = p.pains;
-            const qHist = document.getElementById('q-hist'); if(qHist) qHist.innerText = p.qHist;
+            // Questionnaire
+            document.getElementById('q-mot').innerText = p.motivation;
+            document.getElementById('q-pain').innerText = p.pains;
+            document.getElementById('q-hist').innerText = p.qHist;
+
+            // Hub videos & Referral Escalation
+            document.getElementById('detail-hub-videos').innerHTML = p.videos.map(v => `
+                <div class="p-4 bg-slate-50 border rounded-xl flex gap-6">
+                    <div class="w-32 aspect-video bg-slate-900 rounded flex items-center justify-center"><i class="fa-solid fa-play text-white opacity-30"></i></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${v.date} Submission</span>
+                            <button onclick="referVideoToAMD('${p.id}', '${v.id}')" class="px-3 py-1 bg-red-600 text-white text-[8px] font-black rounded uppercase shadow-sm hover:bg-red-700">Refer to AMD</button>
+                        </div>
+                        <p class="text-sm italic text-slate-600 mb-2 leading-relaxed">"${v.transcript}"</p>
+                        <textarea class="w-full p-2 text-[10px] border rounded" placeholder="Add clinical note before escalation..."></textarea>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-center py-6 text-xs italic text-slate-400">No coaching videos for this case.</p>';
+
+            // Treatment Log
+            document.getElementById('detail-treatment-log').innerHTML = (p.internalNotes || []).map(n => `
+                <div class="p-3 bg-slate-50 border rounded-lg text-xs">
+                    <div class="flex justify-between font-bold text-slate-400 uppercase text-[9px] mb-1"><span>${n.date}</span><span>${n.author}</span></div>
+                    <p class="italic">"${n.text}"</p>
+                </div>
+            `).join('') || '<p class="text-center text-xs italic text-slate-400">No logs found.</p>';
 
             switchMainPane('client-detail');
         }
 
-        function renderTracker() {
-            const body = document.getElementById('tracker-body');
-            const phaseKeys = ['intake', 'diag', 'spec', 'cons', 'mfg', 'log'];
-            body.innerHTML = mockPatients.filter(p => p.clinic === currentClinic).map(p => {
-                const currentPhaseDays = p.phases[phaseKeys[p.phaseIndex]] || 0;
-                return `<tr class="hover:bg-slate-50 cursor-pointer transition-colors group" onclick="selectPatient('${p.id}')">
-                    <td class="px-6 py-4"><div class="flex flex-col"><span class="font-bold text-slate-800 text-xs">${p.name}</span><div class="tooltip-container"><span class="text-[9px] font-bold text-purple-600 uppercase group-hover:text-purple-700">${p.currentStatus}</span><span class="tooltip-text"><b>Trigger Status:</b><br>${statusMap[p.currentStatus]}</span></div></div></td>
-                    ${phaseKeys.map((key, idx) => `<td class="text-center px-2 py-4"><span class="ageing-pill ${idx < p.phaseIndex ? 'ageing-done' : idx === p.phaseIndex ? 'ageing-active' : ''}">${p.phases[key]}d</span></td>`).join('')}
-                    <td class="px-6 py-4 text-right text-xs font-bold text-purple-600">${currentPhaseDays}d / ${p.totalDays}d</td>
-                </tr>`;
-            }).join('');
+        function renderVideoHub() {
+            const list = document.getElementById('global-video-list');
+            const videos = mockPatients.flatMap(p => p.videos.map(v => ({...v, pName: p.name, pId: p.id, clinic: p.clinic})));
+            document.getElementById('video-count-badge').innerText = videos.length;
+            list.innerHTML = videos.map(v => `
+                <div class="section-card flex gap-6 items-start transition hover:border-purple-300 border border-transparent">
+                    <div class="w-48 aspect-video bg-slate-900 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-play text-white opacity-40"></i></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-slate-800">${v.pName} <span class="text-xs text-slate-400 font-normal uppercase">(${v.pId})</span></h4>
+                            <span class="text-[10px] font-black bg-purple-100 text-purple-700 px-2 py-0.5 rounded uppercase tracking-tighter">${v.clinic}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-bold mb-3">${v.date} • Coaching Request</p>
+                        <p class="text-sm italic text-slate-600 mb-4">"${v.transcript}"</p>
+                        <div class="flex gap-2">
+                            <button onclick="selectPatient('${v.pId}')" class="px-3 py-1.5 bg-slate-100 text-slate-700 text-[10px] font-black rounded uppercase">Open Case</button>
+                            <button onclick="referVideoToAMD('${v.pId}', '${v.id}')" class="px-3 py-1.5 bg-red-600 text-white text-[10px] font-black rounded uppercase">Refer to AMD</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-center py-12 text-slate-400 italic">No historical videos in hub.</p>';
+        }
+
+        function renderActionQueue() {
+            const list = document.getElementById('priority-list');
+            const fullList = document.getElementById('task-list-full');
+            const html = actionTasks.map(t => `
+                <div class="section-card flex justify-between items-center border border-slate-50 transition hover:bg-slate-50 mb-3">
+                    <div><p class="text-sm font-bold text-slate-800">${t.patient}</p><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${t.task}</p></div>
+                    <div class="text-right">
+                        <span class="text-[8px] font-black uppercase px-2 py-0.5 rounded ${t.priority === 'High' ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'} mr-3">${t.priority}</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">${t.due}</span>
+                    </div>
+                </div>`).join('');
+            if(list) list.innerHTML = html;
+            if(fullList) fullList.innerHTML = html;
         }
 
         function renderRegistry() {
-            const body = document.getElementById('patient-list-body');
-            if (!body) return;
-            body.innerHTML = mockPatients.filter(p => p.clinic === currentClinic).map(p => `
+            const body = document.getElementById('patient-registry-body');
+            body.innerHTML = mockPatients.map(p => `
                 <tr class="hover:bg-slate-50 cursor-pointer" onclick="selectPatient('${p.id}')">
-                    <td class="py-4 px-6"><div class="font-bold text-slate-800 text-sm">${p.name}</div><div class="text-[10px] font-black text-slate-400 uppercase">AMD-${p.id}</div></td>
-                    <td class="py-4 px-6"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-[9px] font-black uppercase">${p.currentStatus}</span></td>
-                    <td class="text-right py-4 px-6 text-[10px] font-bold text-slate-400 uppercase">${p.totalDays}d system age</td>
-                </tr>`).join('');
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-slate-800">${p.name}</div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${p.clinic} | ${p.id}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 bg-purple-50 text-purple-700 text-[10px] font-black rounded uppercase">${p.currentStatus}</span>
+                    </td>
+                    <td class="px-6 py-4 text-right text-xs font-bold text-slate-400">${p.totalDays}D AGE</td>
+                </tr>
+            `).join('');
         }
 
-        function renderActions() {
-            const list = document.getElementById('priority-list');
-            const tasksFull = document.getElementById('task-list-full');
-            const baseActions = [
-                { name: "John Lee", task: "Confirm postage tracking for STA", priority: "High", due: "Due now" },
-                { name: "Kevin Chen", task: "Awaiting Specialist Push trigger", priority: "Medium", due: "2 days ago" }
-            ];
-            const allActions = [...dynamicActions, ...baseActions];
-            const html = allActions.map(a => `
-                <div class="section-card flex justify-between items-center transition hover:bg-slate-50 mb-3">
-                    <div><p class="text-sm font-bold text-slate-800">${a.name}</p><p class="text-[10px] font-bold text-slate-500 uppercase">${a.task}</p></div>
-                    <div class="text-right"><span class="text-[8px] font-black uppercase px-1.5 py-0.5 rounded ${a.priority === 'High' ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'} mr-2">${a.priority}</span><span class="text-[10px] font-black text-slate-400 uppercase">${a.due}</span></div>
-                </div>`).join('');
-            if (list) list.innerHTML = html;
-            if (tasksFull) tasksFull.innerHTML = html;
+        function referVideoToAMD(pId, vId) {
+            alert(`Coaching update ${vId} for patient ${pId} has been escalated to the Practitioner (AMD) for clinical review.`);
         }
 
-        function renderVideoHub() {
-            const feed = document.getElementById('video-feed-list');
-            const badge = document.getElementById('video-count-badge');
-            const videos = mockPatients.flatMap(p => p.videos.map(v => ({...v, patientName: p.name})));
-            if (badge) badge.innerText = videos.length || '0';
-            if (feed) feed.innerHTML = videos.map(v => `<div class="section-card flex gap-6 items-start"><div class="w-40 aspect-video bg-slate-900 rounded-lg flex items-center justify-center"><i class="fa-solid fa-play text-white opacity-40"></i></div><div class="flex-1"><h4 class="font-bold text-slate-800 mb-1">${v.patientName} <span class="text-xs font-normal text-slate-400">(${v.date})</span></h4><div class="bg-slate-50 p-3 rounded-lg text-xs italic text-slate-600 border border-slate-100">"${v.transcript}"</div><div class="mt-3 flex gap-2"><button class="px-3 py-1.5 bg-purple-600 text-white text-[9px] font-black rounded uppercase">Reply</button><button class="px-3 py-1.5 border text-purple-600 text-[9px] font-black rounded uppercase">Share</button></div></div></div>`).join('') || '<p class="text-center text-slate-400 py-12 italic text-xs">No active video coaching messages.</p>';
-        }
-
-        function renderIntake() {
-            const list = document.getElementById('intake-queue-list');
-            if (!list) return;
-            const items = [{ name: "Chen, Wei-Ting", status: "Forms Submitted", date: "Today" }, { name: "Eric Wu", status: "Awaiting Scans", date: "Jan 10" }];
-            list.innerHTML = items.map(i => `<div class="section-card border-l-4 border-amber-500 flex justify-between items-center transition hover:bg-amber-50/20"><div><p class="font-bold text-slate-800">${i.name}</p><p class="text-xs text-slate-500">${i.status} • ${i.date}</p></div><button class="bg-purple-600 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase">Manage</button></div>`).join('');
-        }
-
-        function openActionModal() { document.getElementById('action-modal').classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function createAction() {
-            const title = document.getElementById('action-title').value;
-            const patient = document.getElementById('action-patient').value;
-            const priority = document.getElementById('action-priority').value;
-            if(!title) return alert("Task title required.");
-            dynamicActions.unshift({ name: patient.split(' ')[0], task: title, priority: priority, due: "Just now" });
-            renderActions();
-            closeModal('action-modal');
-            document.getElementById('action-title').value = '';
+        function confirmPaymentAction(btn) {
+            btn.innerText = "Verifying...";
+            setTimeout(() => {
+                alert("Payment Verified. Case moved to Treatment Design phase.");
+                btn.innerText = "Verified";
+                btn.classList.replace("bg-amber-500", "bg-green-600");
+                btn.disabled = true;
+            }, 800);
         }
 
         function changeClinic(val) {
             currentClinic = val;
-            const c = clinics[val];
+            const clinicsData = {
+                harmony: { name: "Harmony Clinic Taipei", doc: "Dr. Ryan Chiang", patients: 2, scans: 1, videos: 2 },
+                zen: { name: "Zen Dental Studio", doc: "Dr. C. Lin", patients: 2, scans: 1, videos: 1 },
+                legacy: { name: "Legacy Airway Center", doc: "Dr. Peter Tseng", patients: 1, scans: 0, videos: 1 }
+            };
+            const c = clinicsData[val];
             document.getElementById('overview-clinic-name').innerText = `${c.name} Overview`;
             document.getElementById('overview-doctor-name').innerText = `Practitioner: ${c.doc}`;
             document.getElementById('stat-cases').innerText = c.patients;
             document.getElementById('stat-scans').innerText = c.scans;
             document.getElementById('stat-videos').innerText = c.videos;
-            document.getElementById('acct-revenue').innerText = c.revenue;
-            document.getElementById('acct-pending').innerText = c.pendingFees;
-            renderTracker(); renderRegistry(); renderActions(); renderVideoHub(); renderIntake();
+            renderTracker();
         }
 
         function toggleLanguage() { currentLang = currentLang === 'en' ? 'zh' : 'en'; updateText(); }
         function updateText() {
-            const data = translations[currentLang];
-            document.querySelectorAll('[data-key]').forEach(el => { const k = el.getAttribute('data-key'); if (data[k]) el.textContent = data[k]; });
-            document.getElementById('lang-toggle').textContent = currentLang === 'en' ? '中文' : 'English';
+            const btn = document.getElementById('lang-toggle');
+            btn.textContent = currentLang === 'en' ? '中文' : 'English';
             renderTracker();
         }
 
-        window.onload = () => { updateText(); changeClinic('harmony'); };
+        window.onload = () => { changeClinic('harmony'); renderActionQueue(); renderVideoHub(); renderRegistry(); updateText(); };
     </script>
 </body>
 </html>
